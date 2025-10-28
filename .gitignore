@@ -1,0 +1,32 @@
+# --- Python compiled files ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Virtual environment ---
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# --- Environment variables ---
+.env
+*.env
+
+# --- VS Code ---
+.vscode/
+*.code-workspace
+
+# --- Logs and caches ---
+*.log
+.cache/
+instance/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- OS specific ---
+.DS_Store
+Thumbs.db
