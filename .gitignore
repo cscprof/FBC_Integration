@@ -18,6 +18,7 @@ ENV/
 # --- VS Code ---
 .vscode/
 *.code-workspace
+senior-project-test.py
 
 # --- Logs and caches ---
 *.log
