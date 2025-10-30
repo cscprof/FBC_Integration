@@ -1,0 +1,15 @@
+# --- Python compiled files ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Virtual environment ---
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# --- Environment variables ---
+.env
