@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, jsonify
-from app.dbconfig import get_db_connection
+from app.db import get_db_connection
 
 @app.route('/')
 def check():
