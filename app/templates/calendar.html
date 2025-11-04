@@ -3,24 +3,84 @@
 {% block title %}Calendar{% endblock %}
 
 {% block head_extra %}
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
-  <script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
+<style>
+#eventPopup {
+  display: none;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background: white;
+  border: 2px solid #333;
+  padding: 20px;
+  z-index: 1000;
+  max-width: 400px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+#eventPopupClose {
+  cursor: pointer;
+  float: right;
+  font-weight: bold;
+}
+#overlay {
+  display: none;
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.3);
+  z-index: 999;
+}
+</style>
 
-    document.addEventListener('DOMContentLoaded', function() {
-      const calendarEl = document.getElementById('calendar')
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth'
-      })
-      calendar.render()
-    })
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const calendarEl = document.getElementById('calendar');
+  const popup = document.getElementById('eventPopup');
+  const overlay = document.getElementById('overlay');
+  const popupClose = document.getElementById('eventPopupClose');
 
-  </script>
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    events: "/approved-events",
+    eventClick: function(info) {
+      popup.innerHTML = `
+        <span id="eventPopupClose">X</span>
+        <h3>${info.event.title}</h3>
+        <p><strong>Start:</strong> ${info.event.start.toLocaleString()}</p>
+        <p><strong>End:</strong> ${info.event.end.toLocaleString()}</p>
+        <p><strong>Description:</strong> ${info.event.extendedProps.description || "N/A"}</p>
+        <p><strong>URL:</strong> ${info.event.url || "N/A"}</p>
+      `;
+
+      // Show popup and overlay
+      popup.style.display = 'block';
+      overlay.style.display = 'block';
+
+      // Prevent default link
+      info.jsEvent.preventDefault();
+
+      // Close handler
+      document.getElementById('eventPopupClose').onclick = function() {
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+      };
+      overlay.onclick = function() {
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+      };
+    }
+  });
+
+  calendar.render();
+});
+</script>
 {% endblock %}
-
 
 {% block content %}
-    <div id="calendar"></div>
+<div id="calendar"></div>
+
+<!-- Custom popup -->
+<div id="overlay"></div>
+<div id="eventPopup"></div>
 {% endblock %}
-
-
-
