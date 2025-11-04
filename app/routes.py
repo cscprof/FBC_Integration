@@ -6,10 +6,6 @@ from app.db import get_db_connection
 def check():
     return "<h1>index</h1>"
 
-@app.route('/display-calendar')
-def calendar():
-    return render_template('calendar.html')
-
 @app.route('/add-event')
 def addEvent():
     return render_template('')
