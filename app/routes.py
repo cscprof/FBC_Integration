@@ -12,7 +12,13 @@ def addEvent():
 
 @app.route('/admin-view')
 def adminView():
-    return render_template('')
+    conn = get_db_connection()
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT event_id, name, status FROM events")
+        events = cursor.fetchall()
+    conn.close()
+
+    return render_template('adminView.html', events=events)
 
 @app.route('/rejected-events')
 def rejectedEvents():
