@@ -1,8 +1,15 @@
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from app.db import get_db_connection
 
 calendar_bp = Blueprint('calendar', __name__)
+
+@calendar_bp.route('/add-event', methods=["GET, POST"])
+def addEvent():
+    if request.method == "POST":
+        x = 1
+    elif request.method == "GET":
+        return render_template('/addEvent.html')
 
 @calendar_bp.route('/display-calendar')
 def calendar():
