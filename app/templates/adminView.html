@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 2rem;
+            max-width: 900px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .btn {
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-approve {
+            background-color: #4CAF50;
+        }
+        .btn-reject {
+            background-color: #e74c3c;
+        }
+        .status {
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+        .no-data {
+            text-align: center;
+            color: #777;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <h2>Events</h2>
+
+        {% if events %}
+            <table>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                {% for event in events %}
+                    <tr>
+                        <td>{{ event['name'] }}</td>
+                        <td class="status">{{ event['status'] }}</td>
+                        <td>
+                            <a href="{{ url_for('calendar.update_event', event_id=event['event_id'], action='approved') }}">
+                                <button class="btn btn-approve">Approve</button>
+                            </a>
+                            <a href="{{ url_for('calendar.update_event', event_id=event['event_id'], action='rejected') }}">
+                                <button class="btn btn-reject">Reject</button>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p class="no-data">No events found in the database.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
