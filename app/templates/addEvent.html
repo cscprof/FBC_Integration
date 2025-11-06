@@ -3,25 +3,89 @@
 {% block title %}Add Event{% endblock %}
 
 {% block head_extra %}
+<style>
+  /* Basic form styling */
+  form {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 25px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+  }
+
+  input[type="text"],
+  input[type="url"],
+  input[type="date"],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+    margin-bottom: 15px;
+    transition: border-color 0.2s ease-in-out;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  textarea {
+    height: 100px;
+    resize: vertical;
+  }
+
+  input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+</style>
 {% endblock %}
 
-
 {% block content %}
+<h2>Add New Event</h2>
 <form method="POST">
-  <label for="name">Name:</label><br>
-  <input type="text" id="name" name="name" required><br><br>
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name" required>
 
-  <label for="description">Description:</label><br>
-  <textarea id="description" name="description" required></textarea><br><br>
+  <label for="description">Description:</label>
+  <textarea id="description" name="description" required></textarea>
 
-  <label for="url">URL:</label><br>
-  <input type="url" id="url" name="url" required><br><br>
+  <label for="url">URL:</label>
+  <input type="url" id="url" name="url" required>
 
-  <label for="starting_date">Starting Date:</label><br>
-  <input type="date" id="starting_date" name="starting_date" required><br><br>
+  <label for="starting_date">Starting Date:</label>
+  <input type="date" id="starting_date" name="starting_date" required>
 
-  <label for="ending_date">Ending Date:</label><br>
-  <input type="date" id="ending_date" name="ending_date" required><br><br>
+  <label for="ending_date">Ending Date:</label>
+  <input type="date" id="ending_date" name="ending_date" required>
 
   <input type="submit" value="Submit">
 </form>
