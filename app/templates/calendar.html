@@ -42,6 +42,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek,multiMonthYear'
+    },
+    views: {
+      listWeek: { buttonText: 'list' } // optional rename
+    },
+    contentHeight: 'auto',
     events: "/approved-events",
     eventClick: function(info) {
       popup.innerHTML = `
