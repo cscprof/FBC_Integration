@@ -7,4 +7,22 @@
 
 
 {% block content %}
+<form method="POST">
+  <label for="name">Name:</label><br>
+  <input type="text" id="name" name="name" required><br><br>
+
+  <label for="description">Description:</label><br>
+  <textarea id="description" name="description" required></textarea><br><br>
+
+  <label for="url">URL:</label><br>
+  <input type="url" id="url" name="url" required><br><br>
+
+  <label for="starting_date">Starting Date:</label><br>
+  <input type="date" id="starting_date" name="starting_date" required><br><br>
+
+  <label for="ending_date">Ending Date:</label><br>
+  <input type="date" id="ending_date" name="ending_date" required><br><br>
+
+  <input type="submit" value="Submit">
+</form>
 {% endblock %}
