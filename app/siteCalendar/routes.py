@@ -47,8 +47,7 @@ def addEvent():
             if conn:
                 conn.close()
 
-        flash("Event created successfully.", "success")
-        return redirect(url_for('calendar_bp.calendar'))
+        return render_template('calendar.html')
 
     return render_template('addEvent.html')
 
