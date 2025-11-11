@@ -14,7 +14,7 @@ def addEvent():
 def adminView():
     conn = get_db_connection()
     with conn.cursor() as cursor:
-        cursor.execute("SELECT event_id, name, status FROM events")
+        cursor.execute("SELECT event_id, name, status, description FROM events")
         events = cursor.fetchall()
     conn.close()
 
@@ -29,7 +29,7 @@ def get_users():
     try:
         conn = get_db_connection()
         with conn.cursor() as cursor:
-            cursor.execute("SELECT user_id, first_name, last_name FROM users")
+            cursor.execute("SELECT user_id, first_name, last_name, FROM users")
             users = cursor.fetchall()
         conn.close()
         return jsonify(users)
