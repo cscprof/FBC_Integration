@@ -4,10 +4,40 @@
 
 {% block head_extra %}
 <style>
+  /* 🔔 Flash message styling */
+  .flashes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .flashes li {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f44336; /* red */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    z-index: 1000;
+    text-align: center;
+    animation: fadeOut 5s ease forwards;
+  }
+
+  @keyframes fadeOut {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; visibility: hidden; }
+  }
+
   /* Basic form styling */
   form {
     max-width: 600px;
-    margin: 40px auto;
+    margin: 80px auto 40px; /* extra top margin to avoid overlapping flash */
     padding: 25px;
     background-color: #f9f9f9;
     border-radius: 10px;
@@ -24,7 +54,7 @@
 
   input[type="text"],
   input[type="url"],
-  input[type="date"],
+  input[type="datetime-local"],
   textarea {
     width: 100%;
     padding: 10px;
@@ -70,6 +100,17 @@
 {% endblock %}
 
 {% block content %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 <h2>Add New Event</h2>
 <form method="POST">
   <label for="name">Name:</label>
@@ -81,11 +122,14 @@
   <label for="url">URL:</label>
   <input type="url" id="url" name="url" required>
 
-  <label for="starting_date">Starting Date:</label>
-  <input type="date" id="starting_date" name="starting_date" required>
+  <label for="starting_date">Starting Date and Time:</label>
+  <input type="datetime-local" id="starting_date" name="starting_date" required>
 
-  <label for="ending_date">Ending Date:</label>
-  <input type="date" id="ending_date" name="ending_date" required>
+  <label for="ending_date">Ending Date and Time:</label>
+  <input type="datetime-local" id="ending_date" name="ending_date" required>
+
+  <label for="deadline">Registration Deadline</label>
+  <input type="datetime-local" id="deadline" name="deadline" >
 
   <input type="submit" value="Submit">
 </form>

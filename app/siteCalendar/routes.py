@@ -14,28 +14,32 @@ def addEvent():
         url = request.form.get('url', '').strip()
         starting_date_raw = request.form.get('starting_date', '').strip()
         ending_date_raw = request.form.get('ending_date', '').strip()
-        
+        deadline_raw = request.form.get('deadline', '').strip()
+        deadline = datetime.fromisoformat(deadline_raw) if deadline_raw else None
+        posting_date = datetime.now()
+
         if not name:
             flash("Name is required.", "error")
             return render_template('addEvent.html', form=request.form)
 
-        try:
-            starting_date = datetime.fromisoformat(starting_date_raw).date() if starting_date_raw else None
-            ending_date = datetime.fromisoformat(ending_date_raw).date() if ending_date_raw else None
-        except ValueError:
-            flash("Dates must be in YYYY-MM-DD format.", "error")
-            return render_template('addEvent.html', form=request.form)
+        starting_date = datetime.fromisoformat(starting_date_raw)
+        ending_date = datetime.fromisoformat(ending_date_raw)
 
+        if ending_date <= starting_date:
+            print(ending_date, starting_date)
+            print('whu is this firing')
+            flash("Ending date and time must be after the starting date and time.", "error")
+            return render_template('addEvent.html', form=request.form)
+        
         conn = None
         try:
-            print('huh')
             conn = get_db_connection()
             with conn.cursor() as cursor:
                 sql = """
-                    INSERT INTO events (name, description, url, start_date, end_date, user_id, status)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    INSERT INTO events (name, description, url, start_date, end_date, user_id, status, posting_date, registration_deadline)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
-                cursor.execute(sql, (name, description, url or None, starting_date, ending_date, 1, 'pending'))
+                cursor.execute(sql, (name, description, url or None, starting_date, ending_date, 1, 'pending', posting_date, deadline))
             conn.commit()
         except DatabaseError as e:
             print(e)
