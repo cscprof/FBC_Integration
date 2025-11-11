@@ -75,7 +75,7 @@ def get_approved_events():
         conn = get_db_connection()
         with conn.cursor() as cursor:
             cursor.execute("""
-                SELECT name, start_date, end_date, url, description
+                SELECT name, start_date, end_date, url, description, content_type
                 FROM events 
                 WHERE status='approved'
             """)
@@ -90,9 +90,9 @@ def get_approved_events():
                 "start": row['start_date'].isoformat(), 
                 "end": row['end_date'].isoformat(),
                 "url": row.get('url'),
-                "description": row.get('description')
+                "description": row.get('description'),
+                "content_type": row['content_type']
             })
-
         return jsonify(events)
 
     except Exception as e:
