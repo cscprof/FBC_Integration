@@ -64,14 +64,24 @@ def update_event(event_id, action):
     """Update event status to approved or rejected"""
     #Check for valid input
     if action not in ["approved", "rejected"]:
-        return redirect(url_for('adminView'))  
+        return redirect(url_for('calendar.adminView'))  
     conn = get_db_connection()
     with conn.cursor() as cursor:
         cursor.execute("UPDATE events SET status = %s WHERE event_id = %s", (action, event_id))
         conn.commit()
     conn.close()
 
-    return redirect(url_for('adminView'))
+    return redirect(url_for('calendar.adminView'))
+
+@calendar_bp.route('/admin-view')
+def adminView():
+    conn = get_db_connection()
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT event_id, name, status, description FROM events")
+        events = cursor.fetchall()
+    conn.close()
+
+    return render_template('adminView.html', events=events)
 
 @calendar_bp.route('/approved-events', methods=["GET"])
 def get_approved_events():

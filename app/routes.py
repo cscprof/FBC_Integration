@@ -10,16 +10,6 @@ def check():
 def addEvent():
     return render_template('')
 
-@app.route('/admin-view')
-def adminView():
-    conn = get_db_connection()
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT event_id, name, status, description FROM events")
-        events = cursor.fetchall()
-    conn.close()
-
-    return render_template('adminView.html', events=events)
-
 @app.route('/rejected-events')
 def rejectedEvents():
     return render_template('')
