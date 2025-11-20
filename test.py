@@ -1,2 +1,2 @@
 # Test file to verify GitHub configuration
-print('Testing GitHub 2!')
+print('Testing GitHub 3!')
