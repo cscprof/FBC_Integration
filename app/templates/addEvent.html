@@ -1,136 +1,49 @@
-{% extends 'base.html' %}
+{% extends 'layout.html' %}
 
 {% block title %}Add Event{% endblock %}
 
-{% block head_extra %}
-<style>
-  /* 🔔 Flash message styling */
-  .flashes {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .flashes li {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #f44336; /* red */
-    color: white;
-    padding: 12px 25px;
-    border-radius: 6px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    z-index: 1000;
-    text-align: center;
-    animation: fadeOut 5s ease forwards;
-  }
-
-  @keyframes fadeOut {
-    0% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { opacity: 0; visibility: hidden; }
-  }
-
-  /* Basic form styling */
-  form {
-    max-width: 600px;
-    margin: 80px auto 40px; /* extra top margin to avoid overlapping flash */
-    padding: 25px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-  }
-
-  label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 6px;
-    color: #333;
-  }
-
-  input[type="text"],
-  input[type="url"],
-  input[type="datetime-local"],
-  textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-    font-size: 14px;
-    margin-bottom: 15px;
-    transition: border-color 0.2s ease-in-out;
-  }
-
-  input:focus,
-  textarea:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-
-  textarea {
-    height: 100px;
-    resize: vertical;
-  }
-
-  input[type="submit"] {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-  }
-
-  input[type="submit"]:hover {
-    background-color: #0056b3;
-  }
-
-  h2 {
-    text-align: center;
-    color: #333;
-  }
-</style>
-{% endblock %}
-
 {% block content %}
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class="flashes">
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+<div class="add-event-container">
 
-<h2>Add New Event</h2>
-<form method="POST">
-  <label for="name">Name:</label>
-  <input type="text" id="name" name="name" required>
+    <div class="add-event-blob">
 
-  <label for="description">Description:</label>
-  <textarea id="description" name="description" required></textarea>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flashes">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
 
-  <label for="url">URL:</label>
-  <input type="url" id="url" name="url" required>
+        <h1>Add New Event</h1>
+        <div class="underline-event"></div>
 
-  <label for="starting_date">Starting Date and Time:</label>
-  <input type="datetime-local" id="starting_date" name="starting_date" required>
+        <form method="POST" class="event-form">
 
-  <label for="ending_date">Ending Date and Time:</label>
-  <input type="datetime-local" id="ending_date" name="ending_date" required>
+            <input type="text" name="name" placeholder="Event Name" required>
 
-  <label for="deadline">Registration Deadline</label>
-  <input type="datetime-local" id="deadline" name="deadline" >
+            <textarea name="description" placeholder="Event Description" required></textarea>
 
-  <input type="submit" value="Submit">
-</form>
+            <input class="entry-box" type="url" name="url" placeholder="Event URL" required>
+
+            <label class="event-label">Starting Date & Time</label>
+            <input class="entry-box" type="datetime-local" name="starting_date" required>
+
+            <label class="event-label">Ending Date & Time</label>
+            <input class="entry-box" type="datetime-local" name="ending_date" required>
+
+            <label class="event-label">Registration Deadline (Optional)</label>
+            <input class="entry-box" type="datetime-local" name="deadline">
+
+            <button class="button-submit" type="submit">Submit</button>
+        </form>
+
+    </div>
+
+</div>
+
 {% endblock %}

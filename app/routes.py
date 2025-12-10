@@ -4,7 +4,7 @@ from app.db import get_db_connection
 
 @app.route('/')
 def check():
-    return "<h1>index</h1>"
+    return render_template('index.html')
 
 @app.route('/add-event')
 def addEvent():
@@ -36,3 +36,45 @@ def get_users():
     except Exception as e:
         print("Error fetching users:", e)
         return jsonify({"error": str(e)}), 500
+        
+@app.route('/resource-directory')
+def resources():
+    try:
+        return render_template('resourceDirectory.html')
+    except Exception as err:
+        return f"Error {err}"
+
+@app.route('/signup')
+def signup():
+    try:
+        return render_template('signup.html')
+    except Exception as err:
+        return f"Error {err}"
+    
+@app.route('/login')
+def login():
+    try:
+        return render_template('login.html')
+    except Exception as err:
+        return f"Error {err}"
+    
+@app.route('/about')
+def about():
+    try:
+        return render_template('about.html')
+    except Exception as err:
+        return f"Error {err}"
+
+@app.route('/jobs')
+def jobs():
+    try:
+        return render_template('jobs.html')
+    except Exception as err:
+        return f"Error {err}"
+
+@app.route('/contact')
+def contact():
+    try:
+        return render_template('contact.html')
+    except Exception as err:
+        return f"Error {err}"
