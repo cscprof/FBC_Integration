@@ -1,98 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard - Events</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 2rem;
-        }
-        .container {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 2rem;
-            max-width: 900px;
-            margin: auto;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1.5rem;
-        }
-        th, td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f0f0f0;
-        }
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        .btn {
-            border: none;
-            border-radius: 4px;
-            padding: 6px 12px;
-            cursor: pointer;
-            color: white;
-            font-weight: bold;
-        }
-        .btn-approve {
-            background-color: #4CAF50;
-        }
-        .btn-reject {
-            background-color: #e74c3c;
-        }
-        .status {
-            font-weight: bold;
-            text-transform: capitalize;
-        }
-        .no-data {
-            text-align: center;
-            color: #777;
-            margin-top: 1.5rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Events</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+    .btn {
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+    }
+    .btn-approve {
+      background-color: #4CAF50;
+    }
+    .btn-reject {
+      background-color: #e74c3c;
+    }
+    .status {
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+    .no-data {
+      text-align: center;
+      color: #777;
+      margin-top: 1.5rem;
+    }
+
+    /* Popup styles */
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 999;
+    }
+    #eventPopup {
+      display: none;
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      background: white;
+      border: 2px solid #333;
+      padding: 20px;
+      z-index: 1000;
+      max-width: 400px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+    }
+    #eventPopupClose {
+      cursor: pointer;
+      float: right;
+      font-weight: bold;
+      color: #555;
+    }
+    .event-link {
+      color: #007bff;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Admin Dashboard</h1>
-        <h2>Events</h2>
+  <div class="container">
+    <h1>Admin Dashboard</h1>
+    <h2>Events</h2>
 
-        {% if events %}
-            <table>
-                <tr>
-                    <th>Event Name</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-                {% for event in events %}
-                    <tr>
-                        <td>{{ event['name'] }}</td>
-                        <td class="status">{{ event['status'] }}</td>
-                        <td>
-                            <a href="{{ url_for('calendar.update_event', event_id=event['event_id'], action='approved') }}">
-                                <button class="btn btn-approve">Approve</button>
-                            </a>
-                            <a href="{{ url_for('calendar.update_event', event_id=event['event_id'], action='rejected') }}">
-                                <button class="btn btn-reject">Reject</button>
-                            </a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p class="no-data">No events found in the database.</p>
-        {% endif %}
-    </div>
+    {% if events %}
+      <table>
+        <tr>
+          <th>Event Name</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+        {% for event in events %}
+          <tr>
+            <!-- Clickable event name -->
+            <td>
+              <span class="event-link" 
+                    data-name="{{ event['name'] }}" 
+                    data-description="{{ event['description'] }}">
+                {{ event['name'] }}
+              </span>
+            </td>
+            <td class="status">{{ event['status'] }}</td>
+            <td>
+              <a href="{{ url_for('calendar.update_event', event_id=event['event_id'], action='approved') }}">
+                <button class="btn btn-approve">Approve</button>
+              </a>
+              <a href="{{ url_for('calendar.update_event', event_id=event['event_id'], action='rejected') }}">
+                <button class="btn btn-reject">Reject</button>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p class="no-data">No events found in the database.</p>
+    {% endif %}
+  </div>
+
+  <!-- Popup and overlay -->
+  <div id="overlay"></div>
+  <div id="eventPopup">
+    <span id="eventPopupClose">X</span>
+    <h3 id="popupEventName"></h3>
+    <p id="popupEventDescription"></p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const popup = document.getElementById('eventPopup');
+      const overlay = document.getElementById('overlay');
+      const popupClose = document.getElementById('eventPopupClose');
+      const popupName = document.getElementById('popupEventName');
+      const popupDescription = document.getElementById('popupEventDescription');
+
+      // Add click listener to all event name links
+      document.querySelectorAll('.event-link').forEach(link => {
+        link.addEventListener('click', function() {
+          const name = this.getAttribute('data-name');
+          const description = this.getAttribute('data-description') || "No description available.";
+
+          popupName.textContent = name;
+          popupDescription.textContent = description;
+          popup.style.display = 'block';
+          overlay.style.display = 'block';
+        });
+      });
+
+      // Close popup
+      popupClose.addEventListener('click', function() {
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+      });
+
+      overlay.addEventListener('click', function() {
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+      });
+    });
+  </script>
 </body>
 </html>

@@ -10,16 +10,6 @@ def check():
 def addEvent():
     return render_template('')
 
-@app.route('/admin-view')
-def adminView():
-    conn = get_db_connection()
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT event_id, name, status FROM events")
-        events = cursor.fetchall()
-    conn.close()
-
-    return render_template('adminView.html', events=events)
-
 @app.route('/rejected-events')
 def rejectedEvents():
     return render_template('')
@@ -29,7 +19,7 @@ def get_users():
     try:
         conn = get_db_connection()
         with conn.cursor() as cursor:
-            cursor.execute("SELECT user_id, first_name, last_name FROM users")
+            cursor.execute("SELECT user_id, first_name, last_name, FROM users")
             users = cursor.fetchall()
         conn.close()
         return jsonify(users)

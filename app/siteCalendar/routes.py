@@ -119,7 +119,17 @@ def update_event(event_id, action):
         conn.commit()
     conn.close()
 
-    return redirect(url_for('adminView'))
+    return redirect(url_for('calendar.adminView'))
+
+@calendar_bp.route('/admin-view')
+def adminView():
+    conn = get_db_connection()
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT event_id, name, status, description FROM events")
+        events = cursor.fetchall()
+    conn.close()
+
+    return render_template('adminView.html', events=events)
 
 
 # ---------------------------------------------------------
