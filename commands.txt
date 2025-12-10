@@ -1,0 +1,6 @@
+#to start venv
+venv\Scripts\activate
+
+#to run app 
+set FLASK_APP=calendar.py
+flask run

@@ -1,0 +1,70 @@
+from app import app
+from flask import render_template, jsonify
+from app.db import get_db_connection
+
+@app.route('/')
+def check():
+    return render_template('index.html')
+
+@app.route('/add-event')
+def addEvent():
+    return render_template('')
+
+@app.route('/rejected-events')
+def rejectedEvents():
+    return render_template('')
+
+@app.route("/test-db", methods=["GET"])
+def get_users():
+    try:
+        conn = get_db_connection()
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT user_id, first_name, last_name, FROM users")
+            users = cursor.fetchall()
+        conn.close()
+        return jsonify(users)
+    except Exception as e:
+        print("Error fetching users:", e)
+        return jsonify({"error": str(e)}), 500
+        
+@app.route('/resource-directory')
+def resources():
+    try:
+        return render_template('resourceDirectory.html')
+    except Exception as err:
+        return f"Error {err}"
+
+@app.route('/signup')
+def signup():
+    try:
+        return render_template('signup.html')
+    except Exception as err:
+        return f"Error {err}"
+    
+@app.route('/login')
+def login():
+    try:
+        return render_template('login.html')
+    except Exception as err:
+        return f"Error {err}"
+    
+@app.route('/about')
+def about():
+    try:
+        return render_template('about.html')
+    except Exception as err:
+        return f"Error {err}"
+
+@app.route('/jobs')
+def jobs():
+    try:
+        return render_template('jobs.html')
+    except Exception as err:
+        return f"Error {err}"
+
+@app.route('/contact')
+def contact():
+    try:
+        return render_template('contact.html')
+    except Exception as err:
+        return f"Error {err}"
