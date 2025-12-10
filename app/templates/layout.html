@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}Flourish Beaver County{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://flourishbeavercounty.org/wp-content/uploads/2025/08/cropped-Flourish-Beaver-County-Logo-Fb-32x32.png">
+
+<!-- For calendar -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&family=Open+Sans:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/calendar.css') }}">
+
+<!-- For add event page -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/addevent.css') }}">
+
+
+    {% block head %}{% endblock %}
+    </head>
+
+    <body>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/">
+                <img 
+                    src="https://flourishbeavercounty.org/wp-content/uploads/2025/08/Flourish-Beaver-County-Logo-Fb.png" 
+                    style="max-height: 4rem;"
+                >
+
+                </a>
+
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-start">
+
+                <a class="navbar-item" href="/admin">
+                    Admin
+                </a>    
+                <a class="navbar-item" href="/events">
+                    Events List
+                </a>
+
+                <a class="navbar-item" href="/calendar">
+                    Calendar
+                </a>
+
+                <a class="navbar-item" href="/resource-directory">
+                    Resource Directory
+                </a>
+
+                <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
+                    <a class="navbar-link">
+                    More
+                    </a>
+
+                    <div class="navbar-dropdown">
+                    <a class="navbar-item" href="https://flourishbeavercounty.org/about-flourish-beaver-county/">
+                        About Flourish Beaver County
+                    </a>
+                    <a class="navbar-item" href="https://flourishbeavercounty.org/our-board/">
+                        Staff & Board
+                    </a>
+                    <a class="navbar-item" href="https://flourishbeavercounty.org/contact-us/">
+                        Contact Us
+                    </a>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item" href="https://flourishbeavercounty.org/donate/">
+                        Donate
+                    </a>
+                    </div>
+                </div>
+                </div>
+
+                <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                    <a class="button sign-up" href="/signup">
+                        <strong>Sign up</strong>
+                    </a>
+                    <a class="button is-light" href="/login">
+                        Log in
+                    </a>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </nav>
+
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                ©2025 Flourish Beaver County | Student Information Hub
+                </p>
+            </div>
+        </footer>
+
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+                if ($navbarBurgers.length > 0) {
+                    $navbarBurgers.forEach(function (el) {
+                        el.addEventListener('click', function () {
+                            var target = el.dataset.target;
+                            var $target = document.getElementById(target);
+                            el.classList.toggle('is-active');
+                            if ($target) { $target.classList.toggle('is-active'); }
+                        });
+                    });
+                }
+            });
+        </script>
+
+    </body>
+</html>
