@@ -121,7 +121,7 @@ def update_event(event_id, action):
 
     return redirect(url_for('calendar.adminView'))
 
-@calendar_bp.route('/admin-view')
+@calendar_bp.route('/admin')
 def adminView():
     conn = get_db_connection()
     with conn.cursor() as cursor:
