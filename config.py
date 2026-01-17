@@ -11,12 +11,13 @@ should be no need to modify this file.
 '''
 
 import os
+import configparser
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Read the application configuration file
-import configparser
 config = configparser.ConfigParser()
-config.read('settings.conf')
+config.read(os.path.join(basedir,'settings.conf'))
 
 
 class Config:
@@ -31,27 +32,24 @@ class Config:
 
 class BaseConfig(Config):
     DEBUG=True
-    MYSQL_USER = config["MYSQL"]["USERNAME"]
-    MYSQL_PASSWORD = config["MYSQL"]["PASSWORD"]
-    MYSQL_HOST = config["MYSQL"]["HOSTNAME"]
-    MYSQL_DATABASE = config["MYSQL"]["DATABASE"]
-    MYSQL_CONNECTION_STRING = config["MYSQL"]["CONNECTION_STRING"]
+    MYSQL_USER = config["MYSQL_LOCAL"]["USERNAME"]
+    MYSQL_PASSWORD = config["MYSQL_LOCAL"]["PASSWORD"]
+    MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
+    MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
 
 class ProductionConfig(Config):
     DEBUG=False
-    MYSQL_USER = config["MYSQL"]["USERNAME"]
-    MYSQL_PASSWORD = config["MYSQL"]["PASSWORD"]
-    MYSQL_HOST = config["MYSQL"]["HOSTNAME"]
-    MYSQL_DATABASE = config["MYSQL"]["DATABASE"]
-    MYSQL_CONNECTION_STRING = config["MYSQL"]["CONNECTION_STRING"]
+    MYSQL_USER = config["MYSQL_PROD"]["USERNAME"]
+    MYSQL_PASSWORD = config["MYSQL_PROD"]["PASSWORD"]
+    MYSQL_HOST = config["MYSQL_PROD"]["HOSTNAME"]
+    MYSQL_DATABASE = config["MYSQL_PROD"]["DATABASE"]
 
 class GenevaConfig(Config):
     DEBUG=True
-    MYSQL_USER = config["MYSQLGENEVA"]["USERNAME"]
-    MYSQL_PASSWORD = config["MYSQLGENEVA"]["PASSWORD"]
-    MYSQL_HOST = config["MYSQLGENEVA"]["HOSTNAME"]
-    MYSQL_DATABASE = config["MYSQLGENEVA"]["DATABASE"]
-    MYSQL_CONNECTION_STRING = config["MYSQLGENEVA"]["CONNECTION_STRING"]
+    MYSQL_USER = config["MYSQL_LOCAL"]["USERNAME"]
+    MYSQL_PASSWORD = config["MYSQL_LOCAL"]["PASSWORD"]
+    MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
+    MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
 
 config = {
     'base': BaseConfig,

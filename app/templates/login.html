@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}FBC - Log in{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-blob">
+        <h1>Log In</h1>
+    <div class="underline"></div>
+    <form>
+        <input type="email" placeholder="Email Address" />
+        <input type="password" placeholder="Password" />
+        <button class="button login" type="submit">Login</button>
+    </form>
+    </div>
+
+    <div class="signup-text">
+        <h3>I don't have an account yet.</h3>
+        <a class="button sign-up no-account" href="/signup">
+            <strong>Sign up</strong>
+        </a>
+    </div>
+</div>
+{% endblock %}

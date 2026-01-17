@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Flourish Beaver County - Resource Directory{% endblock %}
+
+{% block content %}
+<h1 class="title has-text-centered">Resource Directory</h1>
+
+<style>
+    .resources-container {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .section {
+        width: 100%;
+    }
+
+    .header {
+        background-color: #aaeb54;
+        color: #2e44cc;
+        font-family: "Open Sans", sans-serif;
+        font-weight: 700;
+        padding: 12px 20px;
+        font-size: 1.8rem;
+        border-radius: 4px 4px 0 0;
+    }
+
+    .list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 0;
+    }
+
+    .resource a {
+        display: block;
+        background-color: #f0f0f0;
+        color: #2e44cc;
+        padding: 15px 20px;
+        font-weight: 600;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        font-family: "Open Sans", sans-serif;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .resource a:hover {
+    background-color: #fafafafb;
+}
+</style>
+<!-- 
+dropdown filter - working on
+  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+    <div class="dropdown-content">
+      <a href="#" class="dropdown-item" data-value="all">Show All Schools</a>
+      <a href="#" class="dropdown-item" data-value="geneva">Geneva</a>
+      <a href="#" class="dropdown-item" data-value="ccac">CCAC</a>
+      <a href="#" class="dropdown-item" data-value="psb">Penn State Beaver</a>
+    </div>
+  </div>
+</div> -->
+
+<div class="resources-container">
+    <section class="section" data-school="geneva">
+        <div class="header">Geneva Resources</div>
+        <div class="list">
+            <div class="resource"><a href="https://apply.geneva.edu/portal/campus_visit_events" target="_blank">Visit</a></div>
+            <div class="resource"><a href="https://www.geneva.edu/student-life/engagement/student-activities/calendar-of-events" target="_blank">Campus Events</a></div>
+            <div class="resource"><a href="https://www.geneva.edu/admissions/tugapply" target="_blank">Apply</a></div>
+            <div class="resource"><a href="https://www.geneva.edu/financial-aid/" target="_blank">Financial Aid</a></div>
+            <div class="resource"><a href="https://www.geneva.edu/financial-aid/scholarships-grants" target="_blank">Scholarships</a></div>
+        </div>
+    </section>
+    <section class="section" data-school="ccac">
+        <div class="header">CCAC Resources</div>
+        <div class="list">
+            <div class="resource"><a href="https://catalog.ccac.edu/"target="_blank">Courses</a></div>
+            <div class="resource"><a href="https://www.ccac.edu/admissions/enrollment-services.php?gad_source=1&gad_campaignid=22700964666&gbraid=0AAAAAC5sFd-hw-9nJHjRmJfNc6zCwpxxx&gclid=CjwKCAiAt8bIBhBpEiwAzH1w6VYpowvTKoNk7rEJrD9_T-stwv2kcguUp7fyLjNa0EwMQ7Fi70Bb3BoCUKUQAvD_BwE"target="_blank">Apply</a></div>
+            <div class="resource"><a href="https://www.ccac.edu/ccac-events/index.php"target="_blank">Campus Events</a></div>
+            <div class="resource"><a href="https://www.ccac.edu/academics/virtual-campus/online-programs.php"target="_blank">Online Programs</a></div>
+            <div class="resource"><a href="https://ccac.elluciancrmrecruit.com/Apply/Events/List?ID=10"target="_blank">Visit</a></div>
+        </div>
+    </section>
+    <section class="section" data-school="psb">
+        <div class="header">Penn State Beaver Resources</div>
+        <div class="list">
+            <div class="resource"><a href="https://www.psu.edu/admission/undergraduate/how-to-apply"target="_blank">Apply</a></div>
+            <div class="resource"><a href="https://www.psu.edu/admission/undergraduate/explore/visit-penn-state"target="_blank">Visit</a></div>
+            <div class="resource"><a href="https://beaver.psu.edu/penn-state"target="_blank">About</a></div>
+            <div class="resource"><a href="https://beaver.psu.edu/tuition-financial-aid"target="_blank">Financial Aid</a></div>
+            <div class="resource"><a href="https://beaver.psu.edu/admissions/dual-enrollment">High School Dual Enrollment</a></div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

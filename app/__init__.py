@@ -12,7 +12,6 @@ be coordinated with the team to ensure that the change is necessary
 prior to pushing the new code to GitHub.
 '''
 from flask import Flask
-# from flask_mysql_connector import MySQL
 from config import config
 
 # Create Flask extensions
@@ -21,14 +20,21 @@ from config import config
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+
     config[config_name].init_app(app)
 
-    # Initialize extensions
-    # mysql.init_app(app)
-
-    # Load the demo section
+    # Load the home page section
     from .home import home as home_blueprint
     app.register_blueprint(home_blueprint)
 
+    # Load the events page section
+    from .events import events as events_blueprint
+    app.register_blueprint(events_blueprint)
+
+    # Load the resources page section
+    from .resources import resources as resources_blueprint
+    app.register_blueprint(resources_blueprint)
+
     
     return app
+
