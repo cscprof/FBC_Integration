@@ -1,0 +1,22 @@
+[DEFAULT]
+SECRET_KEY = supersecretkey
+
+
+[SESSION]
+
+SESSION_PERMANENT = False
+SESSION_TYPE = filesystem
+
+
+[MYSQL_LOCAL]
+USERNAME = flaskuser
+PASSWORD = flaskpassword
+HOSTNAME = localhost
+DATABASE = flourish_bc
+
+
+[MYSQL_PROD]
+USERNAME = produser
+PASSWORD = prodpassword
+HOSTNAME = prod-db.example.com
+DATABASE = flourish_bc_prod
