@@ -36,6 +36,7 @@ class BaseConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_LOCAL"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
+    SQLALCHEMY_DATABASE_URI = config["MYSQL_LOCAL"]["DATABASE_URI"]
 
 class ProductionConfig(Config):
     DEBUG=False
@@ -43,6 +44,7 @@ class ProductionConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_PROD"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_PROD"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_PROD"]["DATABASE"]
+    SQLALCHEMY_DATABASE_URI = config["MYSQL_PROD"]["DATABASE_URI"]
 
 class GenevaConfig(Config):
     DEBUG=True
@@ -50,6 +52,7 @@ class GenevaConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_LOCAL"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
+    SQLALCHEMY_DATABASE_URI = config["MYSQL_LOCAL"]["DATABASE_URI"] #Resource team database connection
 
 config = {
     'base': BaseConfig,

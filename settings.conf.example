@@ -13,10 +13,11 @@ USERNAME = flaskuser
 PASSWORD = flaskpassword
 HOSTNAME = localhost
 DATABASE = flourish_bc
-
+DATABASE_URI = mysql+pymysql://user:password@localhost:3306/flourish_bc
 
 [MYSQL_PROD]
 USERNAME = produser
 PASSWORD = prodpassword
 HOSTNAME = prod-db.example.com
 DATABASE = flourish_bc_prod
+DATABASE_URI = mysql+pymysql://user:password@localhost:3306/flourish_bc
