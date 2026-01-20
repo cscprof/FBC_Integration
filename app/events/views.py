@@ -15,7 +15,7 @@ def fetch_approved_events():
     conn = get_db_connection()
     with conn.cursor() as cursor:
         cursor.execute("""
-            SELECT name, start_date, end_date, url, description, content_type
+            SELECT name, start_date, end_date, url, description, content_type, registration_deadline
             FROM events 
             WHERE status='approved'
         """)
@@ -30,10 +30,11 @@ def fetch_approved_events():
             "end": row['end_date'].isoformat(),
             "url": row.get('url'),
             "description": row.get('description'),
-            "content_type": row['content_type']
+            "content_type": row['content_type'],
+            "registration_deadline": row['registration_deadline'].isoformat() if row['registration_deadline'] else None
         })
 
-    return rows
+    return events
 
 
 # ---------------------------------------------------------
@@ -119,17 +120,28 @@ def update_event(event_id, action):
         conn.commit()
     conn.close()
 
-    return redirect(url_for('calendar.adminView'))
+    return redirect(url_for('events.adminView'))
 
 @events.route('/admin')
 def adminView():
     conn = get_db_connection()
     with conn.cursor() as cursor:
-        cursor.execute("SELECT event_id, name, status, description FROM events")
-        events = cursor.fetchall()
+        cursor.execute("""SELECT event_id, name, status, description, start_date, end_date FROM events ORDER BY start_date DESC""")
+        rows = cursor.fetchall()
     conn.close()
 
-    return render_template('events/adminView.html', events=events)
+    events = []
+    for row in rows:
+        events.append({
+            "event_id": row["event_id"],
+            "name": row["name"],
+            "description": row["description"],
+            "status": row["status"],
+            "start": row["start_date"].isoformat(),
+            "end": row["end_date"].isoformat()
+        })
+
+    return render_template('events/eventAdmin.html', events=events)
 
 
 # ---------------------------------------------------------

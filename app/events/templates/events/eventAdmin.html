@@ -18,17 +18,17 @@
                               data-description="{{ event['description'] }}">
                             {{ event['name'] }}
                         </span><br>
-                        <small>{{ event['start_date'] }} – {{ event['end_date'] }}</small><br>
+                        <small>{{ event['start'] }} – {{ event['end'] }}</small><br>
                         <p>{{ event['description'] }}</p>
                         <div class="status">
                             Status: {{ event['status'] if event['status'] else 'pending' }}
                         </div>
                     </div>
                     <div class="actions">
-                        <a href="{{ url_for('update_event', id=event['id'], action='approved') }}">
+                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
                             <button class="btn btn-approve">Approve</button>
                         </a>
-                        <a href="{{ url_for('update_event', id=event['id'], action='rejected') }}">
+                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='rejected') }}">
                             <button class="btn btn-reject">Reject</button>
                         </a>
                     </div>

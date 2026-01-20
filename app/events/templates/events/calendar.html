@@ -120,11 +120,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <h3>${info.event.title}</h3>
         <p><strong>Start:</strong> ${info.event.start.toLocaleString()}</p>
         <p><strong>End:</strong> ${info.event.end.toLocaleString()}</p>
+        <p><strong>Registration Deadline:</strong> ${info.event.extendedProps.registration_deadline 
+        ? new Date(info.event.extendedProps.registration_deadline).toLocaleString() 
+        : 'N/A'}</p>
         <p><strong>Description:</strong> ${info.event.extendedProps.description || "N/A"}</p>
         <p><strong>URL:</strong> <a href="${info.event.url}" classname="link" target="_blank">${info.event.url || "N/A"}</a></p>
       `;
       popup.style.display = 'block';
-      overlay.style.display = 'block';
+      overlay.style.display = 'block'; 
       info.jsEvent.preventDefault();
 
       document.getElementById('eventPopupClose').onclick = function() {

@@ -14,8 +14,8 @@
                 {% for event in events %}
                 <div class="resource">
                     <div>
-                        <span>{{ event.name }}</span><br>
-                        <small>{{ event.start_date }} – {{ event.end_date }}</small><br>
+                        <span>{{ event.title }}</span><br>
+                        <small>{{ event.start }} – {{ event.end }}</small><br>
                         <p>{{ event.description }}</p>
                     </div>
                     <a href="{{ event.url or '#' }}" target="_blank" class="arrow">➜</a>
