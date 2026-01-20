@@ -2,14 +2,15 @@ from flask import render_template
 from sqlalchemy import select
 from . import db
 from .models import resources, resource_category
-from . import resources
+from . import resources as resources_blueprint
 
 # Use the route() decorator to tell Flask what URL should trigger the function
-@resources.route("/resource-directory")
-def home_page():
+@resources_blueprint.route("/resources")
+@resources_blueprint.route("/resource-directory")
+def resource_directory():
     return render_template("resources/resourceDirectory.html")
 
-@resources.route("/resourcesearch.html")
+@resources_blueprint.route("/resourcesearch.html")
 def resourcesearch():
     try:
         dbselect = (
@@ -25,7 +26,7 @@ def resourcesearch():
             resources.resource_category_id == resource_category.resource_category_id ))
 
         dblist = db.session.execute(dbselect).mappings().all()
-        return render_template('resourcesearch.html', resources=dblist)
+        return render_template('resources/resourcesearch.html', resources=dblist)
     except:
         #Exception creates example db entries so that those without the database can still design the webpage
        dblist = [
@@ -40,4 +41,4 @@ def resourcesearch():
             'resource_category_name': 'college'
         }
        ]
-    return render_template('resourcesearch.html', resources=dblist)
+    return render_template('resources/resourcesearch.html', resources=dblist)
