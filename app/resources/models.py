@@ -1,7 +1,7 @@
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from . import db
+#from . import db
 from datetime import datetime, timezone
 
 #These tables may be replaced by other groups that specialize in these tables, they are just here for FK identification

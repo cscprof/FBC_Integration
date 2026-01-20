@@ -1,7 +1,7 @@
 from flask import render_template
 from sqlalchemy import select
-from . import db
-from .models import resources, resource_category
+#from . import db
+#from .models import resources, resource_category
 from . import resources as resources_blueprint
 
 # Use the route() decorator to tell Flask what URL should trigger the function
