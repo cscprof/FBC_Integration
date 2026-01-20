@@ -2,15 +2,15 @@ from flask import render_template
 from sqlalchemy import select
 from . import db
 from .models import resources, resource_category
-from . import resources
+from . import resources as resources_blueprint
 
 # Use the route() decorator to tell Flask what URL should trigger the function
-@resources.route("/resources")
-@resources.route("/resource-directory")
+@resources_blueprint.route("/resources")
+@resources_blueprint.route("/resource-directory")
 def resource_directory():
     return render_template("resources/resourceDirectory.html")
 
-@resources.route("/resourcesearch.html")
+@resources_blueprint.route("/resourcesearch.html")
 def resourcesearch():
     try:
         dbselect = (
