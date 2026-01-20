@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Flourish Beaver County - Calendar{% endblock %}
+
+{% block content %}
+  <h1 class="title has-text-centered">Calendar</h1>
+
+  <div class="calender-and-events-container">
+    <!-- Event info -->
+  <div class ="info-container">
+    <h2 class="title">Event Information</h2>
+    <div id="info-description">Select a date to see event details.</div>
+    <div id="event-details"></div>
+    <h3 class="subtitle-has-text-centered">Note: Events are subject to change. Please check back regularly for updates.</h3>
+  </div>
+
+    <!-- Calendar -->
+  <div class="calendar-container">
+    <div class="calendar-blob">
+      <h1 class="title-inside-calendar">Event Calendar</h1>
+      <div class="underline-calendar"></div>
+
+      <div class="calendar">
+        <div class="calendar-header">
+          <button id="prev" class="nav-btn">&lt;</button>
+          <div id="monthYear"></div>
+          <button id="next" class="nav-btn">&gt;</button>
+        </div>
+
+        <div class="weekdays">
+          <div>Sun</div>
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
+        </div>
+
+        <div class="days" id="days"></div>
+      </div>
+    </div>
+  
+  </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+  <!--need a script to load events from a data source-->
+{% endblock %}
