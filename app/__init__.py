@@ -13,6 +13,7 @@ prior to pushing the new code to GitHub.
 '''
 from flask import Flask
 from config import config
+from db import db #Added by resource team for SQLAlchemy integration
 
 # Create Flask extensions
 # mysql = MySQL()
@@ -32,6 +33,7 @@ def create_app(config_name):
     app.register_blueprint(events_blueprint)
 
     # Load the resources page section
+    db.init_app(app) #Added for SQLAlchemy integration
     from .resources import resources as resources_blueprint
     app.register_blueprint(resources_blueprint)
 

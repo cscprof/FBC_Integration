@@ -4,9 +4,9 @@ in the application. It will also allow us to select from multiple
 configurations if we ever have a need to do so.
 
 The config class will read the configuration values from the
-settings.conf file.
+settings.conf.example file.
 
-Unless we add additional config parameters to settings.conf, there
+Unless we add additional config parameters to settings.conf.example, there
 should be no need to modify this file.
 '''
 
@@ -17,7 +17,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Read the application configuration file
 config = configparser.ConfigParser()
-config.read(os.path.join(basedir,'settings.conf'))
+config.read(os.path.join(basedir, 'settings.conf'))
 
 
 class Config:
