@@ -108,8 +108,8 @@ def calendar():
 # ---------------------------------------------------------
 @events.route('/update_event/<int:event_id>/<string:action>')
 def update_event(event_id, action):
-    if action not in ["approved", "rejected"]:
-        return redirect(url_for('adminView'))
+    if action not in ["approved", "cancelled"]:
+        return redirect(url_for('events.adminView'))
 
     conn = get_db_connection()
     with conn.cursor() as cursor:

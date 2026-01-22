@@ -28,8 +28,8 @@
                         <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
                             <button class="btn btn-approve">Approve</button>
                         </a>
-                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='rejected') }}">
-                            <button class="btn btn-reject">Reject</button>
+                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
+                            <button class="btn btn-reject">Reject/Cancel</button>
                         </a>
                     </div>
                 </div>
