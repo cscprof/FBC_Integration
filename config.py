@@ -36,7 +36,7 @@ class BaseConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_LOCAL"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
-    SQLALCHEMY_DATABASE_URI = config.get("MYSQL_LOCAL", "DATABASE_URI", fallback=None)
+    SQLALCHEMY_DATABASE_URI = config.get("MYSQL_LOCAL", "DATABASE_URI", fallback=None) #Added by resource team for database connection
 
 class ProductionConfig(Config):
     DEBUG=False
@@ -44,7 +44,7 @@ class ProductionConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_PROD"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_PROD"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_PROD"]["DATABASE"]
-    SQLALCHEMY_DATABASE_URI = config.get("MYSQL_PROD", "DATABASE_URI", fallback=None)
+    SQLALCHEMY_DATABASE_URI = config.get("MYSQL_PROD", "DATABASE_URI", fallback=None) #Resource team database connection
 
 class GenevaConfig(Config):
     DEBUG=True
