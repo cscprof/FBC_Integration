@@ -10,7 +10,7 @@ from . import events
 # ---------------------------------------------------------
 #  PURE PYTHON HELPER FUNCTION — returns a list of events
 # ---------------------------------------------------------
-def fetch_approved_events():
+def fetch_approved_events_json():
     """Returns approved events as a list of dicts (NOT a Flask response)."""
     conn = get_db_connection()
     with conn.cursor() as cursor:
@@ -35,6 +35,31 @@ def fetch_approved_events():
         })
 
     return events
+
+def fetch_approved_events_python():
+    """Returns approved events with real datetime objects (for Jinja templates)."""
+    conn = get_db_connection()
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT name, start_date, end_date, url, description
+            FROM events 
+            WHERE status='approved'
+        """)
+        rows = cursor.fetchall()
+    conn.close()
+
+    events = []
+    for row in rows:
+        events.append({
+            "title": row['name'],
+            "start": row['start_date'],
+            "end": row['end_date'],
+            "description": row.get('description'),
+            "url": row.get('url'),
+        })
+
+    return events
+
 
 
 # ---------------------------------------------------------
@@ -137,8 +162,8 @@ def adminView():
             "name": row["name"],
             "description": row["description"],
             "status": row["status"],
-            "start": row["start_date"].isoformat(),
-            "end": row["end_date"].isoformat()
+            "start": row["start_date"],
+            "end": row["end_date"]
         })
 
     return render_template('events/eventAdmin.html', events=events)
@@ -150,7 +175,7 @@ def adminView():
 @events.route('/approved-events', methods=["GET"])
 def get_approved_events():
     try:
-        events = fetch_approved_events()
+        events = fetch_approved_events_json()
         return jsonify(events)
 
     except Exception as e:
@@ -164,7 +189,7 @@ def get_approved_events():
 @events.route('/events')
 def events():
     try:
-        events = fetch_approved_events()
+        events = fetch_approved_events_python()
         return render_template('events/events.html', events=events)
 
     except Exception as err:

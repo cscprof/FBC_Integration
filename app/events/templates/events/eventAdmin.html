@@ -18,7 +18,7 @@
                               data-description="{{ event['description'] }}">
                             {{ event['name'] }}
                         </span><br>
-                        <small>{{ event['start'] }} – {{ event['end'] }}</small><br>
+                        <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
                         <p>{{ event['description'] }}</p>
                         <div class="status">
                             Status: {{ event['status'] if event['status'] else 'pending' }}

@@ -15,7 +15,7 @@
                 <div class="resource">
                     <div>
                         <span>{{ event.title }}</span><br>
-                        <small>{{ event.start }} – {{ event.end }}</small><br>
+                        <small>{{ event.start.strftime('%b %d, %Y %I:%M %p') }} – {{ event.end.strftime('%b %d, %Y %I:%M %p') }}</small><br>
                         <p>{{ event.description }}</p>
                     </div>
                     <a href="{{ event.url or '#' }}" target="_blank" class="arrow">➜</a>
