@@ -3,20 +3,19 @@
 {% block title %}Flourish Beaver County - Resource Directory{% endblock %}
 
 {% block content %}
-<body>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <main>
-        <div class="hero">
-            <h2>Resources</h2>
-            <p>Everything you need to succeed - from college prep to mental health support</p>
-        </div>
+
+<section class="section">
+    <div class="container">
+        <h1 class="title has-text-centered">Resource Directory</h1>
+        <p class="has-text-centered is-size-5 mb-5" style="color: #666; margin-top: 10px;">
+            Everything you need to succeed - from college prep to mental health support
+        </p>
 
         <div class="resources">
             <div class="searchfilter">
                 <div class="searchcontainer">
                     <form class="searchform">
                         <input type="text" placeholder="Search resources..." class="searchinput" name="search">
-                        <button type="submit" class="searchbutton">Search</button>
                     </form>
                 </div>
 
@@ -33,17 +32,17 @@
                 </div>
             </div>
 
-                <div class="examplegrid" id="resourcesgrid">
+            <div class="examplegrid" id="resourcesgrid">
                 <div class="exampleboxes" data-category="college">
                     <h3>College and Scholarships</h3>
                     <p>Find all kinds of scholarships here! We can help find the best fit for you.</p>
                     <ul>
-			<li>Geneva College</li>
+                        <li>Geneva College</li>
                         <li>SMART Scholarship</li>
                         <li>Pitt Beaver</li>
                         <li>STEM Scholarships</li>
                     </ul>
-                    <a href="resourcesearch.html?category=college" class="resourcelink">Learn More</a>
+                    <a href="{{ url_for('resources.resourcesearch') }}?category=college" class="resourcelink">Learn More</a>
                 </div>
 
                 <div class="exampleboxes" data-category="mental">
@@ -55,7 +54,7 @@
                         <li>Crisis Hotlines</li>
                         <li>Wellness Resources</li>
                     </ul>
-                    <a href="resourcesearch.html?category=mental" class="resourcelink">Learn More</a>
+                    <a href="{{ url_for('resources.resourcesearch') }}?category=mental" class="resourcelink">Learn More</a>
                 </div>
 
                 <div class="exampleboxes" data-category="jobs">
@@ -67,7 +66,7 @@
                         <li>Internship Opportunities</li>
                         <li>Resume & Interview Help</li>
                     </ul>
-                    <a href="resourcesearch.html?category=jobs" class="resourcelink">Learn More</a>
+                    <a href="{{ url_for('resources.resourcesearch') }}?category=jobs" class="resourcelink">Learn More</a>
                 </div>
 
                 <div class="exampleboxes" data-category="tutoring">
@@ -79,7 +78,7 @@
                         <li>Study Groups</li>
                         <li>Online Learning Resources</li>
                     </ul>
-                    <a href="resourcesearch.html?category=tutoring" class="resourcelink">Learn More</a>
+                    <a href="{{ url_for('resources.resourcesearch') }}?category=tutoring" class="resourcelink">Learn More</a>
                 </div>
 
                 <div class="exampleboxes" data-category="activities">
@@ -91,7 +90,7 @@
                         <li>Volunteer Opportunities</li>
                         <li>Youth Groups</li>
                     </ul>
-                    <a href="resourcesearch.html?category=activities" class="resourcelink">Learn More</a>
+                    <a href="{{ url_for('resources.resourcesearch') }}?category=activities" class="resourcelink">Learn More</a>
                 </div>
 
                 <div class="exampleboxes" data-category="career">
@@ -103,22 +102,14 @@
                         <li>Career Fairs</li>
                         <li>Mentorship Programs</li>
                     </ul>
-                    <a href="resourcesearch.html?category=career" class="resourcelink">Learn More</a>
+                    <a href="{{ url_for('resources.resourcesearch') }}?category=career" class="resourcelink">Learn More</a>
                 </div>
             </div>
         </div>
+    </div>
+</section>
 
-        <div class="contact">
-            <h2>Have Questions?</h2>
-            <strong><a href="contact.html">Contact us</a></strong>
-        </div>
-
-    </main>
-
-    <footer>
-        <p> 2025 Flourish Beaver County </p>
-    </footer>
-    <script>
+<script>
     document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector(".searchinput");
     const categorySelect = document.querySelector(".categoryselect");
@@ -144,15 +135,9 @@
         });
     }
 
-    // Auto update on typing
     searchInput.addEventListener("keyup", filterResources);
-
-    // Auto update on dropdown change
     categorySelect.addEventListener("change", filterResources);
 });
 </script>
-
-</body>
-</html>
 
 {% endblock %}
