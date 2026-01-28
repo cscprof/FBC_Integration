@@ -1,0 +1,202 @@
+/* Fonts & Resets */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #f4f7fa;
+  font-family: "Open Sans", sans-serif;
+}
+
+.calender-and-events-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 60px; 
+  padding: 60px 100px;
+  flex-wrap: wrap; 
+}
+
+.calendar-container {
+  display: flex;
+  align-items: right;
+  justify-content: right;
+  padding: 60px;
+  padding-left: 100px;
+  padding-right: 160px;
+  min-height: 80vh;
+}
+
+.calendar-blob {
+  background: #8ac926;
+  color: white;
+  padding: 45px;
+  width: 500px;
+  border-radius: 40% 70% 50% 60% / 50% 45% 55% 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.info-container {
+  background: #ffffff;
+  color: #333;
+  padding: 30px;
+  width: 500px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.info-blob {
+    background: #2e44cc;
+    color: white;
+    padding: 25px;
+    width: 1800px;
+    border-radius: 40% 70% 50% 60% / 50% 45% 55% 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem;
+  padding-top: 60px;
+}
+
+.title-inside-calendar {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  color: white;
+  font-size: 1.8rem;
+  padding-top: 20px;
+}
+
+.underline-calendar {
+  width: 150px;
+  height: 5px;
+  background: #2e44cc;
+  margin: 10px 0 25px;
+  border-radius: 3px;
+}
+
+.calendar {
+  background: white;
+  color: #333;
+  border-radius: 15px;
+  width: 100%;
+  padding: 1rem;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  color: #2e44cc;
+}
+
+#monthYear {
+  font-size: 1.2rem;
+}
+
+.nav-btn {
+  background: none;
+  border: 2px solid #2e44cc;
+  color: #2e44cc;
+  font-size: 1rem;
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-btn:hover {
+  background: #aaeb54;
+  border-color: #aaeb54;
+  color: #2e44cc;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 600;
+  color: #2e44cc;
+  margin-bottom: 0.5rem;
+}
+
+/* Days grid */
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 6px;
+}
+
+.days div {
+  padding: 10px 0;
+  border-radius: 10px;
+  transition: background 0.3s, color 0.3s;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.days div:hover {
+  background: #aaeb54;
+  color: #2e44cc;
+}
+
+.days .today {
+  background: #2e44cc;
+  color: white;
+  font-weight: 700;
+}
+
+.info-container {
+  background: #ffffff;
+  color: #333;
+  padding: 30px;
+  width: 500px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.info-container h2 {
+  color: #2e44cc;
+  margin-bottom: 15px;
+}
+
+.info-container h3 {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.subtitle-has-text-centered {
+  font-family: "Open Sans", sans-serif;
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  text-align: center;
+}

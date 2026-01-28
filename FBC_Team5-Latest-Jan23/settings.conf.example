@@ -1,0 +1,18 @@
+[DEFAULT]
+SECRET_KEY = a223oijhc209ufji7cok2309uff
+
+[SESSION]
+SESSION_PERMANENT = False
+SESSION_TYPE = filesystem
+
+[MYSQL_PROD]
+USERNAME = cs1234user
+PASSWORD = password1
+HOSTNAME = localhost
+DATABASE = cs6400
+
+[MYSQL_LOCAL]
+USERNAME = geneva
+PASSWORD = password
+HOSTNAME = localhost
+DATABASE = flourish_bc
