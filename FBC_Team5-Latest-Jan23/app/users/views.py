@@ -5,11 +5,11 @@ from pymysql.cursors import DictCursor
 
 # Hashing (create app/users/Hashing.py if missing)
 from .Hashing import hash_plaintext, hash_check_matches
-
-from . import signup, login, adminpanel
+from . import users
+# from . import signup, login, adminpanel
 
 # Sign Up
-@signup.route("/add_user", methods=["GET", "POST"])
+@users.route("/add_user", methods=["GET", "POST"])
 def add_user():
     if request.method == "POST":
         role_id = request.form.get('userRole', '').strip()
@@ -47,16 +47,16 @@ def add_user():
                 conn.close()
         return redirect(url_for('login.home_page'))
 
-@signup.route('/signup')
+@users.route('/signup')
 def signup_page():
-    return render_template("signup/signup.html")
+    return render_template("/signup/signup.html")
 
 # Login
-@login.route("/login")
+@users.route("/login")
 def home_page():
     return render_template("login/login.html")
 
-@login.route("/auth_login", methods=["GET", "POST"])
+@users.route("/auth_login", methods=["GET", "POST"])
 def auth_login():
     if request.method == "POST":
         username = request.form.get('username', '').strip()
@@ -82,7 +82,7 @@ def auth_login():
         return redirect(url_for('login.home_page'))
 
 # Admin
-@adminpanel.route("/admin")
+@users.route("/admin")
 def admin_panel():
     conn = get_db_connection()
     try:
@@ -94,7 +94,7 @@ def admin_panel():
     finally:
         conn.close()
 
-@adminpanel.route("/admin/user/<int:user_id>/edit", methods=["GET", "POST"])  # FIXED route
+@users.route("/admin/user/<int:user_id>/edit", methods=["GET", "POST"])  # FIXED route
 def edit_user(user_id):
     conn = get_db_connection()
     try:

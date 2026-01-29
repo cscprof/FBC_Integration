@@ -39,6 +39,12 @@ def create_app(config_name):
     from .users import users as users_blueprint
     app.register_blueprint(users_blueprint)
 
+    # from .signup import signup as signup_blueprint
+    # app,register_blueprint(users_blueprint)
+
+    # from .admin_panel import admin_panel as admin_panel_blueprint
+    # app.register_blueprint(admin_panel_blueprint)
+
     # Load the profile page section
     from .profile import profile as profile_blueprint
     app.register_blueprint(profile_blueprint)
