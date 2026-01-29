@@ -90,12 +90,16 @@ main {
 }
 
 .exampleboxes {
-    background-color: #e5e5e5;
+    background-color: #e1e4e8;
     padding: 30px;
-    border-radius: 10px;
+    border-radius: 15px;
     text-align: center;
-    box-shadow: 0 6px 18px rgba(170, 235, 84, 0.25);
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.1),
+        0 6px 18px rgba(138, 201, 38, 0.25);
 }
+
 
 .exampleboxes h3 {
     color: #2e44cc;
