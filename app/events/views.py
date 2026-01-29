@@ -151,7 +151,7 @@ def update_event(event_id, action):
 def adminView():
     conn = get_db_connection()
     with conn.cursor() as cursor:
-        cursor.execute("""SELECT event_id, name, status, description, start_date, end_date FROM events ORDER BY start_date DESC""")
+        cursor.execute("""SELECT event_id, name, status, description, start_date, end_date, url FROM events ORDER BY CASE WHEN status = 'pending' THEN 0 ELSE 1 END, start_date ASC""")
         rows = cursor.fetchall()
     conn.close()
 
@@ -163,7 +163,8 @@ def adminView():
             "description": row["description"],
             "status": row["status"],
             "start": row["start_date"],
-            "end": row["end_date"]
+            "end": row["end_date"],
+            "url": row["url"]
         })
 
     return render_template('events/eventAdmin.html', events=events)
