@@ -15,7 +15,11 @@
                     <div>
                         <span class="event-link" 
                               data-name="{{ event['name'] }}" 
-                              data-description="{{ event['description'] }}">
+                              data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') }}"
+                              data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') }}"
+                              data-description="{{ event['description'] }}"
+                              data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
+                              data-status="{{ event['status'] if event['status'] else 'pending' }}">
                             {{ event['name'] }}
                         </span><br>
                         <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
@@ -46,7 +50,11 @@
 <div id="eventPopup">
     <span id="eventPopupClose">X</span>
     <h3 id="popupEventName"></h3>
+    <p><strong>Start:</strong> <span id="popupEventStart"></span></p>
+    <p><strong>End:</strong> <span id="popupEventEnd"></span></p>
+    <p><strong>Registration Deadline:</strong> <span id="popupEventDeadline"></span></p>
     <p id="popupEventDescription"></p>
+    <p><strong>Status:</strong> <span id="popupEventStatus"></span></p>
 </div>
 
 <script>
@@ -55,12 +63,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const overlay = document.getElementById('overlay');
     const popupClose = document.getElementById('eventPopupClose');
     const popupName = document.getElementById('popupEventName');
+    const popupStart = document.getElementById('popupEventStart');
+    const popupEnd = document.getElementById('popupEventEnd');
+    const popupDeadline = document.getElementById('popupEventDeadline');
     const popupDescription = document.getElementById('popupEventDescription');
+    const popupStatus = document.getElementById('popupEventStatus');
 
     document.querySelectorAll('.event-link').forEach(link => {
         link.addEventListener('click', function() {
             const name = this.getAttribute('data-name');
             const description = this.getAttribute('data-description') || "No description available.";
+            popupStart.textContent = this.dataset.start;
+            popupEnd.textContent = this.dataset.end;
+            popupDeadline.textContent = this.dataset.deadline;
+            popupStatus.textContent = this.dataset.status;
             popupName.textContent = name;
             popupDescription.textContent = description;
             popup.style.display = 'block';
