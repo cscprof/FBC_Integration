@@ -16,44 +16,7 @@ main {
     gap: 40px;
 }
 
-/* Hero section removed - using standard title pattern instead */
 
-
-.contact {
-    background-color: #2e44cc;
-    color: #ffffff;
-    padding: 40px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.contact h2 {
-    font-size: 2em;
-}
-
-.contact p {
-    font-size: 1.1em;
-}
-
-.contact a {
-    color: #aaeb54;
-    font-size: 1.3em;
-    text-decoration: none;
-}
-
-.contact a:hover {
-    text-decoration: underline;
-    color: #8ac926;
-}
-
-footer {
-    background-color: #2e44cc;
-    color: #ffffff;
-    text-align: center;
-    padding: 20px;
-}
-
-/* Resources Page */
 
 .resources {
     background-color: #ffffff;
@@ -94,21 +57,6 @@ footer {
     border-color: #2e44cc;
 }
 
-.searchbutton {
-    padding: 12px 20px;
-    background-color: #8ac926;
-    color: #2e44cc;
-    border: none;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.searchbutton:hover {
-    background-color: #aaeb54;
-}
-
 .categorydropdown {
     flex: 0 0 200px;
 }
@@ -129,17 +77,15 @@ footer {
     border-color: #2e44cc;
 }
 
-/* Resource cards grid layout */
 .examplegrid {
     display: grid;
-    grid-template-columns: 1fr; /* 1 column by default (mobile-friendly) */
+    grid-template-columns: 1fr; 
     gap: 30px;
 }
 
-/* On medium+ screens, show a fixed 2x2-style layout */
 @media (min-width: 768px) {
     .examplegrid {
-        grid-template-columns: repeat(2, 1fr); /* always 2 columns */
+        grid-template-columns: repeat(2, 1fr); 
     }
 }
 
