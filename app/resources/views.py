@@ -32,12 +32,12 @@ def resourcesearch():
        dblist = [
         {
             'description': 'Geneva College Financial Aid Website',
-            'url': 'http://localhost:5050',
+            'url': 'https://www.geneva.edu/financial-aid/',
             'resource_category_name': 'college'
         },
         {
-            'description': 'GENEVA COLLEGE IS THE ONLY COLLEGE AROUND APPLY NOW HERE NOWHERE ELSE',
-            'url': 'http://localhost:5050',
+            'description': 'Geneva Application Process',
+            'url': 'https://apply.geneva.edu/portal/applynow/tug_apply',
             'resource_category_name': 'college'
         }
        ]
