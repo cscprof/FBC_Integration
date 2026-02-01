@@ -1,64 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add a New User</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
-        form {
-            max-width: 400px;
-        }
-        label {
-            display: inline-block;
-            width: 120px;
-        }
-        input, button {
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
 
+{% block title %}Add a New User{% endblock %}
+
+
+{% block content %}
+<div class="signup-container">
     <h1>Add a New User</h1>
-
     <form action="/add_user" method="POST">
 
+        <div>
         <input type="radio" id="student" name="userRole" value="1" checked>
-        <label for="student">Student</label><br>
+        <label class="signup-label" for="student">Student</label><br>
+        </div>
 
+        <div>
         <input type="radio" id="admin" name="userRole" value="2">
-        <label for="admin">Admin</label><br>
+        <label class="signup-label" for="admin">Admin</label><br>
+        </div>
 
+        <div>
         <input type="radio" id="parent" name="userRole" value="3">
-        <label for="parent">Parent</label><br>
+        <label class="signup-label" for="parent">Parent</label><br>
+        </div>
 
+        <div>
         <input type="radio" id="partner" name="userRole" value="4">
-        <label for="partner">Partner</label><br><br>
+        <label class="signup-label" for="partner">Partner</label><br><br>
+        </div>
 
-        <label>First Name:</label>
-        <input type="text" name="first_name" required><br>
+        <label class="signup-label">First Name:</label>
+        <input class="entry-box" type="text" name="first_name" required><br>
 
-        <label>Middle Name:</label>
-        <input type="text" name="middle_name"><br>
+        <label class="signup-label">Middle Name:</label>
+        <input class="entry-box" type="text" name="middle_name"><br>
 
-        <label>Last Name:</label>
-        <input type="text" name="last_name" required><br>
+        <label class="signup-label">Last Name:</label>
+        <input class="entry-box" type="text" name="last_name" required><br>
 
-        <label>Password:</label>
-        <input type="text" name="password" required><br>
+        <label class="signup-label">Password:</label>
+        <input class="entry-box" type="text" name="password" required><br>
 
-        <label>Email:</label>
-        <input type="email" name="email" required><br>
+        <label class="signup-label">Email:</label>
+        <input class="entry-box" type="email" name="email" required><br>
 
-        <label>Graduation Year:</label>
-        <input type="text" name="graduation_year"><br>
+        <label class="signup-label">Graduation Year:</label>
+        <input class="entry-box" type="text" name="graduation_year"><br>
 
-        <button type="submit">Submit</button>
+        <button class="button-submit" type="submit">Submit</button>
     </form>
-
-</body>
-</html>
+</div>
+{% endblock %}

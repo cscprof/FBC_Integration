@@ -1,18 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="signup-container">
     <h1>Login</h1>
     <form action="/auth_login" method="POST">
-        <label>Username:</label>
-        <input type="text" name="username" required><br>
+        <label class="signup-label">Username:</label>
+        <input class="entry-box" type="text" name="username" required><br>
 
-        <label>Password:</label>
-        <input type="text" name="password"><br>
+        <label class="signup-label">Password:</label>
+        <input class="entry-box" type="text" name="password"><br>
 
-        <button type="submit">Submit</button>
+        <button class="button-submit" type="submit">Submit</button>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}
