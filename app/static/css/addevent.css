@@ -20,6 +20,10 @@
     100% { opacity: 0; visibility: hidden; }
 }
 
+h1 {
+  font-family: "Playwrite NZ Basic", cursive;
+  font-optical-sizing: auto;
+}
 .add-event-container {
     display: flex;
     align-items: center;
@@ -34,7 +38,7 @@
     color: white;
     padding: 45px;
     width: 750px;
-    border-radius: 45% 80% 52% 55% / 40% 55% 45% 50%;
+    border-radius: 30% 35% 10% 10% / 30% 30% 10% 10%;
     display: flex;
     flex-direction: column;
     align-items: center;
