@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Flourish Beaver County - Resource Directory{% endblock %}
+
+{% block content %}
+
+<section class="section">
+    <div class="container">
+        <h1 class="title has-text-centered">Resource Directory</h1>
+        <p class="has-text-centered is-size-5 mb-5" style="color: #666; margin-top: 10px;">
+            Everything you need to succeed - from college prep to mental health support
+        </p>
+
+        <div class="resources">
+            <div class="searchfilter">
+                <div class="searchcontainer">
+                    <form class="searchform">
+                        <input type="text" placeholder="Search resources..." class="searchinput" name="search">
+                        
+                    </form>
+                </div>
+
+                <div class="categorydropdown">
+                    <select class="categoryselect">
+                        <option value="all">All Categories</option>
+                        <option value="college">College</option>
+                        <option value="mental">Mental Health</option>
+                        <option value="jobs">Jobs</option>
+                        <option value="tutoring">Tutoring</option>
+                        <option value="activities">Activities</option>
+                        <option value="career">Career</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="examplegrid" id="resourcesgrid">
+                {% for resource in resources %}
+                <div class="exampleboxes" data-category="{{ resource.resource_category_name }}">
+                    <h3>{{ resource.description }}</h3>
+                    <a href="{{ resource.url }}" class="resourcelink">{{ resource.url }}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.querySelector(".searchinput");
+    const categorySelect = document.querySelector(".categoryselect");
+    const resourceBoxes = document.querySelectorAll(".exampleboxes");
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+    if (categoryParam) {
+        categorySelect.value = categoryParam;
+    }
+
+    function filterResources() {
+        const searchValue = searchInput.value.toLowerCase();
+        const selectedCategory = categorySelect.value;
+
+        resourceBoxes.forEach(box => {
+            const boxCategory = box.getAttribute("data-category");
+            const textContent = box.innerText.toLowerCase();
+
+            const matchesSearch = textContent.includes(searchValue);
+            const matchesCategory =
+                selectedCategory === "all" || boxCategory === selectedCategory;
+
+            if (matchesSearch && matchesCategory) {
+                box.style.display = "block";
+            } else {
+                box.style.display = "none";
+            }
+        });
+    }
+
+    searchInput.addEventListener("keyup", filterResources);
+    categorySelect.addEventListener("change", filterResources);
+
+    if (categoryParam) {
+        filterResources();
+    }
+});
+</script>
+
+{% endblock %}

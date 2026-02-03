@@ -1,0 +1,149 @@
+
+
+body {
+    font-family: "Open Sans", Arial, sans-serif;
+    color: #2e44cc;
+    background-color: #f5f5f5;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+
+
+.resources {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.searchfilter {
+    margin-bottom: 30px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.searchcontainer {
+    flex: 1;
+    min-width: 250px;
+}
+
+.searchform {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.searchinput {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid #d0d4ff;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.searchinput:focus {
+    outline: none;
+    border-color: #2e44cc;
+}
+
+.categorydropdown {
+    flex: 0 0 200px;
+}
+
+.categoryselect {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #d0d4ff;
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: white;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.categoryselect:focus {
+    outline: none;
+    border-color: #2e44cc;
+}
+
+.examplegrid {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 30px;
+}
+
+@media (min-width: 768px) {
+    .examplegrid {
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+.exampleboxes {
+    background-color: #e1e4e8;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.1),
+        0 6px 18px rgba(138, 201, 38, 0.25);
+}
+
+
+.exampleboxes h3 {
+    color: #2e44cc;
+    font-size: 1.5em;
+}
+
+.exampleboxes p {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.exampleboxes ul {
+    text-align: left;
+    margin-top: 15px;
+    padding-left: 20px;
+}
+
+.exampleboxes ul li {
+    margin: 8px 0;
+    color: #444;
+}
+
+.resourcelink {
+    color: #2e44cc;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1em;
+    
+}
+
+.resourcelink:hover {
+    color: #8ac926;
+    text-decoration: underline;
+}
+
+.about a {
+    color: #3786b8;
+    text-decoration: none;
+}
+
+.about a:hover {
+    text-decoration: underline;
+}
+
+
+
+
