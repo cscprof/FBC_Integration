@@ -45,7 +45,7 @@ def add_user():
         finally:
             if conn:
                 conn.close()
-        return redirect(url_for('login.home_page'))
+        return render_template('/login/login.html')
 
 @users.route('/signup')
 def signup_page():
