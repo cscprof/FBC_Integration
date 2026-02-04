@@ -21,7 +21,8 @@
 }
 
 h1 {
-  font-family: "Playwrite NZ Basic", cursive;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
   font-optical-sizing: auto;
 }
 .add-event-container {
