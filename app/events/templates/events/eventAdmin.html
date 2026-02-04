@@ -8,9 +8,11 @@
 
     <div class="section">
         <div class="header">Manage Events</div>
+        <div class="header-2">Pending Events</div>
         <div class="list">
             {% if events %}
                 {% for event in events %}
+                {% if event['status'] == 'pending' or not event['status'] %}
                 <div class="resource">
                     <div>
                         <span class="event-link" 
@@ -38,10 +40,90 @@
                         </a>
                     </div>
                 </div>
+                {% endif %}
                 {% endfor %}
             {% else %}
+
+            <div class="resource">No events found in the database.</div>
+        {% endif %}
+        <div class="header-2">Approved Events</div>
+        <div class="list">
+            {% if events %}
+                {% for event in events %}
+                {% if event['status'] == 'approved'%}
+                <div class="resource">
+                    <div>
+                        <span class="event-link" 
+                              data-name="{{ event['name'] }}" 
+                              data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') }}"
+                              data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') }}"
+                              data-description="{{ event['description'] }}"
+                              data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
+                              data-url="{{ event['url'] or '' }}"
+                              data-status="{{ event['status'] if event['status'] else 'pending' }}">
+                            {{ event['name'] }}
+                        </span><br>
+                        <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
+                        <p>{{ event['description'] }}</p>
+                        <div class="status">
+                            Status: {{ event['status'] if event['status'] else 'pending' }}
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
+                            <button class="btn btn-approve">Approve</button>
+                        </a>
+                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
+                            <button class="btn btn-reject">Reject/Cancel</button>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            {% else %}
+
                 <div class="resource">No events found in the database.</div>
             {% endif %}
+
+        <div class="header-2">Cancelled Events</div>
+        <div class="list">
+            {% if events %}
+                {% for event in events %}
+                {% if event['status'] == 'cancelled'%}
+                <div class="resource">
+                    <div>
+                        <span class="event-link" 
+                              data-name="{{ event['name'] }}" 
+                              data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') }}"
+                              data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') }}"
+                              data-description="{{ event['description'] }}"
+                              data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
+                              data-url="{{ event['url'] or '' }}"
+                              data-status="{{ event['status'] if event['status'] else 'pending' }}">
+                            {{ event['name'] }}
+                        </span><br>
+                        <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
+                        <p>{{ event['description'] }}</p>
+                        <div class="status">
+                            Status: {{ event['status'] if event['status'] else 'pending' }}
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
+                            <button class="btn btn-approve">Approve</button>
+                        </a>
+                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
+                            <button class="btn btn-reject">Reject/Cancel</button>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            {% else %}
+
+                <div class="resource">No events found in the database.</div>
+            {% endif %}
+
         </div>
     </div>
 </div>
