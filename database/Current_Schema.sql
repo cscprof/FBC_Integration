@@ -1,7 +1,7 @@
 /*
 MySQL Backup
 Database: flourish_bc
-Backup Time: 2026-01-17 14:16:46
+Backup Time: 2026-02-03 11:57:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -9,9 +9,11 @@ DROP TABLE IF EXISTS `flourish_bc`.`content_types`;
 DROP TABLE IF EXISTS `flourish_bc`.`event_tags`;
 DROP TABLE IF EXISTS `flourish_bc`.`events`;
 DROP TABLE IF EXISTS `flourish_bc`.`partners`;
+DROP TABLE IF EXISTS `flourish_bc`.`resource_category`;
 DROP TABLE IF EXISTS `flourish_bc`.`resource_tags`;
 DROP TABLE IF EXISTS `flourish_bc`.`resources`;
 DROP TABLE IF EXISTS `flourish_bc`.`roles`;
+DROP TABLE IF EXISTS `flourish_bc`.`saved_resources`;
 DROP TABLE IF EXISTS `flourish_bc`.`tags`;
 DROP TABLE IF EXISTS `flourish_bc`.`users`;
 CREATE TABLE `content_types` (
@@ -58,6 +60,11 @@ CREATE TABLE `partners` (
   `zip` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`partner_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `resource_category` (
+  `resource_category_id` int NOT NULL AUTO_INCREMENT,
+  `resource_category_name` varchar(32) NOT NULL,
+  PRIMARY KEY (`resource_category_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `resource_tags` (
   `resource_tag_id` int NOT NULL AUTO_INCREMENT,
   `resource_id` int NOT NULL,
@@ -77,9 +84,12 @@ CREATE TABLE `resources` (
   `contact_email` varchar(128) DEFAULT NULL,
   `contact_phone` varchar(32) DEFAULT NULL,
   `user_id` int NOT NULL,
+  `resource_category_id` int NOT NULL,
   PRIMARY KEY (`resource_id`),
   KEY `content_types_fk` (`content_type_id`),
-  CONSTRAINT `content_types_fk` FOREIGN KEY (`content_type_id`) REFERENCES `content_types` (`content_type_id`)
+  KEY `resource_category_fk` (`resource_category_id`),
+  CONSTRAINT `content_types_fk` FOREIGN KEY (`content_type_id`) REFERENCES `content_types` (`content_type_id`),
+  CONSTRAINT `resource_category_fk` FOREIGN KEY (`resource_category_id`) REFERENCES `resource_category` (`resource_category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `roles` (
   `role_id` int NOT NULL AUTO_INCREMENT,
@@ -87,6 +97,16 @@ CREATE TABLE `roles` (
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `saved_resources` (
+  `saved_resource_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `resource_id` int DEFAULT NULL,
+  PRIMARY KEY (`saved_resource_id`),
+  KEY `users__saved_resources_fk` (`user_id`),
+  KEY `resourse_saved_resource_id` (`resource_id`),
+  CONSTRAINT `resourse_saved_resource_id` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`resource_id`) ON DELETE RESTRICT,
+  CONSTRAINT `users__saved_resources_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `tags` (
   `tag_id` int NOT NULL AUTO_INCREMENT,
   `tag` varchar(64) NOT NULL,
@@ -132,6 +152,12 @@ INSERT INTO `flourish_bc`.`partners` (`partner_id`,`name`,`description`,`phone`,
 UNLOCK TABLES;
 COMMIT;
 BEGIN;
+LOCK TABLES `flourish_bc`.`resource_category` WRITE;
+DELETE FROM `flourish_bc`.`resource_category`;
+INSERT INTO `flourish_bc`.`resource_category` (`resource_category_id`,`resource_category_name`) VALUES (1, 'college'),(2, 'mental'),(3, 'jobs'),(4, 'tutoring'),(5, 'activities'),(6, 'career');
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
 LOCK TABLES `flourish_bc`.`resource_tags` WRITE;
 DELETE FROM `flourish_bc`.`resource_tags`;
 UNLOCK TABLES;
@@ -145,6 +171,11 @@ BEGIN;
 LOCK TABLES `flourish_bc`.`roles` WRITE;
 DELETE FROM `flourish_bc`.`roles`;
 INSERT INTO `flourish_bc`.`roles` (`role_id`,`role`,`description`) VALUES (1, 'Student', 'A student'),(2, 'Parent', 'A parent'),(3, 'Guardian', 'A guardian'),(4, 'Admin', 'An administrator'),(5, 'Partner', 'A third-party user');
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`saved_resources` WRITE;
+DELETE FROM `flourish_bc`.`saved_resources`;
 UNLOCK TABLES;
 COMMIT;
 BEGIN;
