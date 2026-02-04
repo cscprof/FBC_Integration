@@ -4,9 +4,9 @@ in the application. It will also allow us to select from multiple
 configurations if we ever have a need to do so.
 
 The config class will read the configuration values from the
-settings.conf file.
+settings.conf.example file.
 
-Unless we add additional config parameters to settings.conf, there
+Unless we add additional config parameters to settings.conf.example, there
 should be no need to modify this file.
 '''
 
@@ -17,7 +17,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Read the application configuration file
 config = configparser.ConfigParser()
-config.read(os.path.join(basedir,'settings.conf'))
+config.read(os.path.join(basedir, 'settings.conf'))
 
 
 class Config:
@@ -36,6 +36,7 @@ class BaseConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_LOCAL"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
+    SQLALCHEMY_DATABASE_URI = config.get("MYSQL_LOCAL", "DATABASE_URI", fallback=None) #Added by resource team for database connection
 
 class ProductionConfig(Config):
     DEBUG=False
@@ -43,6 +44,7 @@ class ProductionConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_PROD"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_PROD"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_PROD"]["DATABASE"]
+    SQLALCHEMY_DATABASE_URI = config.get("MYSQL_PROD", "DATABASE_URI", fallback=None) #Resource team database connection
 
 class GenevaConfig(Config):
     DEBUG=True
@@ -50,6 +52,7 @@ class GenevaConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_LOCAL"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
+    SQLALCHEMY_DATABASE_URI = config.get("MYSQL_LOCAL", "DATABASE_URI", fallback=None) #Resource team database connection
 
 config = {
     'base': BaseConfig,

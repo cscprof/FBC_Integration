@@ -2,6 +2,7 @@
 #import os
 import pymysql
 from flask import current_app
+from flask_sqlalchemy import SQLAlchemy
 
 #load_dotenv()
 
@@ -20,6 +21,8 @@ from flask import current_app
 #         database=DB_CONFIG["database"],
 #         cursorclass=pymysql.cursors.DictCursor
 #     )
+
+db = SQLAlchemy() #Added by resource team for SQLAlchemy integration
 
 def get_db_connection():
 
