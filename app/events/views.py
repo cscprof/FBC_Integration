@@ -115,22 +115,16 @@ def addEvent():
             if conn:
                 conn.close()
 
-        return render_template('events/calendar.html')
+        return render_template('events/confirmEvent.html', event_name=name)
 
     return render_template('events/addEvent.html')
 
 
-# ---------------------------------------------------------
-#  MAIN CALENDAR PAGE
-# ---------------------------------------------------------
 @events.route('/calendar')
 def calendar():
     return render_template('events/calendar.html')
 
 
-# ---------------------------------------------------------
-#  UPDATE EVENT STATUS
-# ---------------------------------------------------------
 @events.route('/update_event/<int:event_id>/<string:action>')
 def update_event(event_id, action):
     if action not in ["approved", "cancelled"]:
@@ -168,6 +162,102 @@ def adminView():
         })
 
     return render_template('events/eventAdmin.html', events=events)
+
+
+@events.route('/edit_event/<int:event_id>', methods=['GET', 'POST'])
+def edit_event(event_id):
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        description = request.form.get('description', '').strip()
+        url = request.form.get('url', '').strip() or None
+        starting_date_raw = request.form.get('starting_date', '').strip()
+        ending_date_raw = request.form.get('ending_date', '').strip()
+        deadline_raw = request.form.get('deadline', '').strip()
+
+        print(f"DEBUG: name={name}, url={url}")
+        print(f"DEBUG: starting_date_raw={starting_date_raw}")
+        print(f"DEBUG: ending_date_raw={ending_date_raw}")
+        print(f"DEBUG: deadline_raw={deadline_raw}")
+
+        if not name:
+            flash('Name is required.', 'error')
+            return redirect(url_for('events.edit_event', event_id=event_id))
+
+        try:
+            starting_date = datetime.fromisoformat(starting_date_raw)
+            ending_date = datetime.fromisoformat(ending_date_raw)
+            deadline = datetime.fromisoformat(deadline_raw) if deadline_raw else None
+
+            print(f"DEBUG: starting_date={starting_date} (type: {type(starting_date)})")
+            print(f"DEBUG: ending_date={ending_date} (type: {type(ending_date)})")
+            print(f"DEBUG: ending_date > starting_date = {ending_date > starting_date}")
+            print(f"DEBUG: ending_date <= starting_date = {ending_date <= starting_date}")
+
+            if ending_date <= starting_date:
+                flash('Ending date and time must be after the starting date and time.', 'error')
+                return redirect(url_for('events.edit_event', event_id=event_id))
+
+            conn = get_db_connection()
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                    UPDATE events SET name=%s, description=%s, url=%s, start_date=%s, end_date=%s, registration_deadline=%s
+                    WHERE event_id=%s
+                """, (name, description, url, starting_date, ending_date, deadline, event_id))
+            conn.commit()
+            conn.close()
+            print(f"DEBUG: Event {event_id} updated successfully")
+            flash('Event updated successfully.', 'success')
+            return redirect(url_for('events.adminView'))
+
+        except Exception as e:
+            print(f"DEBUG: Error - {e}")
+            import traceback
+            traceback.print_exc()
+            flash('Error updating event: ' + str(e), 'error')
+            return redirect(url_for('events.edit_event', event_id=event_id))
+
+    # GET: fetch event and render form
+    conn = get_db_connection()
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT event_id, name, description, url, start_date, end_date, registration_deadline FROM events WHERE event_id=%s", (event_id,))
+        row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        flash('Event not found.', 'error')
+        return redirect(url_for('events.adminView'))
+
+    event = {
+        'event_id': row['event_id'],
+        'name': row['name'],
+        'description': row.get('description') or '',
+        'url': row.get('url') or '',
+        'start_date': row['start_date'].isoformat() if row['start_date'] else '',
+        'end_date': row['end_date'].isoformat() if row['end_date'] else '',
+        'registration_deadline': row['registration_deadline'].isoformat() if row['registration_deadline'] else ''
+    }
+
+    return render_template('events/editEvent.html', event=event)
+
+
+@events.route('/delete_event/<int:event_id>', methods=['POST'])
+def delete_event(event_id):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("DELETE FROM events WHERE event_id=%s", (event_id,))
+        conn.commit()
+        flash('Event deleted.', 'success')
+    except Exception as e:
+        print(e)
+        if conn:
+            conn.rollback()
+        flash('Error deleting event: ' + str(e), 'error')
+    finally:
+        if conn:
+            conn.close()
+
+    return redirect(url_for('events.adminView'))
 
 
 # ---------------------------------------------------------

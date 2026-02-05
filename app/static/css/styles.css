@@ -188,6 +188,34 @@ input {
     font-weight: bold;
 }
 
+.btn-edit {
+    background-color: #2e44cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.actions {
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.actions a {
+    display: inline;
+}
+
+.actions form {
+    display: inline;
+}
+
 .events-container {
     display: flex;
     flex-direction: column;
