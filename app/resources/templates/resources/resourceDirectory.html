@@ -5,139 +5,196 @@
 {% block content %}
 
 <section class="section">
-    <div class="container">
-        <h1 class="title has-text-centered">Resource Directory</h1>
-        <p class="has-text-centered is-size-5 mb-5" style="color: #666; margin-top: 10px;">
-            Everything you need to succeed - from college prep to mental health support
-        </p>
+  <div class="container">
+    <h1 class="title has-text-centered">Resource Directory</h1>
+    <p class="has-text-centered is-size-5 mb-5" style="color: #666; margin-top: 10px;">
+      Everything you need to succeed - from college prep to mental health support
+    </p>
 
-        <div class="resources">
-            <div class="searchfilter">
-                <div class="searchcontainer">
-                    <form class="searchform">
-                        <input type="text" placeholder="Search resources..." class="searchinput" name="search">
-                    </form>
-                </div>
+    <div class="resources admin-layout">
 
-                <div class="categorydropdown">
-                    <select class="categoryselect">
-                        <option value="all">All Categories</option>
-                        <option value="college">College</option>
-                        <option value="mental">Mental Health</option>
-                        <option value="jobs">Jobs</option>
-                        <option value="tutoring">Tutoring</option>
-                        <option value="activities">Activities</option>
-                        <option value="career">Career</option>
-                    </select>
-                </div>
-            </div>
+      <!-- LEFT SIDE: Search/Filter + Resource grid -->
+      <div class="main-content">
+        <div class="searchfilter">
+          <div class="searchcontainer">
+            <form class="searchform">
+              <input type="text" placeholder="Search resources..." class="searchinput" name="search">
+            </form>
+          </div>
 
-            <div class="examplegrid" id="resourcesgrid">
-                <div class="exampleboxes" data-category="college">
-                    <h3>College and Scholarships</h3>
-                    <p>Find all kinds of scholarships here! We can help find the best fit for you.</p>
-                    <ul>
-                        <li>Geneva College</li>
-                        <li>SMART Scholarship</li>
-                        <li>Pitt Beaver</li>
-                        <li>STEM Scholarships</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=college" class="resourcelink">Learn More</a>
-                </div>
-
-                <div class="exampleboxes" data-category="mental">
-                    <h3>Mental Health & Support</h3>
-                    <p>Free and confidential support for stress, anxiety, and other challenges.</p>
-                    <ul>
-                        <li>School Counselors</li>
-                        <li>Teen Support Groups</li>
-                        <li>Crisis Hotlines</li>
-                        <li>Wellness Resources</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=mental" class="resourcelink">Learn More</a>
-                </div>
-
-                <div class="exampleboxes" data-category="jobs">
-                    <h3>Jobs & Internships</h3>
-                    <p>Find part-time jobs, summer work, and internships in Beaver County.</p>
-                    <ul>
-                        <li>Job Listings for Teens</li>
-                        <li>Summer Employment</li>
-                        <li>Internship Opportunities</li>
-                        <li>Resume & Interview Help</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=jobs" class="resourcelink">Learn More</a>
-                </div>
-
-                <div class="exampleboxes" data-category="tutoring">
-                    <h3>Tutoring & Study Help</h3>
-                    <p>Free tutoring and study resources to help you ace your classes.</p>
-                    <ul>
-                        <li>Peer Tutoring Programs</li>
-                        <li>Homework Help</li>
-                        <li>Study Groups</li>
-                        <li>Online Learning Resources</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=tutoring" class="resourcelink">Learn More</a>
-                </div>
-
-                <div class="exampleboxes" data-category="activities">
-                    <h3>Activities & Clubs</h3>
-                    <p>Join clubs, sports, and activities to meet new people and explore interests.</p>
-                    <ul>
-                        <li>School Clubs & Sports</li>
-                        <li>Community Programs</li>
-                        <li>Volunteer Opportunities</li>
-                        <li>Youth Groups</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=activities" class="resourcelink">Learn More</a>
-                </div>
-
-                <div class="exampleboxes" data-category="career">
-                    <h3>Career Exploration</h3>
-                    <p>Discover career paths and learn about different industries and opportunities.</p>
-                    <ul>
-                        <li>Career Assessments</li>
-                        <li>Job Shadowing</li>
-                        <li>Career Fairs</li>
-                        <li>Mentorship Programs</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=career" class="resourcelink">Learn More</a>
-                </div>
-            </div>
+          <div class="categorydropdown">
+            <select class="categoryselect">
+              <option value="all">All Categories</option>
+              <option value="college">College</option>
+              <option value="mental">Mental Health</option>
+              <option value="jobs">Jobs</option>
+              <option value="tutoring">Tutoring</option>
+              <option value="activities">Activities</option>
+              <option value="career">Career</option>
+            </select>
+          </div>
         </div>
+
+        <div class="examplegrid" id="resourcesgrid">
+          <div class="exampleboxes" data-category="college">
+            <h3>College and Scholarships</h3>
+            <p>Find all kinds of scholarships here! We can help find the best fit for you.</p>
+            <ul>
+              <li>Geneva College</li>
+              <li>SMART Scholarship</li>
+              <li>Pitt Beaver</li>
+              <li>STEM Scholarships</li>
+            </ul>
+            <a href="{{ url_for('resources.resourcesearch') }}?category=college" class="resourcelink">Learn More</a>
+          </div>
+
+          <div class="exampleboxes" data-category="mental">
+            <h3>Mental Health & Support</h3>
+            <p>Free and confidential support for stress, anxiety, and other challenges.</p>
+            <ul>
+              <li>School Counselors</li>
+              <li>Teen Support Groups</li>
+              <li>Crisis Hotlines</li>
+              <li>Wellness Resources</li>
+            </ul>
+            <a href="{{ url_for('resources.resourcesearch') }}?category=mental" class="resourcelink">Learn More</a>
+          </div>
+
+          <div class="exampleboxes" data-category="jobs">
+            <h3>Jobs & Internships</h3>
+            <p>Find part-time jobs, summer work, and internships in Beaver County.</p>
+            <ul>
+              <li>Job Listings for Teens</li>
+              <li>Summer Employment</li>
+              <li>Internship Opportunities</li>
+              <li>Resume & Interview Help</li>
+            </ul>
+            <a href="{{ url_for('resources.resourcesearch') }}?category=jobs" class="resourcelink">Learn More</a>
+          </div>
+
+          <div class="exampleboxes" data-category="tutoring">
+            <h3>Tutoring & Study Help</h3>
+            <p>Free tutoring and study resources to help you ace your classes.</p>
+            <ul>
+              <li>Peer Tutoring Programs</li>
+              <li>Homework Help</li>
+              <li>Study Groups</li>
+              <li>Online Learning Resources</li>
+            </ul>
+            <a href="{{ url_for('resources.resourcesearch') }}?category=tutoring" class="resourcelink">Learn More</a>
+          </div>
+
+          <div class="exampleboxes" data-category="activities">
+            <h3>Activities & Clubs</h3>
+            <p>Join clubs, sports, and activities to meet new people and explore interests.</p>
+            <ul>
+              <li>School Clubs & Sports</li>
+              <li>Community Programs</li>
+              <li>Volunteer Opportunities</li>
+              <li>Youth Groups</li>
+            </ul>
+            <a href="{{ url_for('resources.resourcesearch') }}?category=activities" class="resourcelink">Learn More</a>
+          </div>
+
+          <div class="exampleboxes" data-category="career">
+            <h3>Career Exploration</h3>
+            <p>Discover career paths and learn about different industries and opportunities.</p>
+            <ul>
+              <li>Career Assessments</li>
+              <li>Job Shadowing</li>
+              <li>Career Fairs</li>
+              <li>Mentorship Programs</li>
+            </ul>
+            <a href="{{ url_for('resources.resourcesearch') }}?category=career" class="resourcelink">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE: Admin panel (ONLY shows to admins) -->
+      {% if current_user.is_authenticated and current_user.is_admin %}
+      <aside class="admin-panel">
+        <h3 class="admin-title">Admin Controls</h3>
+
+        <!-- Add Resource -->
+        <form method="POST" action="{{ url_for('resources.admin_manage') }}">
+          {% if csrf_token %}
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          {% endif %}
+
+          <label class="admin-label">Title</label>
+          <input type="text" name="title" required class="admin-input">
+
+          <label class="admin-label">Description</label>
+          <textarea name="description" required class="admin-textarea"></textarea>
+
+          <label class="admin-label">Category</label>
+          <select name="category" required class="admin-select">
+            <option value="college">College</option>
+            <option value="mental">Mental Health</option>
+            <option value="jobs">Jobs</option>
+            <option value="tutoring">Tutoring</option>
+            <option value="activities">Activities</option>
+            <option value="career">Career</option>
+          </select>
+
+          <label class="admin-label">Link (optional)</label>
+          <input type="url" name="link" class="admin-input" placeholder="https://...">
+
+          <button type="submit" name="action" value="add" class="btn-add">
+            ➕ Add Resource
+          </button>
+        </form>
+
+        <hr class="admin-divider">
+
+        <!-- Remove Resource -->
+        <form method="POST" action="{{ url_for('resources.admin_manage') }}">
+          {% if csrf_token %}
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          {% endif %}
+
+          <label class="admin-label">Remove Resource</label>
+          <select name="resource_id" class="admin-select" required>
+            {% for resource in resources %}
+              <option value="{{ resource.id }}">{{ resource.title }}</option>
+            {% endfor %}
+          </select>
+
+          <button type="submit" name="action" value="delete" class="btn-delete">
+            🗑 Remove
+          </button>
+        </form>
+      </aside>
+      {% endif %}
+
     </div>
+  </div>
 </section>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector(".searchinput");
     const categorySelect = document.querySelector(".categoryselect");
     const resourceBoxes = document.querySelectorAll(".exampleboxes");
 
     function filterResources() {
-        const searchValue = searchInput.value.toLowerCase();
-        const selectedCategory = categorySelect.value;
+      const searchValue = (searchInput?.value || "").toLowerCase();
+      const selectedCategory = categorySelect?.value || "all";
 
-        resourceBoxes.forEach(box => {
-            const boxCategory = box.getAttribute("data-category");
-            const textContent = box.innerText.toLowerCase();
+      resourceBoxes.forEach(box => {
+        const boxCategory = box.getAttribute("data-category");
+        const textContent = box.innerText.toLowerCase();
 
-            const matchesSearch = textContent.includes(searchValue);
-            const matchesCategory =
-                selectedCategory === "all" || boxCategory === selectedCategory;
+        const matchesSearch = textContent.includes(searchValue);
+        const matchesCategory = selectedCategory === "all" || boxCategory === selectedCategory;
 
-            if (matchesSearch && matchesCategory) {
-                box.style.display = "block";
-            } else {
-                box.style.display = "none";
-            }
-        });
+        box.style.display = (matchesSearch && matchesCategory) ? "block" : "none";
+      });
     }
 
-    searchInput.addEventListener("keyup", filterResources);
-    categorySelect.addEventListener("change", filterResources);
-});
+    if (searchInput) searchInput.addEventListener("keyup", filterResources);
+    if (categorySelect) categorySelect.addEventListener("change", filterResources);
+  });
 </script>
 
 {% endblock %}
