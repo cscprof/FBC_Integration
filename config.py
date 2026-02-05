@@ -36,7 +36,11 @@ class BaseConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_LOCAL"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
-    SQLALCHEMY_DATABASE_URI = config.get("MYSQL_LOCAL", "DATABASE_URI", fallback=None) #Added by resource team for database connection
+    # Prefer explicit DATABASE_URI from settings, otherwise build from pieces
+    _db_uri = config.get("MYSQL_LOCAL", "DATABASE_URI", fallback=None)
+    if not _db_uri:
+        _db_uri = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
+    SQLALCHEMY_DATABASE_URI = _db_uri
 
 class ProductionConfig(Config):
     DEBUG=False
@@ -44,7 +48,10 @@ class ProductionConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_PROD"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_PROD"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_PROD"]["DATABASE"]
-    SQLALCHEMY_DATABASE_URI = config.get("MYSQL_PROD", "DATABASE_URI", fallback=None) #Resource team database connection
+    _db_uri = config.get("MYSQL_PROD", "DATABASE_URI", fallback=None)
+    if not _db_uri:
+        _db_uri = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
+    SQLALCHEMY_DATABASE_URI = _db_uri
 
 class GenevaConfig(Config):
     DEBUG=True
@@ -52,7 +59,10 @@ class GenevaConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_LOCAL"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
-    SQLALCHEMY_DATABASE_URI = config.get("MYSQL_LOCAL", "DATABASE_URI", fallback=None) #Resource team database connection
+    _db_uri = config.get("MYSQL_LOCAL", "DATABASE_URI", fallback=None)
+    if not _db_uri:
+        _db_uri = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
+    SQLALCHEMY_DATABASE_URI = _db_uri #Resource team database connection
 
 config = {
     'base': BaseConfig,

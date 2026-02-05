@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block content %}
+<div class="events-container">
+    <h1 class="title">Admin Dashboard</h1>
+
+    <div class="section">
+        <div class="header">Manage Events</div>
+        <div class="list">
+            {% if events %}
+                {% for event in events %}
+                <div class="resource">
+                    <div>
+                        <span class="event-link" 
+                              data-name="{{ event['name'] }}" 
+                              data-description="{{ event['description'] }}">
+                            {{ event['name'] }}
+                        </span><br>
+                        <small>{{ event['start_date'] }} – {{ event['end_date'] }}</small><br>
+                        <p>{{ event['description'] }}</p>
+                        <div class="status">
+                            Status: {{ event['status'] if event['status'] else 'pending' }}
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
+                            <button class="btn btn-approve">Approve</button>
+                        </a>
+                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='rejected') }}">
+                            <button class="btn btn-reject">Reject</button>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="resource">No events found in the database.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Popup and overlay -->
+<div id="overlay"></div>
+<div id="eventPopup">
+    <span id="eventPopupClose">X</span>
+    <h3 id="popupEventName"></h3>
+    <p id="popupEventDescription"></p>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const popup = document.getElementById('eventPopup');
+    const overlay = document.getElementById('overlay');
+    const popupClose = document.getElementById('eventPopupClose');
+    const popupName = document.getElementById('popupEventName');
+    const popupDescription = document.getElementById('popupEventDescription');
+
+    document.querySelectorAll('.event-link').forEach(link => {
+        link.addEventListener('click', function() {
+            const name = this.getAttribute('data-name');
+            const description = this.getAttribute('data-description') || "No description available.";
+            popupName.textContent = name;
+            popupDescription.textContent = description;
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+        });
+    });
+
+    popupClose.addEventListener('click', function() {
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+    });
+
+    overlay.addEventListener('click', function() {
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+    });
+});
+</script>
+{% endblock %}
