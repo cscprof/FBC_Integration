@@ -121,6 +121,7 @@ def update_event(event_id, action):
 
     return redirect(url_for('calendar.adminView'))
 
+'''
 @events.route('/admin')
 def adminView():
     conn = get_db_connection()
@@ -130,8 +131,7 @@ def adminView():
     conn.close()
 
     return render_template('events/adminView.html', events=events)
-
-
+'''
 # ---------------------------------------------------------
 #  API ENDPOINT — returns JSON of approved events
 # ---------------------------------------------------------

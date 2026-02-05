@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit user</title>
+</head>
+<body>
+
+<h1>Edit user {{ user.user_id }}</h1>
+
+<form method="post" action="{{ url_for('.edit_user', user_id=user.user_id) }}">
+    <label>First name:
+        <input type="text" name="first_name" value="{{ user.first_name }}">
+    </label>
+    <br>
+
+    <label>Middle name:
+        <input type="text" name="middle_name" value="{{ user.middle_name }}">
+    </label>
+    <br>
+
+    <label>Last name:
+        <input type="text" name="last_name" value="{{ user.last_name }}">
+    </label>
+    <br>
+
+    <label>Email:
+        <input type="email" name="email" value="{{ user.email }}">
+    </label>
+    <br>
+
+    <label>Graduation year:
+        <input type="text" name="graduation_year" value="{{ user.graduation_year }}">
+    </label>
+    <br>
+
+    <label>Username:
+        <input type="text" name="username" value="{{ user.username }}">
+    </label>
+    <br>
+
+    <label>Role ID:
+        <input type="text" name="role_id" value="{{ user.role_id }}">
+    </label>
+    <br>
+
+    <button type="submit">Save changes</button>
+    <a href="{{ url_for('adminpanel.admin_panel') }}">Cancel</a>
+</form>
+
+</body>
+</html>

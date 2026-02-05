@@ -3,99 +3,156 @@
 {% block title %}Flourish Beaver County - Resource Directory{% endblock %}
 
 {% block content %}
-<h1 class="title has-text-centered">Resource Directory</h1>
-
-<style>
-    .resources-container {
-        display: flex;
-        flex-direction: column;
-        gap: 40px;
-        padding: 20px;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
-    .section {
-        width: 100%;
-    }
-
-    .header {
-        background-color: #aaeb54;
-        color: #2e44cc;
-        font-family: "Open Sans", sans-serif;
-        font-weight: 700;
-        padding: 12px 20px;
-        font-size: 1.8rem;
-        border-radius: 4px 4px 0 0;
-    }
-
-    .list {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        margin-top: 0;
-    }
-
-    .resource a {
-        display: block;
-        background-color: #f0f0f0;
-        color: #2e44cc;
-        padding: 15px 20px;
-        font-weight: 600;
-        border-radius: 4px;
-        border: 1px solid #ddd;
-        font-family: "Open Sans", sans-serif;
-        text-decoration: none;
-        transition: background-color 0.3s;
-    }
-
-    .resource a:hover {
-    background-color: #fafafafb;
-}
-</style>
-<!-- 
-dropdown filter - working on
-  <div class="dropdown-menu" id="dropdown-menu" role="menu">
-    <div class="dropdown-content">
-      <a href="#" class="dropdown-item" data-value="all">Show All Schools</a>
-      <a href="#" class="dropdown-item" data-value="geneva">Geneva</a>
-      <a href="#" class="dropdown-item" data-value="ccac">CCAC</a>
-      <a href="#" class="dropdown-item" data-value="psb">Penn State Beaver</a>
-    </div>
-  </div>
-</div> -->
-
-<div class="resources-container">
-    <section class="section" data-school="geneva">
-        <div class="header">Geneva Resources</div>
-        <div class="list">
-            <div class="resource"><a href="https://apply.geneva.edu/portal/campus_visit_events" target="_blank">Visit</a></div>
-            <div class="resource"><a href="https://www.geneva.edu/student-life/engagement/student-activities/calendar-of-events" target="_blank">Campus Events</a></div>
-            <div class="resource"><a href="https://www.geneva.edu/admissions/tugapply" target="_blank">Apply</a></div>
-            <div class="resource"><a href="https://www.geneva.edu/financial-aid/" target="_blank">Financial Aid</a></div>
-            <div class="resource"><a href="https://www.geneva.edu/financial-aid/scholarships-grants" target="_blank">Scholarships</a></div>
+<body>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <main>
+        <div class="hero">
+            <h2>Resources</h2>
+            <p>Everything you need to succeed - from college prep to mental health support</p>
         </div>
-    </section>
-    <section class="section" data-school="ccac">
-        <div class="header">CCAC Resources</div>
-        <div class="list">
-            <div class="resource"><a href="https://catalog.ccac.edu/"target="_blank">Courses</a></div>
-            <div class="resource"><a href="https://www.ccac.edu/admissions/enrollment-services.php?gad_source=1&gad_campaignid=22700964666&gbraid=0AAAAAC5sFd-hw-9nJHjRmJfNc6zCwpxxx&gclid=CjwKCAiAt8bIBhBpEiwAzH1w6VYpowvTKoNk7rEJrD9_T-stwv2kcguUp7fyLjNa0EwMQ7Fi70Bb3BoCUKUQAvD_BwE"target="_blank">Apply</a></div>
-            <div class="resource"><a href="https://www.ccac.edu/ccac-events/index.php"target="_blank">Campus Events</a></div>
-            <div class="resource"><a href="https://www.ccac.edu/academics/virtual-campus/online-programs.php"target="_blank">Online Programs</a></div>
-            <div class="resource"><a href="https://ccac.elluciancrmrecruit.com/Apply/Events/List?ID=10"target="_blank">Visit</a></div>
+
+        <div class="resources">
+            <div class="searchfilter">
+                <div class="searchcontainer">
+                    <form class="searchform">
+                        <input type="text" placeholder="Search resources..." class="searchinput" name="search">
+                        <button type="submit" class="searchbutton">Search</button>
+                    </form>
+                </div>
+
+                <div class="categorydropdown">
+                    <select class="categoryselect">
+                        <option value="all">All Categories</option>
+                        <option value="college">College</option>
+                        <option value="mental">Mental Health</option>
+                        <option value="jobs">Jobs</option>
+                        <option value="tutoring">Tutoring</option>
+                        <option value="activities">Activities</option>
+                        <option value="career">Career</option>
+                    </select>
+                </div>
+            </div>
+
+                <div class="examplegrid" id="resourcesgrid">
+                <div class="exampleboxes" data-category="college">
+                    <h3>College and Scholarships</h3>
+                    <p>Find all kinds of scholarships here! We can help find the best fit for you.</p>
+                    <ul>
+			<li>Geneva College</li>
+                        <li>SMART Scholarship</li>
+                        <li>Pitt Beaver</li>
+                        <li>STEM Scholarships</li>
+                    </ul>
+                    <a href="resourcesearch.html?category=college" class="resourcelink">Learn More</a>
+                </div>
+
+                <div class="exampleboxes" data-category="mental">
+                    <h3>Mental Health & Support</h3>
+                    <p>Free and confidential support for stress, anxiety, and other challenges.</p>
+                    <ul>
+                        <li>School Counselors</li>
+                        <li>Teen Support Groups</li>
+                        <li>Crisis Hotlines</li>
+                        <li>Wellness Resources</li>
+                    </ul>
+                    <a href="resourcesearch.html?category=mental" class="resourcelink">Learn More</a>
+                </div>
+
+                <div class="exampleboxes" data-category="jobs">
+                    <h3>Jobs & Internships</h3>
+                    <p>Find part-time jobs, summer work, and internships in Beaver County.</p>
+                    <ul>
+                        <li>Job Listings for Teens</li>
+                        <li>Summer Employment</li>
+                        <li>Internship Opportunities</li>
+                        <li>Resume & Interview Help</li>
+                    </ul>
+                    <a href="resourcesearch.html?category=jobs" class="resourcelink">Learn More</a>
+                </div>
+
+                <div class="exampleboxes" data-category="tutoring">
+                    <h3>Tutoring & Study Help</h3>
+                    <p>Free tutoring and study resources to help you ace your classes.</p>
+                    <ul>
+                        <li>Peer Tutoring Programs</li>
+                        <li>Homework Help</li>
+                        <li>Study Groups</li>
+                        <li>Online Learning Resources</li>
+                    </ul>
+                    <a href="resourcesearch.html?category=tutoring" class="resourcelink">Learn More</a>
+                </div>
+
+                <div class="exampleboxes" data-category="activities">
+                    <h3>Activities & Clubs</h3>
+                    <p>Join clubs, sports, and activities to meet new people and explore interests.</p>
+                    <ul>
+                        <li>School Clubs & Sports</li>
+                        <li>Community Programs</li>
+                        <li>Volunteer Opportunities</li>
+                        <li>Youth Groups</li>
+                    </ul>
+                    <a href="resourcesearch.html?category=activities" class="resourcelink">Learn More</a>
+                </div>
+
+                <div class="exampleboxes" data-category="career">
+                    <h3>Career Exploration</h3>
+                    <p>Discover career paths and learn about different industries and opportunities.</p>
+                    <ul>
+                        <li>Career Assessments</li>
+                        <li>Job Shadowing</li>
+                        <li>Career Fairs</li>
+                        <li>Mentorship Programs</li>
+                    </ul>
+                    <a href="resourcesearch.html?category=career" class="resourcelink">Learn More</a>
+                </div>
+            </div>
         </div>
-    </section>
-    <section class="section" data-school="psb">
-        <div class="header">Penn State Beaver Resources</div>
-        <div class="list">
-            <div class="resource"><a href="https://www.psu.edu/admission/undergraduate/how-to-apply"target="_blank">Apply</a></div>
-            <div class="resource"><a href="https://www.psu.edu/admission/undergraduate/explore/visit-penn-state"target="_blank">Visit</a></div>
-            <div class="resource"><a href="https://beaver.psu.edu/penn-state"target="_blank">About</a></div>
-            <div class="resource"><a href="https://beaver.psu.edu/tuition-financial-aid"target="_blank">Financial Aid</a></div>
-            <div class="resource"><a href="https://beaver.psu.edu/admissions/dual-enrollment">High School Dual Enrollment</a></div>
+
+        <div class="contact">
+            <h2>Have Questions?</h2>
+            <strong><a href="contact.html">Contact us</a></strong>
         </div>
-    </section>
-</div>
+
+    </main>
+
+    <footer>
+        <p> 2025 Flourish Beaver County </p>
+    </footer>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.querySelector(".searchinput");
+    const categorySelect = document.querySelector(".categoryselect");
+    const resourceBoxes = document.querySelectorAll(".exampleboxes");
+
+    function filterResources() {
+        const searchValue = searchInput.value.toLowerCase();
+        const selectedCategory = categorySelect.value;
+
+        resourceBoxes.forEach(box => {
+            const boxCategory = box.getAttribute("data-category");
+            const textContent = box.innerText.toLowerCase();
+
+            const matchesSearch = textContent.includes(searchValue);
+            const matchesCategory =
+                selectedCategory === "all" || boxCategory === selectedCategory;
+
+            if (matchesSearch && matchesCategory) {
+                box.style.display = "block";
+            } else {
+                box.style.display = "none";
+            }
+        });
+    }
+
+    // Auto update on typing
+    searchInput.addEventListener("keyup", filterResources);
+
+    // Auto update on dropdown change
+    categorySelect.addEventListener("change", filterResources);
+});
+</script>
+
+</body>
+</html>
 
 {% endblock %}
