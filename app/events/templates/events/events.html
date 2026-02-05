@@ -14,7 +14,9 @@
                 {% for event in events %}
                 <div class="resource">
                     <div>
-                        <span>{{ event.title }}</span><br>
+                        <a href="/calendar?event={{ event.title | urlencode }}" class="event-link" style="text-decoration: none; color: inherit;">
+                            <span>{{ event.title }}</span>
+                        </a><br>
                         <small>{{ event.start.strftime('%b %d, %Y %I:%M %p') }} – {{ event.end.strftime('%b %d, %Y %I:%M %p') }}</small><br>
                         <p>{{ event.description }}</p>
                     </div>
