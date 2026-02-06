@@ -1,14 +1,18 @@
-from flask import render_template
+from flask import render_template, request, redirect, url_for
 from sqlalchemy import select
 from db import db
-from .models import resources, resource_category
+from .models import resources, resource_category, content_types
 from . import resources as resources_blueprint
 
 # Use the route() decorator to tell Flask what URL should trigger the function
 @resources_blueprint.route("/resources")
 @resources_blueprint.route("/resource-directory")
 def resource_directory():
-    return render_template("resources/resourceDirectory.html")
+    try:
+        categories_list = db.session.execute(select(resource_category)).scalars().all()
+        return render_template("resources/resourceDirectory.html", categories=categories_list)
+    except:
+        return render_template("resources/resourceDirectory.html", categories=[])
 
 @resources_blueprint.route("/resourcesearch.html")
 def resourcesearch():
@@ -43,3 +47,47 @@ def resourcesearch():
        ]
     
     return render_template('resources/resourcesearch.html', resources=dblist)
+
+@resources_blueprint.route("/upload-resource", methods=["POST"])
+def upload_resource():
+    # Get the form data that the user submitted
+    title = request.form.get('title', '').strip()
+    description = request.form.get('description', '').strip()
+    url = request.form.get('url', '').strip()
+    resource_category_id = request.form.get('resource_category_id', '').strip()
+    
+    # Make sure all required fields were filled out
+    if not title or not description or not url or not resource_category_id:
+        return redirect(url_for('resources.resource_directory'))
+    
+    try:
+        # We need a content type for the database, so get the first one available
+        content_type = db.session.execute(select(content_types)).scalars().first()
+        if not content_type:
+            return redirect(url_for('resources.resource_directory'))
+        
+        # Combine the title and description into one field
+        # The database description field will contain: "Title\n\nDescription"
+        full_description = f"{title}\n\n{description}"
+        
+        # Create the new resource with all the information
+        new_resource = resources(
+            description=full_description[:255],  # Make sure it fits in the database field
+            url=url,
+            contact_name="N/A",  # Required field, but not used for user uploads
+            content_type_id=content_type.content_type_id,
+            resource_category_id=int(resource_category_id),
+            user_id=1  # Default user for now
+        )
+        
+        # Save it to the database
+        db.session.add(new_resource)
+        db.session.commit()
+        
+        # Show the user their newly uploaded resource
+        return redirect(url_for('resources.resourcesearch'))
+        
+    except Exception as e:
+        # If something went wrong, undo any changes and go back
+        db.session.rollback()
+        return redirect(url_for('resources.resource_directory'))
