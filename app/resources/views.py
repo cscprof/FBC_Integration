@@ -48,36 +48,34 @@ def resourcesearch():
     
     return render_template('resources/resourcesearch.html', resources=dblist)
 
+#HEY CHANGES WE NEED TO MAKE NEXT
+##Making sure it only exists as admin
+##Adding other optional fields that exist in the database (Contact Name, Contact Num, etc)
+##Whatever content type is should probably be figured out
+###-Owen B.
 @resources_blueprint.route("/upload-resource", methods=["POST"])
 def upload_resource():
     # Get the form data that the user submitted
     title = request.form.get('title', '').strip()
-    description = request.form.get('description', '').strip()
     url = request.form.get('url', '').strip()
     resource_category_id = request.form.get('resource_category_id', '').strip()
     
     # Make sure all required fields were filled out
-    if not title or not description or not url or not resource_category_id:
+    if not title or not url or not resource_category_id:
         return redirect(url_for('resources.resource_directory'))
     
     try:
-        # We need a content type for the database, so get the first one available
-        content_type = db.session.execute(select(content_types)).scalars().first()
-        if not content_type:
-            return redirect(url_for('resources.resource_directory'))
-        
-        # Combine the title and description into one field
-        # The database description field will contain: "Title\n\nDescription"
-        full_description = f"{title}\n\n{description}"
+        #Guys this might be useful later so I'll leave it here but I'm changing the value to none
+        #Idek what a content type is I don't think it's been implemented by anyone yet
+        content_type = None
         
         # Create the new resource with all the information
         new_resource = resources(
-            description=full_description[:255],  # Make sure it fits in the database field
+            description=title,
             url=url,
-            contact_name="N/A",  # Required field, but not used for user uploads
-            content_type_id=content_type.content_type_id,
+            content_type_id=content_type,
             resource_category_id=int(resource_category_id),
-            user_id=1  # Default user for now
+            user_id=1  # Change later to be signed-in user
         )
         
         # Save it to the database
