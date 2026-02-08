@@ -45,7 +45,7 @@
     <br>
 
     <button type="submit">Save changes</button>
-    <a href="{{ url_for('adminpanel.admin_panel') }}">Cancel</a>
+    <a href="{{ url_for('users.edit_user', user_id=user.user_id) }}">Cancel</a>
 </form>
 
 </body>

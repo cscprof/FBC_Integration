@@ -35,7 +35,7 @@
         <td>{{ user.username }}</td>
         <td>{{ user.role_id }}</td>
         <td>
-            <a href="{{ url_for('adminpanel.edit_user', user_id=user.user_id) }}">Edit</a>
+            <a href="{{ url_for('users.edit_user', user_id=user.user_id) }}">Edit</a>
         </td>
 
       </tr>
