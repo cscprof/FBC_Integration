@@ -12,8 +12,10 @@ be coordinated with the team to ensure that the change is necessary
 prior to pushing the new code to GitHub.
 '''
 from flask import Flask
+
 from config import config
 from db import db #Added by resource team for SQLAlchemy integration
+
 
 # Create Flask extensions
 # mysql = MySQL()
@@ -37,6 +39,19 @@ def create_app(config_name):
     from .resources import resources as resources_blueprint
     app.register_blueprint(resources_blueprint)
 
+    # Load the user managent section
+    from .users import users as users_blueprint
+    app.register_blueprint(users_blueprint)
+
+    # from .signup import signup as signup_blueprint
+    # app,register_blueprint(users_blueprint)
+
+    # from .admin_panel import admin_panel as admin_panel_blueprint
+    # app.register_blueprint(admin_panel_blueprint)
+
+    # Load the profile page section
+    from .profile import profile as profile_blueprint
+    app.register_blueprint(profile_blueprint)
     
     return app
 

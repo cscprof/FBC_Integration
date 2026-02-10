@@ -64,6 +64,7 @@ class GenevaConfig(Config):
         _db_uri = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
     SQLALCHEMY_DATABASE_URI = _db_uri #Resource team database connection
 
+
 config = {
     'base': BaseConfig,
     'production': ProductionConfig,

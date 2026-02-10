@@ -1,3 +1,4 @@
+
 from flask import render_template, request, redirect, url_for
 from sqlalchemy import select
 from db import db
@@ -13,6 +14,7 @@ def resource_directory():
         return render_template("resources/resourceDirectory.html", categories=categories_list)
     except:
         return render_template("resources/resourceDirectory.html", categories=[])
+
 
 @resources_blueprint.route("/resourcesearch.html")
 def resourcesearch():

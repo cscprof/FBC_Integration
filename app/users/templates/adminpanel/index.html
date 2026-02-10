@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+{% block content %}
+
+<h1>Users</h1>
+{% if users %}
+  <table border="1">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>First Name</th>
+        <th>Middle Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Graduation Year</th>
+        <th>Username</th>
+        <th>Role ID</th>
+        <th>Manage</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.user_id }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.middle_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.graduation_year }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.role_id }}</td>
+        <td>
+            <a href="{{ url_for('users.edit_user', user_id=user.user_id) }}">Edit</a>
+        </td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No users found.</p>
+{% endif %}
+
+{% endblock %}
+</body>
+</html>

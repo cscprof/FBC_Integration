@@ -1,0 +1,164 @@
+<!-- I am no HTML designer. Perplexity gave me this layout, I hooked it up to the backend manually-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .profile-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+        .profile-header {
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        .profile-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .profile-header .username {
+            color: #777;
+            font-size: 14px;
+        }
+        .profile-section {
+            margin-bottom: 16px;
+        }
+        .profile-section h2 {
+            font-size: 16px;
+            margin: 0 0 8px 0;
+            color: #333;
+        }
+        .profile-field {
+            display: flex;
+            margin-bottom: 6px;
+        }
+        .profile-label {
+            width: 160px;
+            font-weight: bold;
+            color: #555;
+        }
+        .profile-value {
+            flex: 1;
+            color: #222;
+        }
+        .muted {
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+{% for user in user %}
+<div class="profile-container">
+    <!-- Header with full name and username -->
+    <div class="profile-header">
+        <!-- Replace with dynamic values -->
+        <h1>
+            <!-- If middle_name is null, just omit it server-side -->
+            {{ user.first_name }} <span class="muted">{{ user.middle_name }}</span> {{ user.last_name }}
+        </h1>
+    </div>
+
+    <!-- Basic information -->
+    <div class="profile-section">
+        <h2>Basic Info</h2>
+
+        <div class="profile-field">
+            <div class="profile-label">User ID</div>
+            <div class="profile-value">{{ user.user_id }}</div>
+        </div>
+
+        <div class="profile-field">
+            <div class="profile-label">First Name</div>
+            <div class="profile-value">{{ user.first_name }}</div>
+        </div>
+
+        <div class="profile-field">
+            <div class="profile-label">{{ user.middle_name }}</div>
+            <div class="profile-value">
+                <!-- Show "Not provided" if null -->
+                <span class="muted">Not provided</span>
+            </div>
+        </div>
+
+        <div class="profile-field">
+            <div class="profile-label">Last Name</div>
+            <div class="profile-value">{{ user.last_name }}</div>
+        </div>
+    </div>
+
+    <!-- Contact information -->
+    <div class="profile-section">
+        <h2>Contact</h2>
+
+        <div class="profile-field">
+            <div class="profile-label">Email</div>
+            <div class="profile-value">
+                <!-- If email is nullable, handle null similarly -->
+                {{ user.email }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Academic / other info -->
+    <div class="profile-section">
+        <h2>Additional Info</h2>
+
+        <div class="profile-field">
+            <div class="profile-label">Graduation Year</div>
+            <div class="profile-value">
+                <!-- graduation_year is nullable -->
+                {{ user.graduation_year }}
+            </div>
+        </div>
+
+        <div class="profile-field">
+            <div class="profile-label">Role ID</div>
+            <div class="profile-value">{{ user.role_id }}</div>
+        </div>
+
+        <div class="profile-field">
+            <div class="profile-label">Partner ID</div>
+            <div class="profile-value">
+                <!-- partner_id is nullable -->
+                <span class="muted">Not assigned</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security / internal info (usually not shown to the user) -->
+    <div class="profile-section">
+        <h2>Internal</h2>
+
+        <div class="profile-field">
+            <div class="profile-label">Username</div>
+            <div class="profile-value">{{ user.username }}</div>
+        </div>
+
+        <div class="profile-field">
+            <div class="profile-label">Password</div>
+            <div class="profile-value">
+                <!-- NEVER show real password; this is just a placeholder -->
+                {{ user.password }}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endfor %}
+
+</body>
+</html>

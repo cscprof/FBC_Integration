@@ -68,6 +68,7 @@ class resource_category(db.Model):
     resource_category_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
     resource_category_name: so.Mapped[str] = so.mapped_column(sa.Enum("college","mental","jobs","tutoring","activities","career", name="category"), nullable=False)
 
+
 #These tables must be implemented as written in final product
 class resources(db.Model):
     resource_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
