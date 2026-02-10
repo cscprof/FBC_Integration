@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <p><strong>URL:</strong> <a href="${info.event.url}" classname="link" target="_blank">${info.event.url || "N/A"}</a></p>
       `;
       popup.style.display = 'block';
-      overlay.style.display = 'block';
+      overlay.style.display = 'block'; 
       info.jsEvent.preventDefault();
 
       document.getElementById('eventPopupClose').onclick = function() {
@@ -146,6 +146,42 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
       allEvents = data;
       calendar.addEventSource(allEvents);
+      
+      // Check if an event was passed as a query parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const eventParam = urlParams.get('event');
+      
+      if (eventParam) {
+        // Find the event with matching title
+        const targetEvent = allEvents.find(e => e.title === decodeURIComponent(eventParam));
+        if (targetEvent) {
+          // Wait a moment for the calendar to render, then show the popup
+          setTimeout(() => {
+            popup.innerHTML = `
+              <span id="eventPopupClose">X</span>
+              <h3>${targetEvent.title}</h3>
+              <p><strong>Start:</strong> ${new Date(targetEvent.start).toLocaleString()}</p>
+              <p><strong>End:</strong> ${new Date(targetEvent.end).toLocaleString()}</p>
+              <p><strong>Registration Deadline:</strong> ${targetEvent.registration_deadline 
+              ? new Date(targetEvent.registration_deadline).toLocaleString() 
+              : 'N/A'}</p>
+              <p><strong>Description:</strong> ${targetEvent.description || "N/A"}</p>
+              <p><strong>URL:</strong> <a href="${targetEvent.url}" class="link" target="_blank">${targetEvent.url || "N/A"}</a></p>
+            `;
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+            
+            document.getElementById('eventPopupClose').onclick = function() {
+              popup.style.display = 'none';
+              overlay.style.display = 'none';
+            };
+            overlay.onclick = function() {
+              popup.style.display = 'none';
+              overlay.style.display = 'none';
+            };
+          }, 500);
+        }
+      }
     })
     .catch(err => console.error(err));
 

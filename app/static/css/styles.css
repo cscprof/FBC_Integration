@@ -188,6 +188,34 @@ input {
     font-weight: bold;
 }
 
+.btn-edit {
+    background-color: #2e44cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.actions {
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.actions a {
+    display: inline;
+}
+
+.actions form {
+    display: inline;
+}
+
 .events-container {
     display: flex;
     flex-direction: column;
@@ -220,6 +248,17 @@ input {
     padding: 12px 20px;
     font-size: 2rem;
     border-radius: 4px 4px 0 0;
+}
+
+.header-2 {
+    background-color: #aaeb54;
+    color: #2e44cc;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 700;
+    padding: 8px 20px;
+    font-size: 1.5rem;
+    border-radius: 4px 4px 0 0;
+    margin-top: 20px;
 }
 
 
@@ -330,4 +369,52 @@ input {
 .homepage-info h3 {
     padding: 15px;
     text-decoration: underline; 
+}
+
+/* Resources Directory Styles */
+.resources-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.resources-container .section {
+    width: 100%;
+}
+
+.resources-container .header {
+    background-color: #aaeb54;
+    color: #2e44cc;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 700;
+    padding: 12px 20px;
+    font-size: 1.8rem;
+    border-radius: 4px 4px 0 0;
+}
+
+.resources-container .list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 0;
+}
+
+.resource a {
+    display: block;
+    /*background-color: #f0f0f0;*/
+    color: #2e44cc;
+    /*padding: 15px 20px;*/
+    font-weight: 600;
+    border-radius: 4px;
+    /*border: 1px solid #ddd;*/
+    font-family: "Open Sans", sans-serif;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.resource a:hover {
+    background-color: #fafafa;
 }
