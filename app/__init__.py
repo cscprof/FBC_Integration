@@ -12,12 +12,10 @@ be coordinated with the team to ensure that the change is necessary
 prior to pushing the new code to GitHub.
 '''
 from flask import Flask
-<<<<<<< HEAD
-from config  import config
-=======
+
 from config import config
 from db import db #Added by resource team for SQLAlchemy integration
->>>>>>> main
+
 
 # Create Flask extensions
 # mysql = MySQL()

@@ -149,11 +149,6 @@ def adminView():
         cursor.execute("""SELECT event_id, name, status, description, start_date, end_date, url FROM events ORDER BY CASE WHEN status = 'pending' THEN 0 ELSE 1 END, start_date ASC""")
         rows = cursor.fetchall()
     conn.close()
-
-<<<<<<< HEAD
-    return render_template('events/adminView.html', events=events)
-'''
-=======
     events = []
     for row in rows:
         events.append({
@@ -167,6 +162,7 @@ def adminView():
         })
 
     return render_template('events/eventAdmin.html', events=events)
+'''
 
 
 @events.route('/edit_event/<int:event_id>', methods=['GET', 'POST'])
@@ -265,7 +261,6 @@ def delete_event(event_id):
     return redirect(url_for('events.adminView'))
 
 
->>>>>>> main
 # ---------------------------------------------------------
 #  API ENDPOINT — returns JSON of approved events
 # ---------------------------------------------------------
