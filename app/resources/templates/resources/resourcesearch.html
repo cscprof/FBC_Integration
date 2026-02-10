@@ -37,7 +37,7 @@
                 {% for resource in resources %}
                 <div class="exampleboxes" data-category="{{ resource.resource_category_name }}">
                     <h3>{{ resource.description }}</h3>
-                    <a href="{{ resource.url }}" class="resourcelink">{{ resource.url }}</a>
+                    <a href="{{ resource.url }}" class="resourcelink" target="_blank">{{ resource.url }}</a>
                 </div>
                 {% endfor %}
             </div>
