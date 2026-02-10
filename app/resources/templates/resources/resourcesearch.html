@@ -4,31 +4,19 @@
 
 {% block content %}
 
-<<<<<<< HEAD
-    <main>
-        <div class="hero">
-            <h2>Resources</h2>
-            <p>Everything you need to succeed - from college prep to mental health support</p>
-        </div>
-=======
 <section class="section">
     <div class="container">
         <h1 class="title has-text-centered">Resource Directory</h1>
         <p class="has-text-centered is-size-5 mb-5" style="color: #666; margin-top: 10px;">
             Everything you need to succeed - from college prep to mental health support
         </p>
->>>>>>> main
 
         <div class="resources">
             <div class="searchfilter">
                 <div class="searchcontainer">
                     <form class="searchform">
                         <input type="text" placeholder="Search resources..." class="searchinput" name="search">
-<<<<<<< HEAD
-                        <button type="submit" class="searchbutton">Search</button>
-=======
                         
->>>>>>> main
                     </form>
                 </div>
 
@@ -46,30 +34,6 @@
             </div>
 
             <div class="examplegrid" id="resourcesgrid">
-<<<<<<< HEAD
-
-		{% for resource in resources %}
-		<div class="exampleboxes" data-category="{{ resource.resource_category_name}}">
-			<h3>{{ resource.description }}</h3>
-			<a href="{{ resource.url }}" class="resourcelink">{{ resource.url }}</a>
-                </div>
-		{% endfor %}
-
-            </div>
-        </div>
-
-        <div class="contact">
-            <h2>Have Questions?</h2>
-            <strong><a href="contact.html">Contact us</a></strong>
-        </div>
-
-    </main>
-
-    <footer>
-        <p> 2025 Flourish Beaver County </p>
-    </footer>
-    <script>
-=======
                 {% for resource in resources %}
                 <div class="exampleboxes" data-category="{{ resource.resource_category_name }}">
                     <h3>{{ resource.description }}</h3>
@@ -84,22 +48,12 @@
 </section>
 
 <script>
->>>>>>> main
     document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector(".searchinput");
     const categorySelect = document.querySelector(".categoryselect");
     const resourceBoxes = document.querySelectorAll(".exampleboxes");
-<<<<<<< HEAD
-
-    // Get category from URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     const categoryParam = urlParams.get('category');
-
-    // Set dropdown to category from URL if provided
-=======
-    const urlParams = new URLSearchParams(window.location.search);
-    const categoryParam = urlParams.get('category');
->>>>>>> main
     if (categoryParam) {
         categorySelect.value = categoryParam;
     }
@@ -124,29 +78,13 @@
         });
     }
 
-<<<<<<< HEAD
-    // Auto update on typing
-    searchInput.addEventListener("keyup", filterResources);
-
-    // Auto update on dropdown change
-    categorySelect.addEventListener("change", filterResources);
-
-    // Trigger filter on page load if category was set from URL
-=======
     searchInput.addEventListener("keyup", filterResources);
     categorySelect.addEventListener("change", filterResources);
 
->>>>>>> main
     if (categoryParam) {
         filterResources();
     }
 });
 </script>
 
-<<<<<<< HEAD
-</body>
-</html>
-
-=======
->>>>>>> main
 {% endblock %}
