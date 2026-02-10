@@ -1,7 +1,7 @@
 /*
 MySQL Backup
 Database: flourish_bc
-Backup Time: 2026-02-03 11:57:51
+Backup Time: 2026-02-10 16:39:03
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,7 +21,7 @@ CREATE TABLE `content_types` (
   `name` varchar(64) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`content_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `event_tags` (
   `event_tag_id` int NOT NULL AUTO_INCREMENT,
   `event_id` int NOT NULL,
@@ -90,7 +90,7 @@ CREATE TABLE `resources` (
   KEY `resource_category_fk` (`resource_category_id`),
   CONSTRAINT `content_types_fk` FOREIGN KEY (`content_type_id`) REFERENCES `content_types` (`content_type_id`),
   CONSTRAINT `resource_category_fk` FOREIGN KEY (`resource_category_id`) REFERENCES `resource_category` (`resource_category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=129277 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `roles` (
   `role_id` int NOT NULL AUTO_INCREMENT,
   `role` enum('Student','Parent','Guardian','Admin','Partner') NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE `users` (
   `username` varchar(64) NOT NULL,
   `password` varchar(128) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
-  `grdauation_year` int DEFAULT NULL,
+  `graduation_year` int DEFAULT NULL,
   `role_id` int NOT NULL,
   `partner_id` int DEFAULT NULL,
   PRIMARY KEY (`user_id`),
@@ -128,10 +128,11 @@ CREATE TABLE `users` (
   KEY `partners_roles_fk` (`partner_id`),
   CONSTRAINT `partners_roles_fk` FOREIGN KEY (`partner_id`) REFERENCES `partners` (`partner_id`),
   CONSTRAINT `users_roles_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 BEGIN;
 LOCK TABLES `flourish_bc`.`content_types` WRITE;
 DELETE FROM `flourish_bc`.`content_types`;
+INSERT INTO `flourish_bc`.`content_types` (`content_type_id`,`name`,`description`) VALUES (1, 'Colleges', NULL),(2, 'Scholarships and Fiunancial Aid', NULL),(3, 'Mental Health', NULL),(4, 'Jobs', NULL),(5, 'Tutoring', NULL),(6, 'Activities', NULL),(7, 'Career', NULL);
 UNLOCK TABLES;
 COMMIT;
 BEGIN;
@@ -165,6 +166,7 @@ COMMIT;
 BEGIN;
 LOCK TABLES `flourish_bc`.`resources` WRITE;
 DELETE FROM `flourish_bc`.`resources`;
+INSERT INTO `flourish_bc`.`resources` (`resource_id`,`description`,`content_type_id`,`url`,`contact_name`,`contact_email`,`contact_phone`,`user_id`,`resource_category_id`) VALUES (1, 'Geneva College', NULL, 'https://www.geneva.edu/', NULL, NULL, NULL, 1, 1),(2, 'Geneva College Counseling Service', NULL, 'https://www.geneva.edu/student-life/wellness/counseling/', 'Amy Solman', 'alsolman@geneva.edu', '724-847-4082', 1, 2),(3, 'Suicide Hotline', NULL, 'https://988lifeline.org/', NULL, NULL, '988', 1, 2),(4, 'College Applications (CommonApp)', NULL, 'https://www.commonapp.org/', NULL, NULL, NULL, 1, 1),(5, 'NCAA Athletic Eligibility', NULL, 'https://web3.ncaa.org/ecwr3/', NULL, NULL, NULL, 1, 1),(6, 'Linkedin', NULL, 'https://www.linkedin.com/', NULL, NULL, NULL, 1, 3),(7, 'Handshake for Students', NULL, 'https://joinhandshake.com/', NULL, NULL, NULL, 1, 3),(8, 'SuperProf Tutoring', NULL, 'https://www.superprof.com/', NULL, NULL, NULL, 1, 4),(9, 'Free Application For Federal Student Aid (FAFSA)', NULL, 'https://studentaid.gov/h/apply-for-aid/fafsa', NULL, NULL, NULL, 1, 1),(10, 'Tutor.com', NULL, 'https://www.tutor.com/', NULL, NULL, NULL, 1, 4),(11, 'Geneva Campus Visit Events', NULL, 'https://apply.geneva.edu/portal/campus_visit_events', NULL, NULL, NULL, 1, 5),(12, 'Scholarships.com', NULL, 'https://www.scholarships.com/', NULL, NULL, NULL, 1, 1),(13, 'Geneva College Center for Calling & Career', NULL, 'https://www.geneva.edu/calling-career/', NULL, NULL, '724.847.6572', 1, 6),(14, '2026 Geneva College In-Person Career Fair', NULL, 'https://geneva.joinhandshake.com/stu/career_fairs/61913/employers_list?page=1&per_page=25', NULL, NULL, NULL, 1, 6),(129275, 'Geneva - Summer Orientation', NULL, 'https://www.geneva.edu/student-life/engagement/first-year-experience/summer-orientation', NULL, NULL, NULL, 1, 1),(129276, 'Penn State', NULL, 'https://psu.edu', NULL, NULL, NULL, 1, 1);
 UNLOCK TABLES;
 COMMIT;
 BEGIN;
@@ -186,6 +188,6 @@ COMMIT;
 BEGIN;
 LOCK TABLES `flourish_bc`.`users` WRITE;
 DELETE FROM `flourish_bc`.`users`;
-INSERT INTO `flourish_bc`.`users` (`user_id`,`first_name`,`last_name`,`middle_name`,`username`,`password`,`email`,`grdauation_year`,`role_id`,`partner_id`) VALUES (1, 'Kathleen', 'Grehl', NULL, 'kgehl', 'asdfasdf', 'kgrehl@genevaa.edu', NULL, 5, 1);
+INSERT INTO `flourish_bc`.`users` (`user_id`,`first_name`,`last_name`,`middle_name`,`username`,`password`,`email`,`graduation_year`,`role_id`,`partner_id`) VALUES (1, 'Kathleen', 'Grehl', NULL, 'kgehl', 'asdfasdf', 'kgrehl@genevaa.edu', NULL, 5, 1),(2, 'Scott', 'Madeira', '', 'ScottMadeira', '$argon2id$v=19$m=65536,t=3,p=4$Er9FAm6RFyYqmRQ5q19/dA$BlxASLFVu0gFuupW2CJK+TkDB7ZmOTuJBmejOi/JZaY', 'smadeira@geneva.edu', 1983, 1, NULL);
 UNLOCK TABLES;
 COMMIT;
