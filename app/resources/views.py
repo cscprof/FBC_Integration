@@ -19,22 +19,22 @@ def resource_directory():
 @resources_blueprint.route("/resourcesearch")
 def resourcesearch():
    # try:
-        dbselect = (
-        select(
-            resources.resource_id,
-            resources.description,
-            resources.url,
-            resources.resource_category_id,
-            resource_category.resource_category_name,
-        )
-        .join(
-            resource_category,
-            resources.resource_category_id == resource_category.resource_category_id ))
+    dbselect = (
+    select(
+        resources.resource_id,
+        resources.description,
+        resources.url,
+        resources.resource_category_id,
+        resource_category.resource_category_name,
+    )
+    .join(
+        resource_category,
+        resources.resource_category_id == resource_category.resource_category_id ))
 
-        dblist = db.session.execute(dbselect).mappings().all()
+    dblist = db.session.execute(dbselect).mappings().all()
 
 
-        return render_template('resources/resourcesearch.html', resources=dblist)
+    return render_template('resources/resourcesearch.html', resources=dblist)
 
     """except:
        
