@@ -18,7 +18,7 @@ def resource_directory():
 
 @resources_blueprint.route("/resourcesearch")
 def resourcesearch():
-    try:
+   # try:
         dbselect = (
         select(
             resources.resource_id,
@@ -33,7 +33,10 @@ def resourcesearch():
 
         dblist = db.session.execute(dbselect).mappings().all()
 
-    except:
+
+        return render_template('resources/resourcesearch.html', resources=dblist)
+
+    """except:
        
         #Exception creates example db entries so that those without the database can still design the webpage
        dblist = [
@@ -47,9 +50,9 @@ def resourcesearch():
             'url': 'https://apply.geneva.edu/portal/applynow/tug_apply',
             'resource_category_name': 'college'
         }
-       ]
+       ]"""
     
-    return render_template('resources/resourcesearch.html', resources=dblist)
+
 
 #HEY CHANGES WE NEED TO MAKE NEXT
 ##Making sure it only exists as admin
