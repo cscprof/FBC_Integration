@@ -78,8 +78,8 @@ def auth_login():
                 conn.close()
         if is_auth:
             return redirect(url_for('profile.profile', username=username))
-        flash("Invalid login")
-        return redirect(url_for('login.home_page'))
+        flash("Invalid login, please try again")
+        return render_template('login/login.html', form=request.form)
 
 # Admin
 @users.route("/admin")
