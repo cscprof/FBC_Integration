@@ -19,10 +19,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 config = configparser.ConfigParser()
 config.read(os.path.join(basedir, 'settings.conf'))
 
-
 class Config:
     SECRET_KEY = config["DEFAULT"]["SECRET_KEY"]
-
     SESSION_PERMANENT = config["SESSION"]["SESSION_PERMANENT"]
     SESSION_TYPE = config["SESSION"]["SESSION_TYPE"]
 
@@ -35,12 +33,8 @@ class BaseConfig(Config):
     MYSQL_USER = config["MYSQL_LOCAL"]["USERNAME"]
     MYSQL_PASSWORD = config["MYSQL_LOCAL"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
-    MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
-    # Prefer explicit DATABASE_URI from settings, otherwise build from pieces
-    _db_uri = config.get("MYSQL_LOCAL", "DATABASE_URI", fallback=None)
-    if not _db_uri:
-        _db_uri = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
-    SQLALCHEMY_DATABASE_URI = _db_uri
+    MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]        
+    SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
 
 class ProductionConfig(Config):
     DEBUG=False
@@ -48,10 +42,7 @@ class ProductionConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_PROD"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_PROD"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_PROD"]["DATABASE"]
-    _db_uri = config.get("MYSQL_PROD", "DATABASE_URI", fallback=None)
-    if not _db_uri:
-        _db_uri = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
-    SQLALCHEMY_DATABASE_URI = _db_uri
+    SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
 
 class GenevaConfig(Config):
     DEBUG=True
@@ -59,11 +50,7 @@ class GenevaConfig(Config):
     MYSQL_PASSWORD = config["MYSQL_LOCAL"]["PASSWORD"]
     MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
-    _db_uri = config.get("MYSQL_LOCAL", "DATABASE_URI", fallback=None)
-    if not _db_uri:
-        _db_uri = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
-    SQLALCHEMY_DATABASE_URI = _db_uri #Resource team database connection
-
+    SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
 
 config = {
     'base': BaseConfig,

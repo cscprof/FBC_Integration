@@ -39,7 +39,7 @@ def create_app(config_name):
     from .resources import resources as resources_blueprint
     app.register_blueprint(resources_blueprint)
 
-    # Load the user managent section
+    # Load the user management section
     from .users import users as users_blueprint
     app.register_blueprint(users_blueprint)
 

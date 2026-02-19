@@ -21,7 +21,7 @@ def profile(username):
             output = cursor.fetchall()
 
     except DatabaseError as e:
-        print(e)
+
         flash("Database error: " + str(e), "error")
         if conn:
             conn.rollback()

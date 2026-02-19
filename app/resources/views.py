@@ -16,7 +16,7 @@ def resource_directory():
         return render_template("resources/resourceDirectory.html", categories=[])
 
 
-@resources_blueprint.route("/resourcesearch.html")
+@resources_blueprint.route("/resourcesearch")
 def resourcesearch():
     try:
         dbselect = (
@@ -32,8 +32,9 @@ def resourcesearch():
             resources.resource_category_id == resource_category.resource_category_id ))
 
         dblist = db.session.execute(dbselect).mappings().all()
-        return render_template('resources/resourcesearch.html', resources=dblist)
+
     except:
+       
         #Exception creates example db entries so that those without the database can still design the webpage
        dblist = [
         {
@@ -55,7 +56,7 @@ def resourcesearch():
 ##Adding other optional fields that exist in the database (Contact Name, Contact Num, etc)
 ##Whatever content type is should probably be figured out
 ###-Owen B.
-@resources_blueprint.route("/upload-resource", methods=["POST"])
+@resources_blueprint.route("/resources/upload", methods=["POST"])
 def upload_resource():
     # Get the form data that the user submitted
     title = request.form.get('title', '').strip()
