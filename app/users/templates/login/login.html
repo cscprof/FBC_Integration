@@ -6,17 +6,6 @@
 <div class="signup-container">
 
     <h1>Login</h1>
-    
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <ul class="flashes">
-              {% for message in messages %}
-                <li>{{ message }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        {% endwith %}
 
     <form action="/auth_login" method="POST">
         <input placeholder="Username" class="entry-box" type="text" name="username" required>
@@ -44,5 +33,16 @@
 
         <button class="button-submit" type="submit">Submit</button>
     </form>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flashes">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
 </div>
 {% endblock %}

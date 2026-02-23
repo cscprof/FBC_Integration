@@ -34,6 +34,12 @@
 
         <input class="entry-box" placeholder="Last Name" type="text" name="last_name" required>
 
+        <input class="entry-box" placeholder="Email" type="email" name="email" required>
+
+        <input class="entry-box" placeholder="Graduation Year" type="text" name="graduation_year">
+
+        <input class="entry-box" placeholder="Username" type="text" name="username">
+
         <div class="password-box">
             <input placeholder="Password (8 characters minimum)" type="password" name="password" id="password" minlength="8" required>
             <img src="{{ url_for('static', filename='images/eyeclosed.png') }}" id="eyeicon" alt="hide-password">
@@ -51,14 +57,10 @@
                     eyeicon.src = "{{ url_for('static', filename='images/eyeclosed.png') }}";
                 }
             }
-
         </script>
 
-        <input class="entry-box" placeholder="Email" type="email" name="email" required>
-
-        <input class="entry-box" placeholder="Graduation Year" type="text" name="graduation_year">
-
         <button class="button-submit" type="submit">Submit</button>
+
     </form>
 </div>
 {% endblock %}
