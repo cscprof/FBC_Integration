@@ -28,23 +28,35 @@
         <label class="signup-label" for="partner">Partner</label><br><br>
         </div>
 
-        <label class="signup-label">First Name:</label>
-        <input class="entry-box" type="text" name="first_name" required><br>
+        <input class="entry-box" placeholder="First Name" type="text" name="first_name" required>
 
-        <label class="signup-label">Middle Name:</label>
-        <input class="entry-box" type="text" name="middle_name"><br>
+        <input class="entry-box" placeholder="Middle Name" type="text" name="middle_name">
 
-        <label class="signup-label">Last Name:</label>
-        <input class="entry-box" type="text" name="last_name" required><br>
+        <input class="entry-box" placeholder="Last Name" type="text" name="last_name" required>
 
-        <label class="signup-label">Password:</label>
-        <input class="entry-box" type="text" name="password" required><br>
+        <div class="password-box">
+            <input placeholder="Password (8 characters minimum)" type="password" name="password" id="password" minlength="8" required>
+            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}" id="eyeicon" alt="hide-password">
+        </div>
+        <script>
+            let eyeicon = document.getElementById("eyeicon")
+            let password = document.getElementById("password")
 
-        <label class="signup-label">Email:</label>
-        <input class="entry-box" type="email" name="email" required><br>
+            eyeicon.onclick = function(){
+                if (password.type == "password"){
+                    password.type = "text";
+                    eyeicon.src = "{{ url_for('static', filename='images/eyeopen.png') }}";
+                }else{
+                    password.type = "password";
+                    eyeicon.src = "{{ url_for('static', filename='images/eyeclosed.png') }}";
+                }
+            }
 
-        <label class="signup-label">Graduation Year:</label>
-        <input class="entry-box" type="text" name="graduation_year"><br>
+        </script>
+
+        <input class="entry-box" placeholder="Email" type="email" name="email" required>
+
+        <input class="entry-box" placeholder="Graduation Year" type="text" name="graduation_year">
 
         <button class="button-submit" type="submit">Submit</button>
     </form>
