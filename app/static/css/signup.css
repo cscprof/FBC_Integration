@@ -29,7 +29,10 @@ form {
 .entry-box {
     border: 1px solid black;
     border-radius: 10px;          
-    box-sizing: border-box;}
+    box-sizing: border-box;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 
 .button-submit {
     background-color: #aaeb54;
@@ -57,6 +60,8 @@ form input[type="radio"] {
     display: flex;
     align-items: center;
     position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .password-box img{
@@ -66,4 +71,10 @@ form input[type="radio"] {
     top: 50%;
     left: 86%;
     transform: translateY(-50%);
+}
+
+select {
+  border-radius: 8px;
+  border: 1px solid #cccccc;
+  font-size: 1rem;
 }

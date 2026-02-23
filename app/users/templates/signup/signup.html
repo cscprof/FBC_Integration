@@ -8,24 +8,15 @@
     <h1>Add a New User</h1>
     <form action="/add_user" method="POST">
 
+        
         <div>
-        <input type="radio" id="student" name="userRole" value="1" checked>
-        <label class="signup-label" for="student">Student</label><br>
-        </div>
-
-        <div>
-        <input type="radio" id="parent" name="userRole" value="2">
-        <label class="signup-label" for="parent">Parent</label><br>
-        </div>
-
-        <div>
-        <input type="radio" id="guardian" name="userRole" value="3">
-        <label class="signup-label" for="guardian">Guardian</label><br>
-        </div>
-
-        <div>
-        <input type="radio" id="partner" name="userRole" value="5">
-        <label class="signup-label" for="partner">Partner</label><br><br>
+        <label class="signup-label" for="userRole">Who am I?</label><br>
+        <select class="entry-box" name="userRole" id="userRole" required>
+            <option value="1">Student</option>
+            <option value="2">Parent</option>
+            <option value="3">Guardian</option>
+            <option value="5">Partner</option>            
+        </select>
         </div>
 
         <input class="entry-box" placeholder="First Name" type="text" name="first_name" required>
