@@ -8,7 +8,7 @@ from .Hashing import hash_plaintext, hash_check_matches
 from . import users
 # from . import signup, login, adminpanel
 
-# For checking logged in user
+# For creating a user account
 from flask_login import login_user
 from app.Models.Account import Account
 
@@ -75,6 +75,10 @@ def auth_login():
                 row = cursor.fetchone()
                 if row and hash_check_matches(password_given, row["password"]):
                     is_auth = True
+
+                    # Create user from the Account class
+                    # This user can then be used by the login manager anywhere in this program 
+                    # Accessed by current_user.role for setting role permissions
                     user = Account(
                         username=row['username'],
                         email=row['email'],

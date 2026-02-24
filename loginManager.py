@@ -3,8 +3,9 @@ from db import get_db_connection
 from app.Models.Account import Account
 
 login_manager = LoginManager()
-login_manager.login_view = 'users.home_page'  # Redirect to login page if not authenticated
+login_manager.login_view = 'users.home_page' 
 
+# Creates a user account from the mathcing database entry for the entered user_id
 @login_manager.user_loader
 def load_user(user_id):
     conn = get_db_connection()
