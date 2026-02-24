@@ -8,6 +8,10 @@ from .Hashing import hash_plaintext, hash_check_matches
 from . import users
 # from . import signup, login, adminpanel
 
+# For checking logged in user
+from flask_login import login_user
+from app.Models.Account import Account
+
 # Sign Up
 @users.route("/add_user", methods=["GET", "POST"])
 def add_user():
@@ -62,14 +66,28 @@ def auth_login():
         username = request.form.get('username', '').strip()
         password_given = request.form.get('password', '').strip()
         is_auth = False
+        row = None
         conn = None
         try:
             conn = get_db_connection()
             with conn.cursor(DictCursor) as cursor:
-                cursor.execute("SELECT password FROM users WHERE username = %s", (username,))
+                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
                 row = cursor.fetchone()
                 if row and hash_check_matches(password_given, row["password"]):
                     is_auth = True
+                    user = Account(
+                        username=row['username'],
+                        email=row['email'],
+                        passwdHash=row['password'],
+                        roleID=row['role_id'],
+                        partnerID=row['partner_id'],
+                        userID=row['user_id'],
+                        nameFirst=row['first_name'],
+                        nameLast=row['last_name'],
+                        nameMiddle=row['middle_name'],
+                        gradYear=row['graduation_year']
+                    )
+                    login_user(user)
         except DatabaseError as e:
             flash(f"DB Error: {e}", "error")
             return render_template('login/login.html', form=request.form)
