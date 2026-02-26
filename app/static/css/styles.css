@@ -49,7 +49,7 @@
 .login-blob {
     background: #2e44cc;
     color: white;
-    padding: 45px;
+    padding: 45px;  
     width: 500px;
     height: 570px;
     border-radius: 77% 38% 55% 45% / 70% 40% 50% 37%;
@@ -66,19 +66,29 @@
     margin: 5px 0 30px;
 }
 
-form {
+.login-form {
     display: flex;
     flex-direction: column;
     width: 100%;
     gap: 15px;
-    align-items: center;
+    align-items: stretch;
 }
 
-input {
+.login-form label {
+    text-align: left;
+    align-self: flex-start;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: -8px;
+    margin-left: 30px;
+}
+
+.login-form input {
     width: 90%;
     padding: 10px;
     border-radius: 10px;
-    font-size: 1rem;
+    margin-left: 30px;
 }
 
 .login {
@@ -93,7 +103,7 @@ input {
 /*sign up css*/
 .signup-container {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     gap: 50px;
     padding: 80px;
@@ -102,12 +112,12 @@ input {
 .signup-blob {
     background: #8ac926;
     color: white;
-    padding: 45px;
-    width: 650px;
-    height: 750px;
-    /*border-radius: 77% 38% 55% 45% / 70% 40% 50% 37%;*/
-    border-radius: 39% 80% 52% 55% / 40% 55% 45% 50%;
-    display: flex;
+    padding: 60px;
+    width: 100%;
+    max-width: 900px;
+    min-width: 80vh;
+    /* border-radius: 39% 80% 52% 55% / 40% 55% 45% 50%; */
+    border-radius: 60% 40% 55% 45% / 45% 60% 40% 55%;
     flex-direction: column;
     align-items: center;
     justify-content: center;

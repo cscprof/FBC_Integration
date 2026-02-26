@@ -5,53 +5,66 @@
 
 {% block content %}
 <div class="signup-container">
-    <h1>Add a New User</h1>
-    <form action="/add_user" method="POST">
+    <div class="login-text">
+        <h3>I already have an account.</h3>
+        <a class="button sign-up no-account" href="/login">
+            <strong>Log In</strong>
+        </a>
+    </div>
 
-        <div>
-        <input type="radio" id="student" name="userRole" value="1" checked>
-        <label class="signup-label" for="student">Student</label><br>
+    <div class="signup-blob">
+        <h1>Create An Account</h1>
+    <div class="underline-signup"></div>
+    <form class="signup-form" action="/add_user" method="POST">
+
+        <div class="role-group">
+            <label class="role-option">
+                <input type="radio" name="userRole" value="1" checked>
+                Student
+            </label>
+
+            <label class="role-option">
+                <input type="radio" name="userRole" value="2">
+                Parent
+            </label>
+
+            <label class="role-option">
+                <input type="radio" name="userRole" value="3">
+                Guardian
+            </label>
+
+            <label class="role-option">
+                <input type="radio" name="userRole" value="4">
+                Admin
+            </label>
+
+            <label class="role-option">
+                <input type="radio" name="userRole" value="5">
+                Partner
+            </label>
         </div>
 
-        <div>
-        <input type="radio" id="parent" name="userRole" value="2">
-        <label class="signup-label" for="parent">Parent</label><br>
-        </div>
-
-        <div>
-        <input type="radio" id="guardian" name="userRole" value="3">
-        <label class="signup-label" for="guardian">Guardian</label><br>
-        </div>
-
-        <div>
-        <input type="radio" id="admin" name="userRole" value="4">
-        <label class="signup-label" for="admin">Admin</label><br>
-        </div>
-
-        <div>
-        <input type="radio" id="partner" name="userRole" value="5">
-        <label class="signup-label" for="partner">Partner</label><br><br>
-        </div>
 
         <label class="signup-label">First Name:</label>
-        <input class="entry-box" type="text" name="first_name" required><br>
+        <input class="entry-box" type="text" name="first_name" required>
 
         <label class="signup-label">Middle Name:</label>
-        <input class="entry-box" type="text" name="middle_name"><br>
+        <input class="entry-box" type="text" name="middle_name">
 
         <label class="signup-label">Last Name:</label>
-        <input class="entry-box" type="text" name="last_name" required><br>
+        <input class="entry-box" type="text" name="last_name" required>
 
         <label class="signup-label">Password:</label>
-        <input class="entry-box" type="text" name="password" required><br>
+        <input class="entry-box" type="text" name="password" required>
 
         <label class="signup-label">Email:</label>
-        <input class="entry-box" type="email" name="email" required><br>
+        <input class="entry-box" type="email" name="email" required>
 
         <label class="signup-label">Graduation Year:</label>
-        <input class="entry-box" type="text" name="graduation_year"><br>
+        <input class="entry-box" type="text" name="graduation_year">
 
         <button class="button-submit" type="submit">Submit</button>
     </form>
+    </div>
 </div>
 {% endblock %}

@@ -3,9 +3,11 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="signup-container">
-    <h1>Login</h1>
-    <form action="/auth_login" method="POST">
+<div class="login-container">
+    <div class="login-blob">
+        <h1>Log In</h1>
+    <div class="underline"></div>
+    <form class="login-form" action="/auth_login" method="POST">
         <label class="signup-label">Username:</label>
         <input class="entry-box" type="text" name="username" required><br>
 
@@ -14,5 +16,13 @@
 
         <button class="button-submit" type="submit">Submit</button>
     </form>
+    </div>
+
+    <div class="signup-text">
+        <h3>I don't have an account yet.</h3>
+        <a class="button sign-up no-account" href="/signup">
+            <strong>Sign up</strong>
+        </a>
+    </div>
 </div>
 {% endblock %}

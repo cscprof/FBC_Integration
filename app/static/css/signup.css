@@ -1,26 +1,23 @@
-form {
+.signup-form {
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 15px;
-    align-items: flex-start;
+    max-width: 600px;
 }
 
 .signup-container {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     gap: 50px;
     padding: 40px;
     font-family: "Open Sans", sans-serif;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 .signup-label {
-    float: left;
-    width: 150px;
     font-weight: 600;
-    color: rgb(0, 0, 0);
+    color: black;
     font-size: 0.9rem;
     margin-left: 5px;
     height: auto;
@@ -40,6 +37,8 @@ form {
     border-radius: 10px;
     cursor: pointer;
     transition: .2s;
+    width: 50%;
+    align-self: center;
 }
 .button-submit:hover {
     background-color: #8ac926;
@@ -50,4 +49,19 @@ form input[type="radio"] {
   height: 20px;
     display: inline-block;
   vertical-align: bottom;
+}
+
+.role-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.signup-blob {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 120px;
 }
