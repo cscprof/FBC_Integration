@@ -39,7 +39,12 @@
             </div>
 
             <div class="examplegrid" id="resourcesgrid">
-                <div class="exampleboxes" data-category="college">
+
+                <!-- College -->
+                <div class="exampleboxes"
+                     data-category="college"
+                     onclick="window.location.href='{{ url_for('resources.resourcesearch') }}?category=college'"
+                     style="cursor: pointer;">
                     <h3>College and Scholarships</h3>
                     <p>Find all kinds of scholarships here! We can help find the best fit for you.</p>
                     <ul>
@@ -48,10 +53,13 @@
                         <li>Pitt Beaver</li>
                         <li>STEM Scholarships</li>
                     </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=college" class="resourcelink">Learn More</a>
                 </div>
 
-                <div class="exampleboxes" data-category="mental">
+                <!-- Mental -->
+                <div class="exampleboxes"
+                     data-category="mental"
+                     onclick="window.location.href='{{ url_for('resources.resourcesearch') }}?category=mental'"
+                     style="cursor: pointer;">
                     <h3>Mental Health & Support</h3>
                     <p>Free and confidential support for stress, anxiety, and other challenges.</p>
                     <ul>
@@ -60,10 +68,13 @@
                         <li>Crisis Hotlines</li>
                         <li>Wellness Resources</li>
                     </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=mental" class="resourcelink">Learn More</a>
                 </div>
 
-                <div class="exampleboxes" data-category="jobs">
+                <!-- Jobs -->
+                <div class="exampleboxes"
+                     data-category="jobs"
+                     onclick="window.location.href='{{ url_for('resources.resourcesearch') }}?category=jobs'"
+                     style="cursor: pointer;">
                     <h3>Jobs & Internships</h3>
                     <p>Find part-time jobs, summer work, and internships in Beaver County.</p>
                     <ul>
@@ -72,10 +83,13 @@
                         <li>Internship Opportunities</li>
                         <li>Resume & Interview Help</li>
                     </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=jobs" class="resourcelink">Learn More</a>
                 </div>
 
-                <div class="exampleboxes" data-category="tutoring">
+                <!-- Tutoring -->
+                <div class="exampleboxes"
+                     data-category="tutoring"
+                     onclick="window.location.href='{{ url_for('resources.resourcesearch') }}?category=tutoring'"
+                     style="cursor: pointer;">
                     <h3>Tutoring & Study Help</h3>
                     <p>Free tutoring and study resources to help you ace your classes.</p>
                     <ul>
@@ -84,10 +98,13 @@
                         <li>Study Groups</li>
                         <li>Online Learning Resources</li>
                     </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=tutoring" class="resourcelink">Learn More</a>
                 </div>
 
-                <div class="exampleboxes" data-category="activities">
+                <!-- Activities -->
+                <div class="exampleboxes"
+                     data-category="activities"
+                     onclick="window.location.href='{{ url_for('resources.resourcesearch') }}?category=activities'"
+                     style="cursor: pointer;">
                     <h3>Activities & Clubs</h3>
                     <p>Join clubs, sports, and activities to meet new people and explore interests.</p>
                     <ul>
@@ -96,10 +113,13 @@
                         <li>Volunteer Opportunities</li>
                         <li>Youth Groups</li>
                     </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=activities" class="resourcelink">Learn More</a>
                 </div>
 
-                <div class="exampleboxes" data-category="career">
+                <!-- Career -->
+                <div class="exampleboxes"
+                     data-category="career"
+                     onclick="window.location.href='{{ url_for('resources.resourcesearch') }}?category=career'"
+                     style="cursor: pointer;">
                     <h3>Career Exploration</h3>
                     <p>Discover career paths and learn about different industries and opportunities.</p>
                     <ul>
@@ -108,8 +128,8 @@
                         <li>Career Fairs</li>
                         <li>Mentorship Programs</li>
                     </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=career" class="resourcelink">Learn More</a>
                 </div>
+
             </div>
         </div>
     </div>
@@ -147,36 +167,5 @@
         </form>
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.querySelector(".searchinput");
-    const categorySelect = document.querySelector(".categoryselect");
-    const resourceBoxes = document.querySelectorAll(".exampleboxes");
-
-    function filterResources() {
-        const searchValue = searchInput.value.toLowerCase();
-        const selectedCategory = categorySelect.value;
-
-        resourceBoxes.forEach(box => {
-            const boxCategory = box.getAttribute("data-category");
-            const textContent = box.innerText.toLowerCase();
-
-            const matchesSearch = textContent.includes(searchValue);
-            const matchesCategory =
-                selectedCategory === "all" || boxCategory === selectedCategory;
-
-            if (matchesSearch && matchesCategory) {
-                box.style.display = "block";
-            } else {
-                box.style.display = "none";
-            }
-        });
-    }
-
-    searchInput.addEventListener("keyup", filterResources);
-    categorySelect.addEventListener("change", filterResources);
-});
-</script>
 
 {% endblock %}
