@@ -26,6 +26,9 @@ def resourcesearch():
             resources.url,
             resources.resource_category_id,
             resource_category.resource_category_name,
+            resources.contact_name,
+            resources.contact_email,
+            resources.contact_phone,
         )
         .join(
             resource_category,
@@ -40,7 +43,10 @@ def resourcesearch():
         {
             'description': 'Geneva College Financial Aid Website',
             'url': 'https://www.geneva.edu/financial-aid/',
-            'resource_category_name': 'college'
+            'resource_category_name': 'college',
+            'contact_name' : 'Dean Swank',
+            'contact_email' : 'dswank@geneva.edu',
+            'contact_phone' : '18005882300'
         },
         {
             'description': 'Geneva Application Process',
