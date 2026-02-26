@@ -124,6 +124,9 @@
         <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
             <input type="text" name="title" placeholder="Title *" required>
             <input type="text" name="url" placeholder="URL *" required>
+            <input type="text" name="name" placeholder="Contact Name (Optional)">
+            <input type="text" name="email" placeholder="Contact Email (Optional)">
+            <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
             <select name="resource_category_id" required>
                 <option value="">Category *</option>
                 {% if categories %}
