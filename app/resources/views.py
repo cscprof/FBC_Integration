@@ -69,6 +69,9 @@ def upload_resource():
     title = request.form.get('title', '').strip()
     url = request.form.get('url', '').strip()
     resource_category_id = request.form.get('resource_category_id', '').strip()
+    name = request.form.get('name', '').strip()
+    email = request.form.get('email', '').strip()
+    phone = request.form.get('phone', '').strip()
     
     # Make sure all required fields were filled out
     if not title or not url or not resource_category_id:
@@ -85,7 +88,10 @@ def upload_resource():
             url=url,
             content_type_id=content_type,
             resource_category_id=int(resource_category_id),
-            user_id=1  # Change later to be signed-in user
+            user_id=1, # Change later to be signed-in user
+            contact_name=name,
+            contact_email=email,
+            contact_phone=phone,
         )
         
         # Save it to the database
