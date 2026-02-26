@@ -23,7 +23,7 @@ def add_user():
         email = request.form.get('email', '').strip()
         graduation_year = request.form.get('graduation_year', '').strip()
         password = request.form.get('password', '').strip()
-        username = first_name + last_name
+        username = request.form.get('username', '').strip()
 
         conn = None
         try:
