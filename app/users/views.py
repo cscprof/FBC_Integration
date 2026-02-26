@@ -82,7 +82,7 @@ def auth_login():
         return redirect(url_for('login.home_page'))
 
 # Admin
-@users.route("/admin")
+@users.route("/admin/users")
 def admin_panel():
     conn = get_db_connection()
     try:
