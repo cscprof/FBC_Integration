@@ -70,11 +70,21 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <div class="buttons">
-          <a class="button sign-up" href="/signup">
-            <strong>Sign up</strong>
-          </a>
-          <a class="button is-light" href="/login"> Log in </a>
+        <div class="buttons has-text-centered is-flex is-align-items-center is-justify-content-center">
+
+          <!-- Show sign up and log in buttons if the user is not authenticated -->
+          {% if not current_user.is_authenticated %}
+            <a class="button sign-up" href="/signup">
+              <strong>Sign up</strong>
+            </a>
+            <a class="button is-light" href="/login"> Log in </a>
+
+          <!-- Show log out if user is authenticaed -->
+          {% elif current_user.is_authenticated %}
+            <p class="navbar-item has-text-centered" style="display: flex; align-items: center; margin-bottom: 0;"> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </p>
+            <a class="button is-light" href="/"> Log out </a>
+          {% endif %}
+
         </div>
       </div>
     </div>

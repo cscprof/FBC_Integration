@@ -99,7 +99,8 @@ def auth_login():
             if conn:
                 conn.close()
         if is_auth:
-            return redirect(url_for('profile.profile', username=username))
+            return redirect(url_for('home.home_page'))
+            # return redirect(url_for('profile.profile', username=username))
         flash("Invalid login")
         return redirect(url_for('login.home_page'))
 
