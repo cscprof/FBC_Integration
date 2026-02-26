@@ -8,50 +8,50 @@
     <h1>Add a New User</h1>
     <form action="/add_user" method="POST">
 
+        
         <div>
-        <input type="radio" id="student" name="userRole" value="1" checked>
-        <label class="signup-label" for="student">Student</label><br>
+        <label class="signup-label" for="userRole">Who am I?</label><br>
+        <select class="entry-box" name="userRole" id="userRole" required>
+            <option value="1">Student</option>
+            <option value="2">Parent</option>
+            <option value="3">Guardian</option>
+            <option value="5">Partner</option>            
+        </select>
         </div>
 
-        <div>
-        <input type="radio" id="parent" name="userRole" value="2">
-        <label class="signup-label" for="parent">Parent</label><br>
+        <input class="entry-box" placeholder="First Name" type="text" name="first_name" required>
+
+        <input class="entry-box" placeholder="Middle Name" type="text" name="middle_name">
+
+        <input class="entry-box" placeholder="Last Name" type="text" name="last_name" required>
+
+        <input class="entry-box" placeholder="Email" type="email" name="email" required>
+
+        <input class="entry-box" placeholder="Graduation Year" type="text" name="graduation_year">
+
+        <input class="entry-box" placeholder="Username" type="text" name="username">
+
+        <div class="password-box">
+            <input placeholder="Password (8 characters minimum)" type="password" name="password" id="password" minlength="8" required>
+            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}" id="eyeicon" alt="hide-password">
         </div>
+        <script>
+            let eyeicon = document.getElementById("eyeicon")
+            let password = document.getElementById("password")
 
-        <div>
-        <input type="radio" id="guardian" name="userRole" value="3">
-        <label class="signup-label" for="guardian">Guardian</label><br>
-        </div>
-
-        <div>
-        <input type="radio" id="admin" name="userRole" value="4">
-        <label class="signup-label" for="admin">Admin</label><br>
-        </div>
-
-        <div>
-        <input type="radio" id="partner" name="userRole" value="5">
-        <label class="signup-label" for="partner">Partner</label><br><br>
-        </div>
-
-        <label class="signup-label">First Name:</label>
-        <input class="entry-box" type="text" name="first_name" required><br>
-
-        <label class="signup-label">Middle Name:</label>
-        <input class="entry-box" type="text" name="middle_name"><br>
-
-        <label class="signup-label">Last Name:</label>
-        <input class="entry-box" type="text" name="last_name" required><br>
-
-        <label class="signup-label">Password:</label>
-        <input class="entry-box" type="text" name="password" required><br>
-
-        <label class="signup-label">Email:</label>
-        <input class="entry-box" type="email" name="email" required><br>
-
-        <label class="signup-label">Graduation Year:</label>
-        <input class="entry-box" type="text" name="graduation_year"><br>
+            eyeicon.onclick = function(){
+                if (password.type == "password"){
+                    password.type = "text";
+                    eyeicon.src = "{{ url_for('static', filename='images/eyeopen.png') }}";
+                }else{
+                    password.type = "password";
+                    eyeicon.src = "{{ url_for('static', filename='images/eyeclosed.png') }}";
+                }
+            }
+        </script>
 
         <button class="button-submit" type="submit">Submit</button>
+
     </form>
 </div>
 {% endblock %}

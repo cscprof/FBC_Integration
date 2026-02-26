@@ -19,7 +19,7 @@ def add_user():
         email = request.form.get('email', '').strip()
         graduation_year = request.form.get('graduation_year', '').strip()
         password = request.form.get('password', '').strip()
-        username = first_name + last_name
+        username = request.form.get('username', '').strip()
 
         conn = None
         try:
@@ -78,8 +78,8 @@ def auth_login():
                 conn.close()
         if is_auth:
             return redirect(url_for('profile.profile', username=username))
-        flash("Invalid login")
-        return redirect(url_for('login.home_page'))
+        flash("Invalid login, please try again")
+        return render_template('login/login.html', form=request.form)
 
 # Admin
 @users.route("/admin")
