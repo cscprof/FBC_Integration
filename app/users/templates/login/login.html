@@ -4,15 +4,45 @@
 
 {% block content %}
 <div class="signup-container">
-    <h1>Login</h1>
-    <form action="/auth_login" method="POST">
-        <label class="signup-label">Username:</label>
-        <input class="entry-box" type="text" name="username" required><br>
 
-        <label class="signup-label">Password:</label>
-        <input class="entry-box" type="text" name="password"><br>
+    <h1>Login</h1>
+
+    <form action="/auth_login" method="POST">
+        <input placeholder="Username" class="entry-box" type="text" name="username" required>
+
+        <div class="password-box">
+            <input placeholder="Password" type="password" name="password" id="password" required>
+            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}" id="eyeicon" alt="hide-password">
+        </div>
+
+        <script>
+            let eyeicon = document.getElementById("eyeicon")
+            let password = document.getElementById("password")
+
+            eyeicon.onclick = function(){
+                if (password.type == "password"){
+                    password.type = "text";
+                    eyeicon.src = "{{ url_for('static', filename='images/eyeopen.png') }}";
+                }else{
+                    password.type = "password";
+                    eyeicon.src = "{{ url_for('static', filename='images/eyeclosed.png') }}";
+                }
+            }
+        </script>
+
 
         <button class="button-submit" type="submit">Submit</button>
     </form>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flashes">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
 </div>
 {% endblock %}

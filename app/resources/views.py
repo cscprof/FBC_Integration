@@ -17,8 +17,13 @@ def resource_directory():
 
 
 @resources_blueprint.route("/resourcesearch")
+
 def resourcesearch():
     try:
+        #Taken from above method for add resource button
+        categories_list = db.session.execute(select(resource_category)).scalars().all()
+
+        #To load resources from db
         dbselect = (
         select(
             resources.resource_id,
@@ -37,7 +42,8 @@ def resourcesearch():
         dblist = db.session.execute(dbselect).mappings().all()
 
     except:
-       
+
+       categories_list = []
         #Exception creates example db entries so that those without the database can still design the webpage
        dblist = [
         {
@@ -55,12 +61,13 @@ def resourcesearch():
         }
        ]
     
-    return render_template('resources/resourcesearch.html', resources=dblist)
+    return render_template('resources/resourcesearch.html', resources=dblist, categories=categories_list)
 
 #HEY CHANGES WE NEED TO MAKE NEXT
 ##Making sure it only exists as admin
 ##Adding other optional fields that exist in the database (Contact Name, Contact Num, etc)
 ##Whatever content type is should probably be figured out
+###Should capture current user id instead of just "1"
 ###-Owen B.
 @resources_blueprint.route("/resources/upload", methods=["POST"])
 def upload_resource():
