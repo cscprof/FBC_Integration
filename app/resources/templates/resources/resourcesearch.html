@@ -38,13 +38,14 @@
                 <div class="exampleboxes" data-category="{{ resource.resource_category_name }}">
                     <h3>{{ resource.description }}</h3>
                     {%  if resource.contact_name %}
-                    <h3>{{ resource.contact_name }}</h3>
+                    <br>
+                    <h4>{{ resource.contact_name }}</h4>
                     {% endif %}
                     {%  if resource.contact_email %}
-                    <h3>{{ resource.contact_email }}</h3>
+                    <h6>{{ resource.contact_email }}</h6>
                     {% endif %}
                     {%  if resource.contact_phone %}
-                    <h3>{{ resource.contact_phone }}</h3>
+                    <h6>{{ resource.contact_phone }}</h6>
                     {% endif %}
                     <a href="{{ resource.url }}" class="resourcelink" target="_blank">{{ resource.url }}</a>
                 </div>
