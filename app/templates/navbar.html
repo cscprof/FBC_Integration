@@ -24,7 +24,7 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
 
-      {% if current_user.role == 4 %}
+      {% if current_user.role == 4 or current_user.role == 5 %}
         <a class="navbar-item" href="/admin"> Admin </a>
       {% endif %}
 
