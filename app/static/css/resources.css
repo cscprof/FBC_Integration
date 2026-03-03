@@ -81,6 +81,7 @@ main {
     display: grid;
     grid-template-columns: 1fr; 
     gap: 30px;
+    align-items: stretch; 
 }
 
 @media (min-width: 768px) {
@@ -94,16 +95,44 @@ main {
     padding: 30px;
     border-radius: 15px;
     text-align: center;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 220px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
     box-shadow:
         0 8px 25px rgba(0, 0, 0, 0.1),
         0 6px 18px rgba(138, 201, 38, 0.25);
+}
+
+.exampleboxes:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.15),
+        0 8px 22px rgba(138, 201, 38, 0.3);
+}
+
+.resource-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.resource-card-link .exampleboxes {
+    justify-content: flex-start;
+    align-items: center;
 }
 
 
 .exampleboxes h3 {
     color: #2e44cc;
     font-size: 1.5em;
+}
+
+.resource-card-link .exampleboxes h3 {
+    margin-top: 40px;
 }
 
 .exampleboxes p {
@@ -127,7 +156,14 @@ main {
     text-decoration: none;
     font-weight: bold;
     font-size: 1em;
-    
+    display: inline-block;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+.resource-card-link .resourcelink {
+    margin-top: auto;
+    margin-bottom: 24px;
 }
 
 .resourcelink:hover {
