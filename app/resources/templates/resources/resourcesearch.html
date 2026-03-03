@@ -41,10 +41,12 @@
 
             <div class="examplegrid" id="resourcesgrid">
                 {% for resource in resources %}
-                <div class="exampleboxes" data-category="{{ resource.resource_category_name }}">
-                    <h3>{{ resource.description }}</h3>
-                    <a href="{{ resource.url }}" class="resourcelink" target="_blank">{{ resource.url }}</a>
-                </div>
+                <a href="{{ resource.url }}" class="resource-card-link" target="_blank" rel="noopener noreferrer">
+                    <div class="exampleboxes" data-category="{{ resource.resource_category_name }}">
+                        <h3>{{ resource.description }}</h3>
+                        <p class="resourcelink">Learn More</p>
+                    </div>
+                </a>
                 {% endfor %}
             </div>
         </div>
