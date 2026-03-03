@@ -23,11 +23,16 @@
 
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-
-      {% if current_user.role == 4 %}
-        <a class="navbar-item" href="/admin"> Admin </a>
-      {% endif %}
-
+      <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
+        <a class="navbar-link">
+          Admin
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="/admin/users">Users</a>
+          <a class="navbar-item" href="/admin/events">Events</a>
+          <a class="navbar-item" href="/admin/resources">Resources</a>
+        </div>
+      </div>
       <a class="navbar-item" href="/events"> Events List </a>
 
 
