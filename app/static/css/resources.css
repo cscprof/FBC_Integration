@@ -141,9 +141,10 @@ main {
 }
 
 .exampleboxes ul {
-    text-align: left;
+    text-align: center;
     margin-top: 15px;
-    padding-left: 20px;
+    padding-left: 0;
+    list-style-position: inside;
 }
 
 .exampleboxes ul li {
