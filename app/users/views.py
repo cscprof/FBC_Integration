@@ -8,6 +8,10 @@ from .Hashing import hash_plaintext, hash_check_matches
 from . import users
 # from . import signup, login, adminpanel
 
+# For creating a user account
+from flask_login import login_user
+from app.Models.Account import Account
+
 # Sign Up
 @users.route("/add_user", methods=["GET", "POST"])
 def add_user():
@@ -19,7 +23,7 @@ def add_user():
         email = request.form.get('email', '').strip()
         graduation_year = request.form.get('graduation_year', '').strip()
         password = request.form.get('password', '').strip()
-        username = first_name + last_name
+        username = request.form.get('username', '').strip()
 
         conn = None
         try:
@@ -62,14 +66,32 @@ def auth_login():
         username = request.form.get('username', '').strip()
         password_given = request.form.get('password', '').strip()
         is_auth = False
+        row = None
         conn = None
         try:
             conn = get_db_connection()
             with conn.cursor(DictCursor) as cursor:
-                cursor.execute("SELECT password FROM users WHERE username = %s", (username,))
+                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
                 row = cursor.fetchone()
                 if row and hash_check_matches(password_given, row["password"]):
                     is_auth = True
+
+                    # Create user from the Account class
+                    # This user can then be used by the login manager anywhere in this program 
+                    # Accessed by current_user.role for setting role permissions
+                    user = Account(
+                        username=row['username'],
+                        email=row['email'],
+                        passwdHash=row['password'],
+                        roleID=row['role_id'],
+                        partnerID=row['partner_id'],
+                        userID=row['user_id'],
+                        nameFirst=row['first_name'],
+                        nameLast=row['last_name'],
+                        nameMiddle=row['middle_name'],
+                        gradYear=row['graduation_year']
+                    )
+                    login_user(user)
         except DatabaseError as e:
             flash(f"DB Error: {e}", "error")
             return render_template('login/login.html', form=request.form)
@@ -77,7 +99,8 @@ def auth_login():
             if conn:
                 conn.close()
         if is_auth:
-            return redirect(url_for('profile.profile', username=username))
+            return redirect(url_for('home.home_page'))
+            # return redirect(url_for('profile.profile', username=username))
         flash("Invalid login")
         return redirect(url_for('login.home_page'))
 

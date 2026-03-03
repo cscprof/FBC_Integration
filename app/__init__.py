@@ -52,6 +52,10 @@ def create_app(config_name):
     # Load the profile page section
     from .profile import profile as profile_blueprint
     app.register_blueprint(profile_blueprint)
+
+    # Load login manager
+    from loginManager import login_manager
+    login_manager.init_app(app)
     
     return app
 
