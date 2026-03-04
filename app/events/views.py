@@ -141,8 +141,8 @@ def update_event(event_id, action):
 
     return redirect(url_for('events.adminView'))
 
-'''
-@events.route('/admin')
+
+@events.route('/admin2')
 def adminView():
     conn = get_db_connection()
     with conn.cursor() as cursor:
@@ -162,7 +162,7 @@ def adminView():
         })
 
     return render_template('events/eventAdmin.html', events=events)
-'''
+
 
 
 @events.route('/edit_event/<int:event_id>', methods=['GET', 'POST'])
