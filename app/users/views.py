@@ -16,14 +16,20 @@ from app.Models.Account import Account
 @users.route("/add_user", methods=["GET", "POST"])
 def add_user():
     if request.method == "POST":
-        role_id = request.form.get('userRole', '').strip()
-        first_name = request.form.get('first_name', '').strip()
-        last_name = request.form.get('last_name', '').strip()
-        middle_name = request.form.get('middle_name', '').strip()
-        email = request.form.get('email', '').strip()
-        graduation_year = request.form.get('graduation_year', '').strip()
+        #Get all userinfo from webpage, strip any whitespace, then normalize to lowercase for all except password which remains case-sensitive
+        role_id = request.form.get('userRole', '').strip().lower()
+        first_name = request.form.get('first_name', '').strip().lower()
+        last_name = request.form.get('last_name', '').strip().lower()
+        middle_name = request.form.get('middle_name', '').strip().lower()
+        email = request.form.get('email', '').strip().lower()
+        graduation_year = request.form.get('graduation_year', '').strip().lower()
         password = request.form.get('password', '').strip()
-        username = request.form.get('username', '').strip()
+        passwordConfirmation = request.form.get('passwordConfirmation', '').strip()
+        username = request.form.get('username', '').strip().lower()
+
+        if password != passwordConfirmation:
+            flash("Passwords do not match", "error")
+            return redirect(url_for('users.signup_page'))
 
         conn = None
         try:
@@ -45,11 +51,11 @@ def add_user():
             flash(f"Error: {e}", "error")
             if conn:
                 conn.rollback()
-            return render_template('signup/signup.html', form=request.form)
+            return redirect(url_for('users.signup_page'))
         finally:
             if conn:
                 conn.close()
-        return render_template('/login/login.html')
+        return redirect(url_for('users.home_page'))
 
 @users.route('/signup')
 def signup_page():
