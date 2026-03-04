@@ -12,6 +12,7 @@ should be no need to modify this file.
 
 import os
 import configparser
+from datetime import timedelta
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -35,6 +36,7 @@ class BaseConfig(Config):
     MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]        
     SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=int(config["MYSQL_LOCAL"]["PERMANENT_SESSION_LIFETIME"]))
 
 class ProductionConfig(Config):
     DEBUG=False
@@ -43,6 +45,7 @@ class ProductionConfig(Config):
     MYSQL_HOST = config["MYSQL_PROD"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_PROD"]["DATABASE"]
     SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=int(config["MYSQL_LOCAL"]["PERMANENT_SESSION_LIFETIME"]))
 
 class GenevaConfig(Config):
     DEBUG=True
@@ -51,6 +54,7 @@ class GenevaConfig(Config):
     MYSQL_HOST = config["MYSQL_LOCAL"]["HOSTNAME"]
     MYSQL_DATABASE = config["MYSQL_LOCAL"]["DATABASE"]
     SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=int(config["MYSQL_LOCAL"]["PERMANENT_SESSION_LIFETIME"]))
 
 config = {
     'base': BaseConfig,

@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from functools import wraps
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, abort
 from db import get_db_connection
 from pymysql import DatabaseError
 from pymysql.cursors import DictCursor
@@ -9,7 +10,8 @@ from . import users
 # from . import signup, login, adminpanel
 
 # For creating a user account
-from flask_login import login_user
+from flask_login import login_user, fresh_login_required, login_required, logout_user
+from loginManager import role_required
 from app.Models.Account import Account
 
 # Sign Up
@@ -66,6 +68,13 @@ def signup_page():
 def home_page():
     return render_template("login/login.html")
 
+@users.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect("/")
+
 @users.route("/auth_login", methods=["GET", "POST"])
 def auth_login():
     if request.method == "POST":
@@ -112,6 +121,7 @@ def auth_login():
 
 # Admin
 @users.route("/admin/users")
+@role_required(4)
 def admin_panel():
     conn = get_db_connection()
     try:
