@@ -42,24 +42,28 @@ def resourcesearch():
         dblist = db.session.execute(dbselect).mappings().all()
 
     except:
-
-       categories_list = []
-        #Exception creates example db entries so that those without the database can still design the webpage
-       dblist = [
-        {
-            'description': 'Geneva College Financial Aid Website',
-            'url': 'https://www.geneva.edu/financial-aid/',
-            'resource_category_name': 'college',
-            'contact_name' : 'Dean Swank',
-            'contact_email' : 'dswank@geneva.edu',
-            'contact_phone' : '18005882300'
-        },
-        {
-            'description': 'Geneva Application Process',
-            'url': 'https://apply.geneva.edu/portal/applynow/tug_apply',
-            'resource_category_name': 'college'
-        }
-       ]
+        categories_list = []
+        # Exception creates example db entries so that those without the database can still design the webpage
+        dblist = [
+            {
+                'resource_id': 1,
+                'description': 'Geneva College Financial Aid Website',
+                'url': 'https://www.geneva.edu/financial-aid/',
+                'resource_category_name': 'college',
+                'contact_name': 'Dean Swank',
+                'contact_email': 'dswank@geneva.edu',
+                'contact_phone': '18005882300'
+            },
+            {
+                'resource_id': 2,
+                'description': 'Geneva Application Process',
+                'url': 'https://apply.geneva.edu/portal/applynow/tug_apply',
+                'resource_category_name': 'college',
+                'contact_name': None,
+                'contact_email': None,
+                'contact_phone': None,
+            }
+        ]
     
     return render_template('resources/resourcesearch.html', resources=dblist, categories=categories_list)
 
@@ -111,3 +115,51 @@ def upload_resource():
         # If something went wrong, undo any changes and go back
         db.session.rollback()
         return redirect(url_for('resources.resource_directory'))
+
+
+@resources_blueprint.route("/resources/<int:resource_id>/edit", methods=["POST"])
+def edit_resource(resource_id: int):
+    """Edit an existing resource."""
+    try:
+        resource = db.session.get(resources, resource_id)
+        if not resource:
+            return redirect(url_for('resources.resourcesearch'))
+        
+        # Get the form data
+        title = request.form.get('title', '').strip()
+        url = request.form.get('url', '').strip()
+        resource_category_id = request.form.get('resource_category_id', '').strip()
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip()
+        
+        # Make sure all required fields were filled out
+        if not title or not url or not resource_category_id:
+            return redirect(url_for('resources.resourcesearch'))
+        
+        # Update the resource
+        resource.description = title
+        resource.url = url
+        resource.resource_category_id = int(resource_category_id)
+        resource.contact_name = name if name else None
+        resource.contact_email = email if email else None
+        resource.contact_phone = phone if phone else None
+        
+        db.session.commit()
+        return redirect(url_for('resources.resourcesearch'))
+    except Exception:
+        db.session.rollback()
+        return redirect(url_for('resources.resourcesearch'))
+
+
+@resources_blueprint.route("/resources/<int:resource_id>/delete", methods=["POST"])
+def delete_resource(resource_id: int):
+    """Delete a resource by ID and return to the search page."""
+    try:
+        resource = db.session.get(resources, resource_id)
+        if resource:
+            db.session.delete(resource)
+            db.session.commit()
+    except Exception:
+        db.session.rollback()
+    return redirect(url_for('resources.resourcesearch'))
