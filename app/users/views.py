@@ -8,7 +8,7 @@ from .Hashing import hash_plaintext, hash_check_matches
 from . import users
 # from . import signup, login, adminpanel
 
-# For checking logged in user
+# For creating a user account
 from flask_login import login_user
 from app.Models.Account import Account
 
@@ -23,7 +23,7 @@ def add_user():
         email = request.form.get('email', '').strip()
         graduation_year = request.form.get('graduation_year', '').strip()
         password = request.form.get('password', '').strip()
-        username = first_name + last_name
+        username = request.form.get('username', '').strip()
 
         conn = None
         try:
@@ -75,6 +75,10 @@ def auth_login():
                 row = cursor.fetchone()
                 if row and hash_check_matches(password_given, row["password"]):
                     is_auth = True
+
+                    # Create user from the Account class
+                    # This user can then be used by the login manager anywhere in this program 
+                    # Accessed by current_user.role for setting role permissions
                     user = Account(
                         username=row['username'],
                         email=row['email'],
@@ -95,12 +99,13 @@ def auth_login():
             if conn:
                 conn.close()
         if is_auth:
-            return redirect(url_for('profile.profile', username=username))
+            return redirect(url_for('home.home_page'))
+            # return redirect(url_for('profile.profile', username=username))
         flash("Invalid login")
         return redirect(url_for('login.home_page'))
 
 # Admin
-@users.route("/admin")
+@users.route("/admin/users")
 def admin_panel():
     conn = get_db_connection()
     try:

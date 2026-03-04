@@ -142,7 +142,7 @@ def update_event(event_id, action):
     return redirect(url_for('events.adminView'))
 
 
-@events.route('/admin2')
+@events.route('/admin/events')
 def adminView():
     conn = get_db_connection()
     with conn.cursor() as cursor:

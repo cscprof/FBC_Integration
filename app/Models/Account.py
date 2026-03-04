@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 
+# Used for creating user accounts from database
 # UserMixin for checking is_authenticated property
 class Account(UserMixin):
     """
