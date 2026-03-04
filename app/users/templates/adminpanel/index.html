@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Add a New User{% endblock %}
+{% block title %}Edit Users{% endblock %}
 
 {% block content %}
 <!DOCTYPE html>
@@ -11,7 +11,9 @@
 </head>
 <body>
 
-<h1>Users</h1>
+<h1 class="title">Admin Dashboard</h1>
+<div class="header">Manage Users</div>
+<br>
 {% if users %}
   <table border="1">
     <thead>
