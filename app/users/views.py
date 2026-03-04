@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, abort
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from db import get_db_connection
 from pymysql import DatabaseError
 from pymysql.cursors import DictCursor
@@ -10,7 +10,7 @@ from . import users
 # from . import signup, login, adminpanel
 
 # For creating a user account
-from flask_login import login_user, fresh_login_required, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from loginManager import role_required
 from app.Models.Account import Account
 
@@ -106,7 +106,8 @@ def auth_login():
                         nameMiddle=row['middle_name'],
                         gradYear=row['graduation_year']
                     )
-                    login_user(user)
+                    login_user(user, remember=False)    #Makes session cookies reset whenever you leave the page, and stops them from tracking session age. 
+                                                        #Server will track session age
         except DatabaseError as e:
             flash(f"DB Error: {e}", "error")
             return render_template('login/login.html', form=request.form)
@@ -166,3 +167,32 @@ def edit_user(user_id):
         flash("User not found")
         return redirect(url_for("users.admin_panel"))
     return render_template("adminpanel/edit_user.html", user=user)
+
+@users.route("/profile")
+@login_required
+def profile():
+
+    conn = None
+    try:
+        conn = get_db_connection()
+        with conn.cursor() as cursor:
+            sql = """
+                SELECT *
+                FROM users
+                WHERE username = %s
+            """
+            cursor.execute(sql, (current_user.username,))
+            output = cursor.fetchall()
+
+    except DatabaseError as e:
+
+        flash("Database error: " + str(e), "error")
+        if conn:
+            conn.rollback()
+        return render_template("profile/profile.html")
+
+    finally:
+        if conn:
+            conn.close()
+
+    return render_template("profile/profile.html", user=output)

@@ -44,7 +44,7 @@ def role_required(role_id):
     This is a 'Decorator Factory' which rejects a client from accessing a page unless their role_id matches the required role_id
     Example use: 
     @app.route(/route)
-    @role_required(0) # just add this with the minimum access level required to view the page
+    @role_required(0)
     def route(
         code here
     )
@@ -57,3 +57,4 @@ def role_required(role_id):
             return f(*args, **kwargs)
         return decorated_function
     return decorator
+    
