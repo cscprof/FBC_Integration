@@ -29,8 +29,8 @@ class Config:
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
-    MAIL_USERNAME = 'jamesomega36@gmail.com'  # This will be empty when I upload the code. I used my own email for testing, but we need a flourishbc email
-    MAIL_PASSWORD = 'psue kavq kyxj ibva'  # This should also be empty
+    MAIL_USERNAME = ''  # these 2 must be filled in for email verification to work, but we have no production email to use yet.
+    MAIL_PASSWORD = ''  # 
 
     @staticmethod
     def init_app(app):
