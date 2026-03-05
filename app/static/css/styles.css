@@ -348,7 +348,7 @@ input {
     margin: 0 auto;
     background-color: #234E8D;
     padding-bottom: 60px;
-    border-radius: 0;
+    border-radius: 0 0 12px 12px;
 }
 
 .shape {

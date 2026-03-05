@@ -1,26 +1,23 @@
-form {
+.signup-form {
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 15px;
-    align-items: flex-start;
+    max-width: 600px;
 }
 
 .signup-container {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     gap: 50px;
     padding: 40px;
     font-family: "Open Sans", sans-serif;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 .signup-label {
-    float: left;
-    width: 150px;
     font-weight: 600;
-    color: rgb(0, 0, 0);
+    color: black;
     font-size: 0.9rem;
     margin-left: 5px;
     height: auto;
@@ -29,7 +26,10 @@ form {
 .entry-box {
     border: 1px solid black;
     border-radius: 10px;          
-    box-sizing: border-box;}
+    box-sizing: border-box;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 
 .button-submit {
     background-color: #aaeb54;
@@ -40,6 +40,8 @@ form {
     border-radius: 10px;
     cursor: pointer;
     transition: .2s;
+    width: 50%;
+    align-self: center;
 }
 .button-submit:hover {
     background-color: #8ac926;
@@ -50,4 +52,43 @@ form input[type="radio"] {
   height: 20px;
     display: inline-block;
   vertical-align: bottom;
+}
+
+.role-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.signup-blob {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 120px;
+}
+
+.password-box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.password-box img{
+    width: 35px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 86%;
+    transform: translateY(-50%);
+}
+
+select {
+  border-radius: 8px;
+  border: 1px solid #cccccc;
+  font-size: 1rem;
 }
