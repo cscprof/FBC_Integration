@@ -87,23 +87,12 @@
         </div>
 
         <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
-            <label for="uploadTitle" class="modallabel">Title *</label>
-            <input type="text" id="uploadTitle" name="title" placeholder="Title *" required>
-            
-            <label for="uploadUrl" class="modallabel">URL *</label>
-            <input type="text" id="uploadUrl" name="url" placeholder="URL *" required>
-            
-            <label for="uploadName" class="modallabel">Contact Name (Optional)</label>
-            <input type="text" id="uploadName" name="name" placeholder="Contact Name (Optional)">
-            
-            <label for="uploadEmail" class="modallabel">Contact Email (Optional)</label>
-            <input type="text" id="uploadEmail" name="email" placeholder="Contact Email (Optional)">
-            
-            <label for="uploadPhone" class="modallabel">Contact Phone Number (Optional)</label>
-            <input type="text" id="uploadPhone" name="phone" placeholder="Contact Phone Number (Optional)">
-            
-            <label for="uploadCategory" class="modallabel">Category *</label>
-            <select id="uploadCategory" name="resource_category_id" required>
+            <input type="text" name="title" placeholder="Title *" required>
+            <input type="text" name="url" placeholder="URL *" required>
+            <input type="text" name="name" placeholder="Contact Name (Optional)">
+            <input type="text" name="email" placeholder="Contact Email (Optional)">
+            <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
+            <select name="resource_category_id" required>
                 <option value="">Category *</option>
                 {% if categories %}
                     {% for cat in categories %}
