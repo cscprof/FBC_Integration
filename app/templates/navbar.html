@@ -24,6 +24,7 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
 
+      <!-- Show admin button if user is an admin or partner-->
       {% if current_user.role == 4 or current_user.role == 5 %}
         <a class="navbar-item" href="/admin"> Admin </a>
       {% endif %}
