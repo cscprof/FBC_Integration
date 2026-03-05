@@ -24,6 +24,14 @@ class Config:
     SESSION_PERMANENT = config["SESSION"]["SESSION_PERMANENT"]
     SESSION_TYPE = config["SESSION"]["SESSION_TYPE"]
 
+    #Email settings for email
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USE_SSL = False
+    MAIL_USERNAME = 'jamesomega36@gmail.com'  # This will be empty when I upload the code. I used my own email for testing, but we need a flourishbc email
+    MAIL_PASSWORD = 'psue kavq kyxj ibva'  # This should also be empty
+
     @staticmethod
     def init_app(app):
         pass

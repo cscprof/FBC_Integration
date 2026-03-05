@@ -3,7 +3,8 @@ MySQL Backup
 Database: flourish_bc
 Backup Time: 2026-01-17 14:16:46
 */
-CREATE DATABASE IF NOT EXISTS flourish_bc;
+DROP DATABASE IF EXISTS flourish_bc;
+CREATE DATABASE flourish_bc;
 USE flourish_bc;
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -105,6 +106,7 @@ CREATE TABLE `users` (
   `graduation_year` int DEFAULT NULL,
   `role_id` int NOT NULL,
   `partner_id` int DEFAULT NULL,
+  `email_is_verified` BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (`user_id`),
   KEY `users_roles_fk` (`role_id`),
   KEY `partners_roles_fk` (`partner_id`),

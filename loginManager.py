@@ -25,16 +25,17 @@ def load_user(user_id):
         conn.close()
     if row:
         return Account(
-            username=row['username'],
+            username=row['username'].capitalize(),
             email=row['email'],
             passwdHash=row['password'],
             roleID=row['role_id'],
             partnerID=row['partner_id'],
             userID=row['user_id'],
-            nameFirst=row['first_name'],
-            nameLast=row['last_name'],
-            nameMiddle=row['middle_name'],
-            gradYear=row['graduation_year']
+            nameFirst=row['first_name'].capitalize(),
+            nameLast=row['last_name'].capitalize(),
+            nameMiddle=row['middle_name'].capitalize(),
+            gradYear=row['graduation_year'],
+            emailIsVerified=row['email_is_verified']
         )
     return None
 
