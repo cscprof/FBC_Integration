@@ -23,6 +23,8 @@
 
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
+
+      {% if current_user.role == 4 %}
       <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
         <a class="navbar-link">
           Admin
@@ -33,6 +35,8 @@
           <a class="navbar-item" href="/admin/resources">Resources</a>
         </div>
       </div>
+      {% endif %}
+
       <a class="navbar-item" href="/events"> Events List </a>
 
 
@@ -86,7 +90,7 @@
 
           <!-- Show log out if user is authenticaed -->
           {% elif current_user.is_authenticated %}
-            <p class="navbar-item has-text-centered" style="display: flex; align-items: center; margin-bottom: 0;"> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </p>
+            <a class="navbar-item has-text-centered" href="/profile/{{ current_user.username }}" style="display: flex; align-items: center; margin-bottom: 0;"> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </button>
             <a class="button is-light" href="/"> Log out </a>
           {% endif %}
 

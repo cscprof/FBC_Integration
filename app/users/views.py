@@ -102,8 +102,8 @@ def auth_login():
             return redirect(url_for('home.home_page'))
             # return redirect(url_for('profile.profile', username=username))
         flash("Invalid login")
-        return redirect(url_for('login.home_page'))
-
+        return render_template('login/login.html', form=request.form)
+    
 # Admin
 @users.route("/admin/users")
 def admin_panel():

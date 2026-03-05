@@ -11,9 +11,9 @@
 </head>
 <body>
 
-<h1>Edit user {{ user.user_id }}</h1>
+<h1>Edit user {{ user.username }}</h1>
 
-<form method="post" action="{{ url_for('.edit_user', user_id=user.user_id) }}">
+<form method="post" action="{{ url_for('profile.edit_profile', username=user.username) }}">
     <label class="edituser-label">First name:</label>
     <input class="edituser-entry-box" type="text" name="first_name" value="{{ user.first_name }}">
     <br>
@@ -34,17 +34,9 @@
     <input class="edituser-entry-box" type="text" name="graduation_year" value="{{ user.graduation_year }}">
     <br>
 
-    <label class="edituser-label">Username:</label>
-        <input class="edituser-entry-box" type="text" name="username" value="{{ user.username }}">
-    </label>
-    <br>
-
-    <label class="edituser-label">Role ID:
-    <input class="edituser-entry-box" type="text" name="role_id" value="{{ user.role_id }}">
-    <br>
+    
 
     <button class="edituser-button-submit" type="submit">Save changes</button>
-    <a href="{{ url_for('users.edit_user', user_id=user.user_id) }}">Cancel</a>
 </form>
 
 </body>
