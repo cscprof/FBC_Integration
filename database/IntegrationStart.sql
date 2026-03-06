@@ -106,7 +106,6 @@ CREATE TABLE `users` (
   `graduation_year` int DEFAULT NULL,
   `role_id` int NOT NULL,
   `partner_id` int DEFAULT NULL,
-  `email_is_verified` BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (`user_id`),
   KEY `users_roles_fk` (`role_id`),
   KEY `partners_roles_fk` (`partner_id`),
