@@ -1,26 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Users{% endblock %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  
 </head>
 <body>
 
-{% block content %}
-
-<h1>Users</h1>
+<h1 class="title">Admin Dashboard</h1>
+<div class="header">Manage Users</div>
+<br>
 {% if users %}
   <table border="1">
     <thead>
       <tr>
-        <th>User ID</th>
-        <th>First Name</th>
-        <th>Middle Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <th>Graduation Year</th>
-        <th>Username</th>
-        <th>Role ID</th>
-        <th>Manage</th>
+        <th class="users_table">User ID</th>
+        <th class="users_table">First Name</th>
+        <th class="users_table">Middle Name</th>
+        <th class="users_table">Last Name</th>
+        <th class="users_table">Email</th>
+        <th class="users_table">Graduation Year</th>
+        <th class="users_table">Username</th>
+        <th class="users_table">Role ID</th>
+        <th class="users_table">Manage</th>
       </tr>
     </thead>
     <tbody>
@@ -45,7 +51,16 @@
 {% else %}
   <p>No users found.</p>
 {% endif %}
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="flashes">
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
 
-{% endblock %}
 </body>
 </html>
+{% endblock %}

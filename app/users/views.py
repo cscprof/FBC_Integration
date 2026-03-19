@@ -117,6 +117,7 @@ def logout():
 @users.route("/admin")
 @role_required(4)
 def admin_panel():
+    # existing route that shows users in a simple table
     conn = get_db_connection()
     try:
         with conn.cursor(DictCursor) as cursor:
@@ -124,6 +125,20 @@ def admin_panel():
             cursor.execute("SELECT * FROM users")
             users = cursor.fetchall()
         return render_template("adminpanel/index.html", users=users)
+    finally:
+        conn.close()
+
+
+# new route requested by navbar: serve the more polished userAdmin.html page
+@users.route("/admin/users")
+def admin_users():
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("USE flourish_bc")
+            cursor.execute("SELECT * FROM users")
+            users = cursor.fetchall()
+        return render_template("adminpanel/userAdmin.html", users=users)
     finally:
         conn.close()
 
@@ -153,8 +168,16 @@ def edit_user(user_id):
 
             cursor.execute("SELECT * FROM users WHERE user_id=%s", (user_id,))
             user = cursor.fetchone()
+
     finally:
         conn.close()
+
+    if not user:
+        flash("User not found")
+        return redirect(url_for("users.admin_panel"))
+    return render_template("adminpanel/edit_user.html", user=user)
+
+
 
     if not user:
         flash("User not found")

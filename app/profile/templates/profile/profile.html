@@ -1,4 +1,9 @@
 <!-- I am no HTML designer. Perplexity gave me this layout, I hooked it up to the backend manually-->
+{% extends 'base.html' %}
+
+{% block title %}FBC Student Hub{% endblock %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,6 +74,7 @@
         <h1>
             <!-- If middle_name is null, just omit it server-side -->
             {{ user.first_name }} <span class="muted">{{ user.middle_name }}</span> {{ user.last_name }}
+            <a href="{{ url_for('profile.edit_profile', username=user.username) }}">Edit user info?</a>
         </h1>
     </div>
 
@@ -156,6 +162,16 @@
 
 </div>
 {% endfor %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flashes">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
 
 </body>
 </html>
+{% endblock %}

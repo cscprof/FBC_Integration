@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}User Admin{% endblock %}
+
+{% block content %}
+<div class="events-container">
+    <h1 class="title">User Administration</h1>
+    <div class="section">
+        <div class="header">Manage Users</div>
+        <div class="list">
+            {% if users %}
+                {% for user in users %}
+                <div class="resource">
+                    <div>
+                        <strong>ID:</strong> {{ user.user_id }}<br>
+                        <strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}<br>
+                        <strong>Email:</strong> {{ user.email }}<br>
+                        <strong>Graduation:</strong> {{ user.graduation_year }}<br>
+                        <strong>Username:</strong> {{ user.username }}<br>
+                        <strong>Role ID:</strong> {{ user.role_id }}
+                    </div>
+                    <div class="actions">
+                        <form method="POST" action="{{ url_for('users.delete_user', user_id=user.user_id) }}"
+                              onsubmit="return confirm('Delete this user?');" style="display:inline;">
+                            <button type="submit" class="btn btn-reject">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="resource">No users found.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

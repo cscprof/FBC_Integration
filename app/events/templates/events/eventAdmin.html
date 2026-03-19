@@ -27,6 +27,7 @@
                         </span><br>
                         <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
                         <p>{{ event['description'] }}</p>
+                        <small>Submitted by: {{ event['submitted_by'] }}</small>
                         <div class="status">
                             Status: {{ event['status'] if event['status'] else 'pending' }}
                         </div>
@@ -72,6 +73,7 @@
                         </span><br>
                         <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
                         <p>{{ event['description'] }}</p>
+                        <small>Submitted by: {{ event['submitted_by'] }}</small>
                         <div class="status">
                             Status: {{ event['status'] if event['status'] else 'pending' }}
                         </div>
@@ -117,6 +119,7 @@
                         </span><br>
                         <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
                         <p>{{ event['description'] }}</p>
+                        <small>Submitted by: {{ event['submitted_by'] }}</small>
                         <div class="status">
                             Status: {{ event['status'] if event['status'] else 'pending' }}
                         </div>
