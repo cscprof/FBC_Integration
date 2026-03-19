@@ -103,7 +103,7 @@ def auth_login():
             return redirect(url_for('home.home_page'))
             # return redirect(url_for('profile.profile', username=username))
         flash("Invalid login")
-        return redirect(url_for('login.home_page'))
+        return redirect(url_for('home.home_page'))
 
 # Logout
 @users.route('/logout')
@@ -114,7 +114,7 @@ def logout():
     return redirect(url_for('home.home_page'))
 
 # Admin
-@users.route("/admin/users")
+@users.route("/admin")
 @role_required(4)
 def admin_panel():
     conn = get_db_connection()

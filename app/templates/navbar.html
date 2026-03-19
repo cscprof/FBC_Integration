@@ -24,7 +24,7 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
 
-      <!-- Show Admin dropdown only if user is authenticated and is an admin(4) or partner(5) -->
+       <!-- Show Admin dropdown only if user is authenticated and is an admin(4) or partner(5) -->
       {% if current_user.is_authenticated and (current_user.role == 4 or current_user.role == 5) %}
         <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
           <a class="navbar-link">
