@@ -9,7 +9,8 @@ from . import users
 # from . import signup, login, adminpanel
 
 # For creating a user account
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
+from loginManager import role_required
 from app.Models.Account import Account
 
 # Sign Up
@@ -104,8 +105,17 @@ def auth_login():
         flash("Invalid login")
         return redirect(url_for('login.home_page'))
 
+# Logout
+@users.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('home.home_page'))
+
 # Admin
 @users.route("/admin/users")
+@role_required(4)
 def admin_panel():
     conn = get_db_connection()
     try:

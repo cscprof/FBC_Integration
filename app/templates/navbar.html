@@ -23,16 +23,21 @@
 
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
-        <a class="navbar-link">
-          Admin
-        </a>
-        <div class="navbar-dropdown">
-          <a class="navbar-item" href="/admin/users">Users</a>
-          <a class="navbar-item" href="/admin/events">Events</a>
-          <a class="navbar-item" href="/admin/resources">Resources</a>
+
+      <!-- Show Admin dropdown only if user is authenticated and is an admin(4) or partner(5) -->
+      {% if current_user.is_authenticated and (current_user.role == 4 or current_user.role == 5) %}
+        <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
+          <a class="navbar-link">
+            Admin
+          </a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="/admin/users">Users</a>
+            <a class="navbar-item" href="/admin/events">Events</a>
+            <a class="navbar-item" href="/admin/resources">Resources</a>
+          </div>
         </div>
-      </div>
+      {% endif %}
+
       <a class="navbar-item" href="/events"> Events List </a>
 
 
@@ -87,7 +92,7 @@
           <!-- Show log out if user is authenticaed -->
           {% elif current_user.is_authenticated %}
             <p class="navbar-item has-text-centered" style="display: flex; align-items: center; margin-bottom: 0;"> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </p>
-            <a class="button is-light" href="/"> Log out </a>
+            <a class="button is-light" href="{{ url_for('users.logout') }}"> Log out </a>
           {% endif %}
 
         </div>
