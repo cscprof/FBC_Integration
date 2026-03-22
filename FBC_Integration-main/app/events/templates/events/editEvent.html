@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Event{% endblock %}
+
+{% block content %}
+<div class="add-event-container">
+  <div class="add-event-blob" style="max-width:700px;">
+    <h1 style="color:white; margin-bottom:10px;">Edit Event</h1>
+    <div class="underline-event"></div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" class="event-form">
+      <input type="text" name="name" placeholder="Event Name" required value="{{ event.name }}">
+
+      <textarea name="description" placeholder="Event Description" required>{{ event.description }}</textarea>
+
+      <input class="entry-box" type="url" name="url" placeholder="Event URL" value="{{ event.url }}">
+
+      <label class="event-label">Starting Date & Time</label>
+      <input class="entry-box" type="datetime-local" name="starting_date" required value="{{ event.start_date }}">
+
+      <label class="event-label">Ending Date & Time</label>
+      <input class="entry-box" type="datetime-local" name="ending_date" required value="{{ event.end_date }}">
+
+      <label class="event-label">Registration Deadline (Optional)</label>
+      <input class="entry-box" type="datetime-local" name="deadline" value="{{ event.registration_deadline }}">
+
+      <div style="display:flex; gap:10px; margin-top:15px;">
+        <button class="button-submit" type="submit">Save Changes</button>
+        <a class="hub-button" href="{{ url_for('events.adminView') }}" style="text-decoration:none;">Cancel</a>
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

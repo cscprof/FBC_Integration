@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Add a New User{% endblock %}
+
+{% block content %}
+<div class="signup-container">
+    <div class="login-text">
+        <h3>I already have an account.</h3>
+        <a class="button sign-up no-account" href="/login">
+            <strong>Log In</strong>
+        </a>
+    </div>
+
+    <div class="signup-blob">
+        <h1>Create An Account</h1>
+    <div class="underline-signup"></div>
+    <form class="signup-form" action="/add_user" method="POST">
+        <div>
+        <label class="signup-label" for="userRole">Who am I?</label><br>
+        <select class="entry-box" name="userRole" id="userRole" required>
+            <option value="1">Student</option>
+            <option value="2">Parent</option>
+            <option value="3">Guardian</option>
+            <option value="5">Partner</option>            
+        </select>
+        </div>
+
+        <input class="entry-box" placeholder="First Name" type="text" name="first_name" required>
+
+        <input class="entry-box" placeholder="Middle Name" type="text" name="middle_name">
+
+        <input class="entry-box" placeholder="Last Name" type="text" name="last_name" required>
+
+        <input class="entry-box" placeholder="Email" type="email" name="email" required>
+
+        <input class="entry-box" placeholder="Graduation Year" type="text" name="graduation_year">
+
+        <input class="entry-box" placeholder="Username" type="text" name="username">
+
+        <div class="password-box">
+            <input placeholder="Password (8 characters minimum)" type="password" name="password" id="password" minlength="8" required>
+            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}" id="eyeicon" alt="hide-password">
+        </div>
+        <script>
+            let eyeicon = document.getElementById("eyeicon")
+            let password = document.getElementById("password")
+
+            eyeicon.onclick = function(){
+                if (password.type == "password"){
+                    password.type = "text";
+                    eyeicon.src = "{{ url_for('static', filename='images/eyeopen.png') }}";
+                }else{
+                    password.type = "password";
+                    eyeicon.src = "{{ url_for('static', filename='images/eyeclosed.png') }}";
+                }
+            }
+        </script>
+
+        <button class="button-submit" type="submit">Submit</button>
+
+    </form>
+    </div>
+</div>
+{% endblock %}

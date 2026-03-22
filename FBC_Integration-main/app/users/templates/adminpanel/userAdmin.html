@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}User Admin{% endblock %}
+
+{% block content %}
+<div class="events-container">
+    <h1 class="title">User Administration</h1>
+    <div class="section">
+        <div class="header">Manage Users</div>
+        <div class="list">
+            {% if users %}
+                {% for user in users %}
+                    <div class="user-card">
+                        <div class="user-name">
+                            {{ user.first_name }} {{ user.last_name }}
+                        </div>
+
+                        <div class="user-details">
+                            <div><strong>ID:</strong> {{ user.user_id }}</div>
+                            <div><strong>Email:</strong> {{ user.email }}</div>
+                            <div><strong>Graduation:</strong> {{ user.graduation_year }}</div>
+                            <div><strong>Username:</strong> {{ user.username }}</div>
+                            <div><strong>Role ID:</strong> {{ user.role_id }}</div>
+                        </div>
+                    </div>                
+                {% endfor %}
+            {% else %}
+                <div class="resource">No users found.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

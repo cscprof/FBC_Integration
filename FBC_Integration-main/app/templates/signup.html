@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}FBC - Sign Up{% endblock %}
+
+{% block content %}
+<!-- what other information do we want in the signup/acc creation? -->
+<div class="signup-container">
+    <div class="login-text">
+        <h3>I already have an account.</h3>
+        <a class="button sign-up no-account" href="/login">
+            <strong>Log In</strong>
+        </a>
+    </div>
+
+    <div class="signup-blob">
+        <h1>Create An Account</h1>
+    <div class="underline-signup"></div>
+    <form>
+        <div class="name-row">
+            <div class="name-input">
+                <input type="text" placeholder="First Name"/>
+                <input type="text" placeholder="Last Name"/>
+            </div>
+        </div>
+
+        <input type="email" placeholder="Email Address" />
+        <input type="password" placeholder="Password" />
+
+        <!-- small number input box for grade status -->
+        <div class="form-row">
+            <input class="grade" type="number" min="9" max="12" placeholder="Grade"/>
+        
+        <!-- dropdown for school district -->
+            <div class="select">
+                <select class="is-hovered">
+                    <option>Select School District</option>
+                    <option>Blackhawk School District</option>
+                    <option>Central Valley School District</option>
+                    <option>Riverside Beaver County School District</option>
+                </select>
+            </div>
+        </div>
+
+         <!-- text input field (??) for interests and another for career/college goals??-->
+        <textarea
+            class="textarea"
+            placeholder="Your College and Career Interests. Tell us about it..."
+            rows="3"
+            cols="3"
+        ></textarea>
+
+        <button class="button signup" type="submit">Sign Up</button>
+    </form>
+    </div>
+</div>
+{% endblock %}

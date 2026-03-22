@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Add a New User{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit user</title>
+</head>
+<body>
+
+<h1>Edit user {{ user.user_id }}</h1>
+
+<form method="post" action="{{ url_for('.edit_user', user_id=user.user_id) }}">
+    <label class="edituser-label">First name:</label>
+    <input class="edituser-entry-box" type="text" name="first_name" value="{{ user.first_name }}">
+    <br>
+
+    <label class="edituser-label">Middle name:</label>
+    <input class="edituser-entry-box" type="text" name="middle_name" value="{{ user.middle_name }}">
+    <br>
+
+    <label class="edituser-label">Last name:</label>
+        <input class="edituser-entry-box" type="text" name="last_name" value="{{ user.last_name }}">
+    <br>
+
+    <label class="edituser-label">Email:</label>
+        <input class="edituser-entry-box" type="email" name="email" value="{{ user.email }}">
+    <br>
+
+    <label class="edituser-label">Graduation year:</label>
+    <input class="edituser-entry-box" type="text" name="graduation_year" value="{{ user.graduation_year }}">
+    <br>
+
+    <label class="edituser-label">Username:</label>
+        <input class="edituser-entry-box" type="text" name="username" value="{{ user.username }}">
+    </label>
+    <br>
+
+    <label class="edituser-label">Role ID:
+    <input class="edituser-entry-box" type="text" name="role_id" value="{{ user.role_id }}">
+    <br>
+
+    <button class="edituser-button-submit" type="submit">Save changes</button>
+    <a href="{{ url_for('users.edit_user', user_id=user.user_id) }}">Cancel</a>
+</form>
+
+</body>
+</html>
+{% endblock %}
