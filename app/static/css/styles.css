@@ -456,3 +456,83 @@
     gap: 6px 20px;
     font-size: 0.95rem;
 }
+
+.edit-user-info {
+    font-size: medium;
+    color: gray;
+    font-style: italic;
+}
+
+
+.profile-body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+        
+.profile-header {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.profile-header h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+.profile-header .username {
+    color: #777;
+    font-size: 14px;
+}
+
+.profile-section {
+    margin-bottom: 16px;
+}
+
+.profile-info {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.profile-field {
+    display: flex;
+    margin-bottom: 6px;
+}
+
+.profile-label {
+    width: 160px;
+    font-weight: bold;
+    color: #555;
+}
+
+.profile-value {
+    flex: 1;
+    color: #222;
+}
+
+.muted {
+    color: #999;
+    font-style: italic;
+}
+
+/* Success message */
+.flashes li.success {
+    background-color: rgb(171, 235, 77);
+    color:#2e44cc;
+}
+
+/* Error message */
+.flashes li.error {
+    background-color: red;
+}

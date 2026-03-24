@@ -13,6 +13,7 @@
                     <div class="user-card">
                         <div class="user-name">
                             {{ user.first_name }} {{ user.last_name }}
+                            <a class="button" href="{{ url_for('users.edit_user', user_id=user.user_id) }}">Edit</a>
                         </div>
 
                         <div class="user-details">
