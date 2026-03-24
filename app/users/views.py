@@ -131,6 +131,7 @@ def admin_panel():
 
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
+@role_required([4, 5])
 def admin_users():
     conn = get_db_connection()
     try:
