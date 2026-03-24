@@ -21,7 +21,8 @@ def add_user():
         last_name = request.form.get('last_name', '').strip()
         middle_name = request.form.get('middle_name', '').strip()
         email = request.form.get('email', '').strip()
-        graduation_year = request.form.get('graduation_year', '').strip()
+        graduation_year_raw = request.form.get('graduation_year', '').strip()
+        graduation_year=int(graduation_year_raw) if graduation_year_raw else None
         password = request.form.get('password', '').strip()
         username = request.form.get('username', '').strip()
 
