@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from db import get_db_connection
 from datetime import datetime
 from pymysql import DatabaseError
+from loginManager import role_required
 
 from . import events
 
@@ -150,6 +151,7 @@ def update_event(event_id, action):
 
 
 @events.route('/admin/events')
+@role_required([4, 5])
 def adminView():
     conn = get_db_connection()
     with conn.cursor() as cursor:
