@@ -115,7 +115,7 @@ def logout():
 
 # Admin
 @users.route("/admin")
-@role_required(4)
+@role_required([4, 5])
 def admin_panel():
     # existing route that shows users in a simple table
     conn = get_db_connection()
@@ -171,13 +171,6 @@ def edit_user(user_id):
 
     finally:
         conn.close()
-
-    if not user:
-        flash("User not found")
-        return redirect(url_for("users.admin_panel"))
-    return render_template("adminpanel/edit_user.html", user=user)
-
-
 
     if not user:
         flash("User not found")
