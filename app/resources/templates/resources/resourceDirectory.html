@@ -39,77 +39,83 @@
             </div>
 
             <div class="examplegrid" id="resourcesgrid">
-                <div class="exampleboxes" data-category="college">
-                    <h3>College and Scholarships</h3>
-                    <p>Find all kinds of scholarships here! We can help find the best fit for you.</p>
-                    <ul>
-                        <li>Geneva College</li>
-                        <li>SMART Scholarship</li>
-                        <li>Pitt Beaver</li>
-                        <li>STEM Scholarships</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=college" class="resourcelink">Learn More</a>
-                </div>
+                <a href="{{ url_for('resources.resourcesearch') }}?category=college" class="resource-card-link">
+                    <div class="exampleboxes" data-category="college">
+                        <h3>College and Scholarships</h3>
+                        <p>Find all kinds of scholarships here! We can help find the best fit for you.</p>
+                        <ul>
+                            <li>Geneva College</li>
+                            <li>SMART Scholarship</li>
+                            <li>Pitt Beaver</li>
+                            <li>STEM Scholarships</li>
+                        </ul>
+                    </div>
+                </a>
 
-                <div class="exampleboxes" data-category="mental">
-                    <h3>Mental Health & Support</h3>
-                    <p>Free and confidential support for stress, anxiety, and other challenges.</p>
-                    <ul>
-                        <li>School Counselors</li>
-                        <li>Teen Support Groups</li>
-                        <li>Crisis Hotlines</li>
-                        <li>Wellness Resources</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=mental" class="resourcelink">Learn More</a>
-                </div>
+                <a href="{{ url_for('resources.resourcesearch') }}?category=mental" class="resource-card-link">
+                    <div class="exampleboxes" data-category="mental">
+                        <h3>Mental Health & Support</h3>
+                        <p>Free and confidential support for stress, anxiety, and other challenges.</p>
+                        <ul>
+                            <li>School Counselors</li>
+                            <li>Teen Support Groups</li>
+                            <li>Crisis Hotlines</li>
+                            <li>Wellness Resources</li>
+                        </ul>
+                    </div>
+                </a>
 
-                <div class="exampleboxes" data-category="jobs">
-                    <h3>Jobs & Internships</h3>
-                    <p>Find part-time jobs, summer work, and internships in Beaver County.</p>
-                    <ul>
-                        <li>Job Listings for Teens</li>
-                        <li>Summer Employment</li>
-                        <li>Internship Opportunities</li>
-                        <li>Resume & Interview Help</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=jobs" class="resourcelink">Learn More</a>
-                </div>
+                <a href="{{ url_for('resources.resourcesearch') }}?category=jobs" class="resource-card-link">
+                    <div class="exampleboxes" data-category="jobs">
+                        <h3>Jobs & Internships</h3>
+                        <p>Find part-time jobs, summer work, and internships in Beaver County.</p>
+                        <ul>
+                            <li>Job Listings for Teens</li>
+                            <li>Summer Employment</li>
+                            <li>Internship Opportunities</li>
+                            <li>Resume & Interview Help</li>
+                        </ul>
+                    </div>
+                </a>
 
-                <div class="exampleboxes" data-category="tutoring">
-                    <h3>Tutoring & Study Help</h3>
-                    <p>Free tutoring and study resources to help you ace your classes.</p>
-                    <ul>
-                        <li>Peer Tutoring Programs</li>
-                        <li>Homework Help</li>
-                        <li>Study Groups</li>
-                        <li>Online Learning Resources</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=tutoring" class="resourcelink">Learn More</a>
-                </div>
+                <a href="{{ url_for('resources.resourcesearch') }}?category=tutoring" class="resource-card-link">
+                    <div class="exampleboxes" data-category="tutoring">
+                        <h3>Tutoring & Study Help</h3>
+                        <p>Free tutoring and study resources to help you ace your classes.</p>
+                        <ul>
+                            <li>Peer Tutoring Programs</li>
+                            <li>Homework Help</li>
+                            <li>Study Groups</li>
+                            <li>Online Learning Resources</li>
+                        </ul>
+                    </div>
+                </a>
 
-                <div class="exampleboxes" data-category="activities">
-                    <h3>Activities & Clubs</h3>
-                    <p>Join clubs, sports, and activities to meet new people and explore interests.</p>
-                    <ul>
-                        <li>School Clubs & Sports</li>
-                        <li>Community Programs</li>
-                        <li>Volunteer Opportunities</li>
-                        <li>Youth Groups</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=activities" class="resourcelink">Learn More</a>
-                </div>
+                <a href="{{ url_for('resources.resourcesearch') }}?category=activities" class="resource-card-link">
+                    <div class="exampleboxes" data-category="activities">
+                        <h3>Activities & Clubs</h3>
+                        <p>Join clubs, sports, and activities to meet new people and explore interests.</p>
+                        <ul>
+                            <li>School Clubs & Sports</li>
+                            <li>Community Programs</li>
+                            <li>Volunteer Opportunities</li>
+                            <li>Youth Groups</li>
+                        </ul>
+                    </div>
+                </a>
 
-                <div class="exampleboxes" data-category="career">
-                    <h3>Career Exploration</h3>
-                    <p>Discover career paths and learn about different industries and opportunities.</p>
-                    <ul>
-                        <li>Career Assessments</li>
-                        <li>Job Shadowing</li>
-                        <li>Career Fairs</li>
-                        <li>Mentorship Programs</li>
-                    </ul>
-                    <a href="{{ url_for('resources.resourcesearch') }}?category=career" class="resourcelink">Learn More</a>
-                </div>
+                <a href="{{ url_for('resources.resourcesearch') }}?category=career" class="resource-card-link">
+                    <div class="exampleboxes" data-category="career">
+                        <h3>Career Exploration</h3>
+                        <p>Discover career paths and learn about different industries and opportunities.</p>
+                        <ul>
+                            <li>Career Assessments</li>
+                            <li>Job Shadowing</li>
+                            <li>Career Fairs</li>
+                            <li>Mentorship Programs</li>
+                        </ul>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -124,6 +130,9 @@
         <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
             <input type="text" name="title" placeholder="Title *" required>
             <input type="text" name="url" placeholder="URL *" required>
+            <input type="text" name="name" placeholder="Contact Name (Optional)">
+            <input type="text" name="email" placeholder="Contact Email (Optional)">
+            <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
             <select name="resource_category_id" required>
                 <option value="">Category *</option>
                 {% if categories %}
