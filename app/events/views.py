@@ -74,6 +74,14 @@ def addEvent():
         starting_date_raw = request.form.get('starting_date', '').strip()
         ending_date_raw = request.form.get('ending_date', '').strip()
         deadline_raw = request.form.get('deadline', '').strip()
+        contact_name = request.form.get('contact_name', '').strip()
+        contact_phone = request.form.get('contact_phone', '').strip()
+        contact_email = request.form.get('contact_email', '').strip()
+        event_address1 = request.form.get('event_address1', '').strip()
+        event_address2 = request.form.get('event_address2', '').strip()
+        event_city = request.form.get('event_city', '').strip()
+        event_state = request.form.get('event_state', '').strip()
+        event_postal_code = request.form.get('event_postal_code', '').strip()
 
         deadline = datetime.fromisoformat(deadline_raw) if deadline_raw else None
         posting_date = datetime.now()
@@ -94,13 +102,17 @@ def addEvent():
             conn = get_db_connection()
             with conn.cursor() as cursor:
                 sql = """
-                    INSERT INTO events 
-                    (name, description, url, start_date, end_date, user_id, status, posting_date, registration_deadline)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    INSERT INTO events
+                    (name, description, url, start_date, end_date, user_id, status, posting_date, registration_deadline,
+                     contact_name, contact_phone, contact_email, event_address1, event_address2, event_city, event_state, event_postal_code)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 cursor.execute(sql, (
                     name, description, url or None, starting_date, ending_date,
-                    1, 'pending', posting_date, deadline
+                    1, 'pending', posting_date, deadline,
+                    contact_name or None, contact_phone or None, contact_email or None,
+                    event_address1 or None, event_address2 or None, event_city or None,
+                    event_state or None, event_postal_code or None
                 ))
             conn.commit()
 
@@ -174,6 +186,14 @@ def edit_event(event_id):
         starting_date_raw = request.form.get('starting_date', '').strip()
         ending_date_raw = request.form.get('ending_date', '').strip()
         deadline_raw = request.form.get('deadline', '').strip()
+        contact_name = request.form.get('contact_name', '').strip()
+        contact_phone = request.form.get('contact_phone', '').strip()
+        contact_email = request.form.get('contact_email', '').strip()
+        event_address1 = request.form.get('event_address1', '').strip()
+        event_address2 = request.form.get('event_address2', '').strip()
+        event_city = request.form.get('event_city', '').strip()
+        event_state = request.form.get('event_state', '').strip()
+        event_postal_code = request.form.get('event_postal_code', '').strip()
 
         print(f"DEBUG: name={name}, url={url}")
         print(f"DEBUG: starting_date_raw={starting_date_raw}")
@@ -201,9 +221,14 @@ def edit_event(event_id):
             conn = get_db_connection()
             with conn.cursor() as cursor:
                 cursor.execute("""
-                    UPDATE events SET name=%s, description=%s, url=%s, start_date=%s, end_date=%s, registration_deadline=%s
+                    UPDATE events SET name=%s, description=%s, url=%s, start_date=%s, end_date=%s, registration_deadline=%s,
+                    contact_name=%s, contact_phone=%s, contact_email=%s,
+                    event_address1=%s, event_address2=%s, event_city=%s, event_state=%s, event_postal_code=%s
                     WHERE event_id=%s
-                """, (name, description, url, starting_date, ending_date, deadline, event_id))
+                """, (name, description, url, starting_date, ending_date, deadline,
+                      contact_name or None, contact_phone or None, contact_email or None,
+                      event_address1 or None, event_address2 or None, event_city or None,
+                      event_state or None, event_postal_code or None, event_id))
             conn.commit()
             conn.close()
             print(f"DEBUG: Event {event_id} updated successfully")
@@ -220,7 +245,7 @@ def edit_event(event_id):
     # GET: fetch event and render form
     conn = get_db_connection()
     with conn.cursor() as cursor:
-        cursor.execute("SELECT event_id, name, description, url, start_date, end_date, registration_deadline FROM events WHERE event_id=%s", (event_id,))
+        cursor.execute("SELECT event_id, name, description, url, start_date, end_date, registration_deadline, contact_name, contact_phone, contact_email, event_address1, event_address2, event_city, event_state, event_postal_code FROM events WHERE event_id=%s", (event_id,))
         row = cursor.fetchone()
     conn.close()
 
@@ -235,7 +260,15 @@ def edit_event(event_id):
         'url': row.get('url') or '',
         'start_date': row['start_date'].isoformat() if row['start_date'] else '',
         'end_date': row['end_date'].isoformat() if row['end_date'] else '',
-        'registration_deadline': row['registration_deadline'].isoformat() if row['registration_deadline'] else ''
+        'registration_deadline': row['registration_deadline'].isoformat() if row['registration_deadline'] else '',
+        'contact_name': row.get('contact_name') or '',
+        'contact_phone': row.get('contact_phone') or '',
+        'contact_email': row.get('contact_email') or '',
+        'event_address1': row.get('event_address1') or '',
+        'event_address2': row.get('event_address2') or '',
+        'event_city': row.get('event_city') or '',
+        'event_state': row.get('event_state') or '',
+        'event_postal_code': row.get('event_postal_code') or '',
     }
 
     return render_template('events/editEvent.html', event=event)

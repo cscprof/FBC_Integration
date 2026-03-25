@@ -34,6 +34,30 @@
       <label class="event-label">Registration Deadline (Optional)</label>
       <input class="entry-box" type="datetime-local" name="deadline" value="{{ event.registration_deadline }}">
 
+      <label class="event-label">Contact Name</label>
+      <input class="entry-box" type="text" name="contact_name" placeholder="Contact Name" value="{{ event.contact_name }}">
+
+      <label class="event-label">Contact Phone</label>
+      <input class="entry-box" type="tel" name="contact_phone" placeholder="Contact Phone" value="{{ event.contact_phone }}">
+
+      <label class="event-label">Contact Email</label>
+      <input class="entry-box" type="email" name="contact_email" placeholder="Contact Email" value="{{ event.contact_email }}">
+
+      <label class="event-label">Address Line 1</label>
+      <input class="entry-box" type="text" name="event_address1" placeholder="Address Line 1" value="{{ event.event_address1 }}">
+
+      <label class="event-label">Address Line 2</label>
+      <input class="entry-box" type="text" name="event_address2" placeholder="Address Line 2" value="{{ event.event_address2 }}">
+
+      <label class="event-label">City</label>
+      <input class="entry-box" type="text" name="event_city" placeholder="City" value="{{ event.event_city }}">
+
+      <label class="event-label">State</label>
+      <input class="entry-box" type="text" name="event_state" placeholder="State" value="{{ event.event_state }}">
+
+      <label class="event-label">Postal Code</label>
+      <input class="entry-box" type="text" name="event_postal_code" placeholder="Postal Code" value="{{ event.event_postal_code }}">
+
       <div style="display:flex; gap:10px; margin-top:15px;">
         <button class="button-submit" type="submit">Save Changes</button>
         <a class="hub-button" href="{{ url_for('events.adminView') }}" style="text-decoration:none;">Cancel</a>
