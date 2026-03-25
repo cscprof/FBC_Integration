@@ -9,7 +9,8 @@ from . import users
 # from . import signup, login, adminpanel
 
 # For creating a user account
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
+from loginManager import role_required
 from app.Models.Account import Account
 
 # Sign Up
@@ -21,7 +22,8 @@ def add_user():
         last_name = request.form.get('last_name', '').strip()
         middle_name = request.form.get('middle_name', '').strip()
         email = request.form.get('email', '').strip()
-        graduation_year = request.form.get('graduation_year', '').strip()
+        graduation_year_raw = request.form.get('graduation_year', '').strip()
+        graduation_year=int(graduation_year_raw) if graduation_year_raw else None
         password = request.form.get('password', '').strip()
         username = request.form.get('username', '').strip()
 
@@ -102,10 +104,36 @@ def auth_login():
             return redirect(url_for('home.home_page'))
             # return redirect(url_for('profile.profile', username=username))
         flash("Invalid login")
-        return redirect(url_for('login.home_page'))
+        return redirect(url_for('home.home_page'))
+
+# Logout
+@users.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('home.home_page'))
+
 # Admin
-@users.route("/admin/users")
+@users.route("/admin")
+@role_required([4, 5])
 def admin_panel():
+    # existing route that shows users in a simple table
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("USE flourish_bc")
+            cursor.execute("SELECT * FROM users")
+            users = cursor.fetchall()
+        return render_template("adminpanel/index.html", users=users)
+    finally:
+        conn.close()
+
+
+# new route requested by navbar: serve the more polished userAdmin.html page
+@users.route("/admin/users")
+@role_required([4, 5])
+def admin_users():
     conn = get_db_connection()
     try:
         with conn.cursor(DictCursor) as cursor:
