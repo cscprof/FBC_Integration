@@ -1,15 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}Add a New User{% endblock %}
+{% block title %}Edit User{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit user</title>
-</head>
-<body>
 
 <h1>Edit User {{ user.user_id }}: {{user.first_name}} {{user.last_name}} </h1>
 
@@ -44,9 +37,6 @@
     <br>
 
     <button class="edituser-button-submit" type="submit">Save changes</button>
-    <a href="{{ url_for('users.edit_user', user_id=user.user_id) }}">Cancel</a>
+    <a class="button" href="{{ url_for('users.edit_user', user_id=user.user_id) }}">Cancel</a>
 </form>
-
-</body>
-</html>
 {% endblock %}
