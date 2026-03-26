@@ -216,9 +216,12 @@ document.addEventListener('DOMContentLoaded', function() {
     </select>
   </div>
 
+  {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
   <a href="/add-event" class="button">
     Add Event
   </a>
+  {% endif %}
+  
 </div>
 
 <div id="calendar"></div>

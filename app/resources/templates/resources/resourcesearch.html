@@ -11,11 +11,13 @@
             Everything you need to succeed - from college prep to mental health support
         </p>
 
+        {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
         <div class="uploadbutton">
             <button onclick="document.getElementById('uploadModal').style.display='block'" class="uploadresourcebtn">
                 Upload Resource
             </button>
         </div>
+        {% endif %}
 
         <div class="resources">
             <div class="searchfilter">

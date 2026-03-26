@@ -4,6 +4,7 @@ from sqlalchemy import select
 from db import db
 from .models import resources, resource_category, content_types
 from . import resources as resources_blueprint
+from loginManager import role_required
 
 # Use the route() decorator to tell Flask what URL should trigger the function
 @resources_blueprint.route("/resources")
@@ -74,6 +75,7 @@ def resourcesearch():
 ###Should capture current user id instead of just "1"
 ###-Owen B.
 @resources_blueprint.route("/resources/upload", methods=["POST"])
+@role_required([4, 5])
 def upload_resource():
     # Get the form data that the user submitted
     title = request.form.get('title', '').strip()
@@ -118,6 +120,7 @@ def upload_resource():
 
 
 @resources_blueprint.route("/resources/<int:resource_id>/edit", methods=["POST"])
+@role_required([4, 5])
 def edit_resource(resource_id: int):
     """Edit an existing resource."""
     try:
@@ -153,6 +156,7 @@ def edit_resource(resource_id: int):
 
 
 @resources_blueprint.route("/resources/<int:resource_id>/delete", methods=["POST"])
+@role_required([4, 5])
 def delete_resource(resource_id: int):
     """Delete a resource by ID and return to the search page."""
     try:
