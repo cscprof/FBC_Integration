@@ -636,3 +636,25 @@
     display: block;
     margin-bottom: 5px;
 }
+
+.change-password {
+    background-color: #8ac926;
+    font-size: 12px;
+}
+
+.edituser-button-cancel {
+    grid-column: 2;
+    display: block;
+    width: 200px;
+    padding: 5px;
+    font-weight: 500;
+    margin: 20px;
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-top: 15px;
+    border-radius: 10px;
+}
+
+.edituser-button-cancel:hover {
+    background-color: #e0e0e0;
+}
