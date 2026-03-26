@@ -23,7 +23,13 @@ def add_user():
         middle_name = request.form.get('middle_name', '').strip()
         email = request.form.get('email', '').strip()
         graduation_year_raw = request.form.get('graduation_year', '').strip()
-        graduation_year=int(graduation_year_raw) if graduation_year_raw else None
+        if not graduation_year_raw: graduation_year = None 
+        else:
+            try: 
+                graduation_year = int(graduation_year_raw)
+            except ValueError:
+                flash("Graduation year must be an integer.")
+                return render_template('signup/signup.html', form=request.form)
         password = request.form.get('password', '').strip()
         username = request.form.get('username', '').strip()
 
