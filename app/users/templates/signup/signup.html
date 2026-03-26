@@ -2,13 +2,19 @@
 
 {% block title %}Add a New User{% endblock %}
 
-
 {% block content %}
 <div class="signup-container">
-    <h1>Add a New User</h1>
-    <form action="/add_user" method="POST">
+    <div class="login-text">
+        <h3>I already have an account.</h3>
+        <a class="button sign-up no-account" href="/login">
+            <strong>Log In</strong>
+        </a>
+    </div>
 
-        
+    <div class="signup-blob">
+        <h1>Create An Account</h1>
+    <div class="underline-signup"></div>
+    <form class="signup-form" action="/add_user" method="POST">
         <div>
         <label class="signup-label" for="userRole">Who am I?</label><br>
         <select class="entry-box" name="userRole" id="userRole" required>
@@ -53,5 +59,6 @@
         <button class="button-submit" type="submit">Submit</button>
 
     </form>
+    </div>
 </div>
 {% endblock %}

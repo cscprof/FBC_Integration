@@ -97,14 +97,20 @@ main {
     text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    min-height: 220px;
+    justify-content: flex-start;
+    flex: 1;
+    width: 100%;
+    min-height: 280px;
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     box-shadow:
         0 8px 25px rgba(0, 0, 0, 0.1),
         0 6px 18px rgba(138, 201, 38, 0.25);
+}
+
+
+.resource-card {
+    position: relative;
 }
 
 .exampleboxes:hover {
@@ -114,17 +120,46 @@ main {
         0 8px 22px rgba(138, 201, 38, 0.3);
 }
 
+.resource-card-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .resource-card-link {
     text-decoration: none;
     color: inherit;
-    display: block;
+    display: flex;
+    flex: 1;
+    min-height: 0;
 }
 
 .resource-card-link .exampleboxes {
-    justify-content: flex-start;
-    align-items: center;
+    padding-bottom: 50px;
 }
 
+.edit-resource-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #2e44cc;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #2e44cc;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 10;
+    transition: all 0.2s ease;
+}
+
+.edit-resource-btn:hover {
+    background: #2e44cc;
+    color: #ffffff;
+}
 
 .exampleboxes h3 {
     color: #2e44cc;
@@ -133,6 +168,25 @@ main {
 
 .resource-card-link .exampleboxes h3 {
     margin-top: 40px;
+    margin-bottom: 20px;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.exampleboxes h4 {
+    color: #2e44cc;
+    margin: 8px 0;
+    font-size: 1.1em;
+    min-height: 24px;
+}
+
+.exampleboxes h6 {
+    color: #2e44cc;
+    margin: 4px 0;
+    font-size: 0.9em;
+    min-height: 20px;
 }
 
 .exampleboxes p {
@@ -141,9 +195,10 @@ main {
 }
 
 .exampleboxes ul {
-    text-align: left;
+    text-align: center;
     margin-top: 15px;
-    padding-left: 20px;
+    padding-left: 0;
+    list-style-position: inside;
 }
 
 .exampleboxes ul li {
@@ -199,7 +254,8 @@ main {
     background-color: #1e34aa;
 }
 
-#uploadModal {
+#uploadModal,
+.modal {
     display: none;
     position: fixed;
     z-index: 1000;
@@ -213,7 +269,7 @@ main {
 .modalcontent {
     background-color: white;
     margin: 5% auto;
-    padding: 30px;
+    padding: 20px;
     border-radius: 10px;
     width: 90%;
     max-width: 500px;
@@ -222,7 +278,25 @@ main {
 .modalheader {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.modalclose {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.modalclose:hover {
+    color: #2e44cc;
 }
 
 .modaltitle {
@@ -230,12 +304,20 @@ main {
     margin: 0;
 }
 
+.modallabel {
+    display: block;
+    margin-bottom: 3px;
+    color: #333;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
 .modalform input,
 .modalform textarea,
 .modalform select {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
+    padding: 10px;
+    margin-bottom: 10px;
     border: 2px solid #d0d4ff;
     border-radius: 5px;
     box-sizing: border-box;
@@ -257,6 +339,7 @@ main {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+    margin-top: 10px;
 }
 
 .modalbtncancel {
@@ -282,6 +365,19 @@ main {
 
 .modalbtnsubmit:hover {
     background-color: #1e34aa;
+}
+
+.modalbtndelete {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #cc2e2e;
+    color: white;
+}
+
+.modalbtndelete:hover {
+    background-color: #a02121;
 }
 
 

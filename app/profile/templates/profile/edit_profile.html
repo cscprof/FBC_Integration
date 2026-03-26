@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Add a New User{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit user</title>
+</head>
+<body>
+
+<h1>Edit user {{ user.username }}</h1>
+
+<!-- enctype is required for file uploads -->
+<form method="post" action="{{ url_for('profile.edit_profile', username=user.username) }}"
+      enctype="multipart/form-data">
+
+    <label class="edituser-label">First name:</label>
+    <input class="edituser-entry-box" type="text" name="first_name" value="{{ user.first_name }}">
+    <br>
+
+    <label class="edituser-label">Middle name:</label>
+    <input class="edituser-entry-box" type="text" name="middle_name" value="{{ user.middle_name }}">
+    <br>
+
+    <label class="edituser-label">Last name:</label>
+    <input class="edituser-entry-box" type="text" name="last_name" value="{{ user.last_name }}">
+    <br>
+
+    <label class="edituser-label">Email:</label>
+    <input class="edituser-entry-box" type="email" name="email" value="{{ user.email }}">
+    <br>
+
+    <label class="edituser-label">Graduation year:</label>
+    <input class="edituser-entry-box" type="text" name="graduation_year" value="{{ user.graduation_year }}">
+    <br>
+
+    <label class="edituser-label">Profile picture:</label>
+    {% if user.profile_picture %}
+        <img src="{{ url_for('static', filename=user.profile_picture) }}"
+             alt="Current profile picture"
+             style="width:80px; height:80px; border-radius:50%; object-fit:cover; vertical-align:middle; margin-right:8px;">
+        <span style="font-size:13px; color:#777;">(Upload a new image to replace)</span>
+    {% else %}
+        <span style="font-size:13px; color:#777;">No photo set</span>
+    {% endif %}
+    <br>
+    <input type="file" name="profile_picture" accept="image/png, image/jpeg, image/gif, image/webp">
+    <br><br>
+
+    <button class="edituser-button-submit" type="submit">Save changes</button>
+</form>
+
+</body>
+</html>
+{% endblock %}
