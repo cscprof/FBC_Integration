@@ -91,7 +91,8 @@ def auth_login():
                         nameFirst=row['first_name'],
                         nameLast=row['last_name'],
                         nameMiddle=row['middle_name'],
-                        gradYear=row['graduation_year']
+                        gradYear=row['graduation_year'],
+                        profilePicture=row['profile_picture'],
                     )
                     login_user(user)
         except DatabaseError as e:

@@ -54,7 +54,11 @@ def edit_profile(username):
                 middle_name = request.form.get("middle_name") or ""
                 last_name = request.form.get("last_name") or ""
                 email = request.form.get("email") or ""
-                graduation_year = int(request.form.get("graduation_year") or 0)
+                graduation_year_raw = (request.form.get("graduation_year"))
+                if not graduation_year_raw or graduation_year_raw.strip().lower() == "none":
+                    graduation_year = None
+                else:
+                    graduation_year = int(graduation_year_raw)
 
                 # --- Profile picture upload ---
                 profile_picture_path = None
