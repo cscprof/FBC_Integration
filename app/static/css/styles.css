@@ -479,7 +479,7 @@
     max-width: 600px;
     margin: 40px auto;
     background: #ffffff;
-    padding: 20px 30px;
+    padding: 40px 100px;
     border-radius: 8px;
     box-shadow: 0 0 8px rgba(0,0,0,0.1);
 }
@@ -651,7 +651,7 @@
     margin: 20px;
     grid-column: 1 / -1;
     justify-self: center;
-    margin-top: 15px;
+    margin-top: 5px;
     border-radius: 10px;
 }
 
