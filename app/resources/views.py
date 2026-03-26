@@ -63,6 +63,9 @@ def resourcesearch():
     
     return render_template('resources/resourcesearch.html', resources=dblist, categories=categories_list)
 
+@resources_blueprint.route("/resources/admin")
+def resources_admin():
+    return render_template("resources/admin.html")
 #HEY CHANGES WE NEED TO MAKE NEXT
 ##Making sure it only exists as admin
 ##Adding other optional fields that exist in the database (Contact Name, Contact Num, etc)
