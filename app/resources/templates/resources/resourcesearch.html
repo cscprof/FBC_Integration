@@ -60,6 +60,8 @@
                             {% endif %}
                         </div>
                     </a>
+
+                    {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
                     {% if resource.resource_id is defined %}
                     <button class="edit-resource-btn" 
                             title="Edit resource"
@@ -73,6 +75,8 @@
                         Edit
                     </button>
                     {% endif %}
+                    {% endif %}
+                    
                 </div>
                 {% endfor %}
             </div>
