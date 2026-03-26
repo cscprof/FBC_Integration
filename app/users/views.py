@@ -65,7 +65,7 @@ def signup_page():
 
 # Login
 @users.route("/login")
-def home_page():
+def login_page():
     return render_template("login/login.html")
 
 @users.route("/auth_login", methods=["GET", "POST"])
@@ -109,8 +109,8 @@ def auth_login():
         if is_auth:
             return redirect(url_for('home.home_page'))
             # return redirect(url_for('profile.profile', username=username))
-        flash("Invalid login")
-        return redirect(url_for('home.home_page'))
+        flash("Invalid Login. Username or Password is Incorrect. Please Try Again!")
+        return redirect(url_for('users.login_page'))
 
 # Logout
 @users.route('/logout')
