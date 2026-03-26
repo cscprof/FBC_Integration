@@ -9,8 +9,7 @@ from . import users
 # from . import signup, login, adminpanel
 
 # For creating a user account
-from flask_login import login_user, logout_user, login_required
-from loginManager import role_required
+from flask_login import login_user
 from app.Models.Account import Account
 
 # Sign Up
@@ -22,8 +21,7 @@ def add_user():
         last_name = request.form.get('last_name', '').strip()
         middle_name = request.form.get('middle_name', '').strip()
         email = request.form.get('email', '').strip()
-        graduation_year_raw = request.form.get('graduation_year', '').strip()
-        graduation_year=int(graduation_year_raw) if graduation_year_raw else None
+        graduation_year = request.form.get('graduation_year', '').strip()
         password = request.form.get('password', '').strip()
         username = request.form.get('username', '').strip()
 
@@ -104,19 +102,10 @@ def auth_login():
             return redirect(url_for('home.home_page'))
             # return redirect(url_for('profile.profile', username=username))
         flash("Invalid login")
-        return redirect(url_for('home.home_page'))
-
-# Logout
-@users.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash('You have been logged out.')
-    return redirect(url_for('home.home_page'))
-
+        return render_template('login/login.html', form=request.form)
+    
 # Admin
 @users.route("/admin")
-@role_required([4, 5])
 def admin_panel():
     # existing route that shows users in a simple table
     conn = get_db_connection()
@@ -132,7 +121,6 @@ def admin_panel():
 
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
-@role_required([4, 5])
 def admin_users():
     conn = get_db_connection()
     try:
@@ -173,6 +161,13 @@ def edit_user(user_id):
 
     finally:
         conn.close()
+
+    if not user:
+        flash("User not found")
+        return redirect(url_for("users.admin_panel"))
+    return render_template("adminpanel/edit_user.html", user=user)
+
+
 
     if not user:
         flash("User not found")
