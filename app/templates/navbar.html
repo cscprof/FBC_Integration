@@ -91,8 +91,21 @@
 
           <!-- Show log out if user is authenticaed -->
           {% elif current_user.is_authenticated %}
-            <p class="navbar-item has-text-centered" style="display: flex; align-items: center; margin-bottom: 0;"> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </p>
-            <a class="button is-light" href="{{ url_for('users.logout') }}"> Log out </a>
+            {% if current_user.profilePicture %}
+              <a href="{{ url_for('profile.user_profile', username=current_user.username) }}" class="navbar-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0;">
+                <span style="line-height: 3;"> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </span>
+                <img src="{{ url_for('static', filename=current_user.profilePicture) }}"  style="width: 32px; height: 32px; border-radius: 50%;">
+              </a>
+              <a class="button is-light" href="{{ url_for('users.logout') }}"> Log out </a>
+              
+            {% else %}
+              <a href="{{ url_for('profile.user_profile', username=current_user.username) }}" class="navbar-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0;">
+                <span style="line-height: 3;"> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </span>
+                <div class="profile-picture-placeholder" style="width: 32px; height: 32px; border-radius: 50%;">&#128100;</div>
+              </a>
+              <a class="button is-light" href="{{ url_for('users.logout') }}"> Log out </a>
+
+            {% endif %}
           {% endif %}
 
         </div>
