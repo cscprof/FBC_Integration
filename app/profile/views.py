@@ -93,7 +93,7 @@ def edit_profile(username):
                           username))
 
                 conn.commit()
-                flash("User updated!")
+                flash("User updated!", "success")
                 return redirect(url_for("profile.user_profile", username=username))
 
             cursor.execute("SELECT * FROM users WHERE username=%s", (username,))

@@ -172,8 +172,8 @@ def edit_user(user_id):
                 """, (first_name, middle_name, last_name, email, graduation_year,
                       username, role_id, user_id))
                 conn.commit()
-                flash("User updated!")
-                return redirect(url_for("users.admin_panel"))
+                flash("User updated!", "success")
+                return redirect(url_for("users.admin_users"))
 
             cursor.execute("SELECT * FROM users WHERE user_id=%s", (user_id,))
             user = cursor.fetchone()
@@ -183,5 +183,5 @@ def edit_user(user_id):
 
     if not user:
         flash("User not found")
-        return redirect(url_for("users.admin_panel"))
+        return redirect(url_for("users.admin_users"))
     return render_template("adminpanel/edit_user.html", user=user)
