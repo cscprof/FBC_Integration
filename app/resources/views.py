@@ -71,6 +71,7 @@ def resourcesearch():
 
 @resources_blueprint.route("/resources/admin")
 @resources_blueprint.route("/admin/resources")
+@role_required([4, 5])
 def resources_admin():
     try:
         categories_list = db.session.execute(select(resource_category)).scalars().all()
