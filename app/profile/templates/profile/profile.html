@@ -105,9 +105,7 @@
         <div class="profile-field">
             <div class="profile-label">Password:</div>
             <div class="profile-value">
-                 <!-- make into just ******, have button to be able to change your password?? shouldn't be showing the hashed password -->
-                <!--{{ user.password }}-->
-                 ••••••••••• <a href="" class="button change-password">Change Password</a>
+                ••••••••••• <a href="{{ url_for('profile.change_password', username=user.username) }}" class="button change-password">Change Password</a>
             </div>
         </div>
     </div>
