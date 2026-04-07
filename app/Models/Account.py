@@ -7,7 +7,7 @@ class Account(UserMixin):
     Account class stores username, password, userRole, and any other credentials
     I added some input validation to ensure inputs match the db, which is likely redundant
     """
-    def __init__(self, username, email, passwdHash, roleID, partnerID, userID, nameFirst, nameLast, nameMiddle, gradYear, emailIsVerified):
+    def __init__(self, username, email, passwdHash, roleID, partnerID, userID, nameFirst, nameLast, nameMiddle, gradYear, emailIsVerified, profilePicture):
         self.id = userID
         self.username = username
         self.email = email
@@ -19,3 +19,4 @@ class Account(UserMixin):
         self.gradYear = gradYear
         self.partnerID = partnerID
         self.emailIsVerified = emailIsVerified
+        self.profilePicture = profilePicture

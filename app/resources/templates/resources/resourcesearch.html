@@ -11,11 +11,13 @@
             Everything you need to succeed - from college prep to mental health support
         </p>
 
+        {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
         <div class="uploadbutton">
             <button onclick="document.getElementById('uploadModal').style.display='block'" class="uploadresourcebtn">
                 Upload Resource
             </button>
         </div>
+        {% endif %}
 
         <div class="resources">
             <div class="searchfilter">
@@ -41,9 +43,40 @@
 
             <div class="examplegrid" id="resourcesgrid">
                 {% for resource in resources %}
-                <div class="exampleboxes" data-category="{{ resource.resource_category_name }}">
-                    <h3>{{ resource.description }}</h3>
-                    <a href="{{ resource.url }}" class="resourcelink" target="_blank">{{ resource.url }}</a>
+                <div class="resource-card-wrapper" data-category="{{ resource.resource_category_name }}">
+                    <a href="{{ resource.url }}" class="resource-card-link" target="_blank" rel="noopener noreferrer">
+                        <div class="exampleboxes">
+                            <h3>{{ resource.description }}</h3>
+
+                            {%  if resource.contact_name %}
+                            <br>
+                            <h4>{{ resource.contact_name }}</h4>
+                            {% endif %}
+                            {%  if resource.contact_email %}
+                            <h6>{{ resource.contact_email }}</h6>
+                            {% endif %}
+                            {%  if resource.contact_phone %}
+                            <h6>{{ resource.contact_phone }}</h6>
+                            {% endif %}
+                        </div>
+                    </a>
+
+                    {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
+                    {% if resource.resource_id is defined %}
+                    <button class="edit-resource-btn" 
+                            title="Edit resource"
+                            data-resource-id="{{ resource.resource_id }}"
+                            data-title="{{ resource.description|e }}"
+                            data-url="{{ resource.url|e }}"
+                            data-category-id="{{ resource.resource_category_id }}"
+                            data-name="{{ resource.contact_name or ''|e }}"
+                            data-email="{{ resource.contact_email or ''|e }}"
+                            data-phone="{{ resource.contact_phone or ''|e }}">
+                        Edit
+                    </button>
+                    {% endif %}
+                    {% endif %}
+                    
                 </div>
                 {% endfor %}
             </div>
@@ -62,6 +95,9 @@
         <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
             <input type="text" name="title" placeholder="Title *" required>
             <input type="text" name="url" placeholder="URL *" required>
+            <input type="text" name="name" placeholder="Contact Name (Optional)">
+            <input type="text" name="email" placeholder="Contact Email (Optional)">
+            <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
             <select name="resource_category_id" required>
                 <option value="">Category *</option>
                 {% if categories %}
@@ -86,11 +122,82 @@
     </div>
 </div>
 
+<div id="editModal" class="modal">
+    <div class="modalcontent">
+        <div class="modalheader">
+            <h2 class="modaltitle">Edit Resource</h2>
+            <button onclick="closeEditModal()" class="modalclose">&times;</button>
+        </div>
+        
+        <form action="{{ url_for('resources.edit_resource', resource_id=0) }}" method="POST" class="modalform" id="editForm">
+            <input type="hidden" id="editResourceId" name="resource_id">
+            
+            <label for="editTitle" class="modallabel">Title *</label>
+            <input type="text" id="editTitle" name="title" placeholder="Title *" required>
+            
+            <label for="editUrl" class="modallabel">URL *</label>
+            <input type="text" id="editUrl" name="url" placeholder="URL *" required>
+            
+            <label for="editName" class="modallabel">Contact Name (Optional)</label>
+            <input type="text" id="editName" name="name" placeholder="Contact Name (Optional)">
+            
+            <label for="editEmail" class="modallabel">Contact Email (Optional)</label>
+            <input type="text" id="editEmail" name="email" placeholder="Contact Email (Optional)">
+            
+            <label for="editPhone" class="modallabel">Contact Phone Number (Optional)</label>
+            <input type="text" id="editPhone" name="phone" placeholder="Contact Phone Number (Optional)">
+            
+            <label for="editCategory" class="modallabel">Category *</label>
+            <select id="editCategory" name="resource_category_id" required>
+                <option value="">Category *</option>
+                {% if categories %}
+                    {% for cat in categories %}
+                        <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
+                    {% endfor %}
+                {% else %}
+                    <option value="1">College</option>
+                    <option value="2">Mental</option>
+                    <option value="3">Jobs</option>
+                    <option value="4">Tutoring</option>
+                    <option value="5">Activities</option>
+                    <option value="6">Career</option>
+                {% endif %}
+            </select>
+            
+            <div class="modalformactions">
+                <button type="button" onclick="closeEditModal()" class="modalbtncancel">Cancel</button>
+                <button type="button" onclick="deleteResource()" class="modalbtndelete">Delete</button>
+                <button type="submit" class="modalbtnsubmit">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
+    function deleteResource() {
+        const resourceId = document.getElementById('editResourceId').value;
+        if (confirm('Are you sure you want to delete this resource?')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ url_for("resources.delete_resource", resource_id=0) }}'.replace('0', resourceId);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+
+    document.getElementById('editForm').addEventListener('submit', function(e) {
+        const resourceId = document.getElementById('editResourceId').value;
+        this.action = '{{ url_for("resources.edit_resource", resource_id=0) }}'.replace('0', resourceId);
+    });
+    
     document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector(".searchinput");
     const categorySelect = document.querySelector(".categoryselect");
-    const resourceBoxes = document.querySelectorAll(".exampleboxes");
+    const resourceBoxes = document.querySelectorAll(".resource-card-wrapper");
     const urlParams = new URLSearchParams(window.location.search);
     const categoryParam = urlParams.get('category');
     if (categoryParam) {
@@ -115,6 +222,39 @@
                 box.style.display = "none";
             }
         });
+    }
+
+    function openEditModal(button) {
+        const resourceId = button.getAttribute('data-resource-id');
+        const title = button.getAttribute('data-title');
+        const url = button.getAttribute('data-url');
+        const categoryId = button.getAttribute('data-category-id');
+        const name = button.getAttribute('data-name');
+        const email = button.getAttribute('data-email');
+        const phone = button.getAttribute('data-phone');
+        
+        document.getElementById('editResourceId').value = resourceId;
+        document.getElementById('editTitle').value = title;
+        document.getElementById('editUrl').value = url;
+        document.getElementById('editCategory').value = categoryId;
+        document.getElementById('editName').value = name || '';
+        document.getElementById('editEmail').value = email || '';
+        document.getElementById('editPhone').value = phone || '';
+        document.getElementById('editModal').style.display = 'block';
+    }
+
+    document.querySelectorAll('.edit-resource-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openEditModal(this);
+        });
+    });
+
+    window.onclick = function(event) {
+        const editModal = document.getElementById('editModal');
+        if (event.target == editModal) {
+            editModal.style.display = 'none';
+        }
     }
 
     searchInput.addEventListener("keyup", filterResources);

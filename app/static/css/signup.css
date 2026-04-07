@@ -92,3 +92,41 @@ select {
   border: 1px solid #cccccc;
   font-size: 1rem;
 }
+
+.users_table {
+    color:black;
+}
+.edituser-label {
+    font-weight: 600;
+    color: black;
+    font-size: 1rem;
+    margin-left: 5px;
+    height: auto;
+}
+
+.edituser-entry-box {
+    border: 1px solid black;
+    border-radius:5px;          
+    box-sizing: border-box;
+    width: 25%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 2px;
+}
+
+.edituser-button-submit {
+    background-color: #aaeb54;
+    color: black;
+    border: 1px solid grey;
+    padding: 3px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .2s;
+    width: 50%;
+    align-self: center;
+}
+.edituser-button-submit:hover {
+    background-color: #8ac926;
+}
+

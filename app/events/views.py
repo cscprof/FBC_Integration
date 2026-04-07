@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash
+from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash, session
+from flask_login import current_user
 from flask_sqlalchemy import SQLAlchemy
 # from app.db import get_db_connection
 from db import get_db_connection
 from datetime import datetime
 from pymysql import DatabaseError
+from loginManager import role_required
 
 from . import events
 
@@ -66,6 +68,7 @@ def fetch_approved_events_python():
 #  ADD EVENT
 # ---------------------------------------------------------
 @events.route('/add-event', methods=["GET", "POST"])
+@role_required([4, 5])
 def addEvent():
     if request.method == "POST":
         name = request.form.get('name', '').strip()
@@ -89,6 +92,12 @@ def addEvent():
             flash("Ending date and time must be after the starting date and time.", "error")
             return render_template('events/addEvent.html', form=request.form)
 
+        # prefer authenticated user's id; fall back to session value or default user 1
+        if getattr(current_user, 'is_authenticated', False):
+            user_id = current_user.id
+        else:
+            user_id = session.get('user_id', 1)
+
         conn = None
         try:
             conn = get_db_connection()
@@ -100,7 +109,7 @@ def addEvent():
                 """
                 cursor.execute(sql, (
                     name, description, url or None, starting_date, ending_date,
-                    1, 'pending', posting_date, deadline
+                    user_id, 'pending', posting_date, deadline
                 ))
             conn.commit()
 
@@ -126,6 +135,7 @@ def calendar():
 
 
 @events.route('/update_event/<int:event_id>/<string:action>')
+@role_required([4, 5])
 def update_event(event_id, action):
     if action not in ["approved", "cancelled"]:
         return redirect(url_for('events.adminView'))
@@ -143,22 +153,40 @@ def update_event(event_id, action):
 
 
 @events.route('/admin/events')
+@role_required([4, 5])
 def adminView():
     conn = get_db_connection()
     with conn.cursor() as cursor:
-        cursor.execute("""SELECT event_id, name, status, description, start_date, end_date, url FROM events ORDER BY CASE WHEN status = 'pending' THEN 0 ELSE 1 END, start_date ASC""")
+        cursor.execute("""
+            SELECT e.event_id, e.name, e.status, e.description, e.start_date, e.end_date, e.url,
+                   e.registration_deadline, e.user_id,
+                   u.username, u.first_name, u.last_name
+            FROM events e
+            LEFT JOIN users u ON e.user_id = u.user_id
+            ORDER BY CASE WHEN e.status = 'pending' THEN 0 ELSE 1 END, e.start_date ASC
+        """)
         rows = cursor.fetchall()
     conn.close()
+
     events = []
     for row in rows:
+        # build a readable submitter name
+        if row.get('first_name') or row.get('last_name'):
+            submitted_by = f"{row.get('first_name') or ''} {row.get('last_name') or ''}".strip()
+        else:
+            submitted_by = row.get('username') or 'Unknown'
+
         events.append({
             "event_id": row["event_id"],
             "name": row["name"],
-            "description": row["description"],
-            "status": row["status"],
-            "start": row["start_date"],
-            "end": row["end_date"],
-            "url": row["url"]
+            "description": row.get("description"),
+            "status": row.get("status"),
+            "start": row.get("start_date"),
+            "end": row.get("end_date"),
+            "url": row.get("url"),
+            "registration_deadline": row.get("registration_deadline"),
+            "user_id": row.get("user_id"),
+            "submitted_by": submitted_by
         })
 
     return render_template('events/eventAdmin.html', events=events)
@@ -166,6 +194,7 @@ def adminView():
 
 
 @events.route('/edit_event/<int:event_id>', methods=['GET', 'POST'])
+@role_required([4, 5])
 def edit_event(event_id):
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
@@ -242,6 +271,7 @@ def edit_event(event_id):
 
 
 @events.route('/delete_event/<int:event_id>', methods=['POST'])
+@role_required([4, 5])
 def delete_event(event_id):
     conn = get_db_connection()
     try:

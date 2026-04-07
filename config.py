@@ -30,7 +30,7 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
     MAIL_USERNAME = ''  # these 2 must be filled in for email verification to work, but we have no production email to use yet.
-    MAIL_PASSWORD = ''  # 
+    MAIL_PASSWORD = '' 
 
     @staticmethod
     def init_app(app):

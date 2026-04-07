@@ -36,16 +36,24 @@ def load_user(user_id):
             nameMiddle=row['middle_name'].capitalize(),
             gradYear=row['graduation_year'],
             emailIsVerified=row['email_is_verified']
+            profilePicture=row['profile_picture'],
         )
     return None
 
-#decorator to require specific role
+#decorator to require specific role(s)
 def role_required(role_id):
     """
-    This is a 'Decorator Factory' which rejects a client from accessing a page unless their role_id matches the required role_id
-    Example use: 
+    This is a 'Decorator Factory' which rejects a client from accessing a page unless their role_id matches the required role_id(s)
+    Example use (single role): 
     @app.route(/route)
     @role_required(0)
+    def route(
+        code here
+    )
+    
+    Example use (multiple roles):
+    @app.route(/route)
+    @role_required([1, 2, 3])
     def route(
         code here
     )
@@ -53,9 +61,10 @@ def role_required(role_id):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if not current_user.is_authenticated or current_user.role != role_id:
+            # Convert single role_id to list for uniform handling
+            allowed_roles = role_id if isinstance(role_id, list) else [role_id]
+            if not current_user.is_authenticated or current_user.role not in allowed_roles:
                 abort(403)
             return f(*args, **kwargs)
         return decorated_function
     return decorator
-    

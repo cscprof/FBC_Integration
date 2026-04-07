@@ -17,13 +17,19 @@ from app.Models.Account import Account
 @users.route("/add_user", methods=["GET", "POST"])
 def add_user():
     if request.method == "POST":
-        #Get all userinfo from webpage, strip any whitespace, then normalize to lowercase for all except password which remains case-sensitive
-        role_id = request.form.get('userRole', '').strip().lower()
-        first_name = request.form.get('first_name', '').strip().lower()
-        last_name = request.form.get('last_name', '').strip().lower()
-        middle_name = request.form.get('middle_name', '').strip().lower()
-        email = request.form.get('email', '').strip().lower()
-        graduation_year = request.form.get('graduation_year', '').strip().lower()
+        role_id = request.form.get('userRole', '').strip()
+        first_name = request.form.get('first_name', '').strip()
+        last_name = request.form.get('last_name', '').strip()
+        middle_name = request.form.get('middle_name', '').strip()
+        email = request.form.get('email', '').strip()
+        graduation_year_raw = request.form.get('graduation_year', '').strip()
+        if not graduation_year_raw: graduation_year = None 
+        else:
+            try: 
+                graduation_year = int(graduation_year_raw)
+            except ValueError:
+                flash("Graduation year must be an integer.")
+                return render_template('signup/signup.html', form=request.form)
         password = request.form.get('password', '').strip()
         passwordConfirmation = request.form.get('passwordConfirmation', '').strip()
         username = request.form.get('username', '').strip().lower()
@@ -108,6 +114,7 @@ def auth_login():
                         nameMiddle=row['middle_name'],
                         gradYear=row['graduation_year'],
                         emailIsVerified=row['email_is_verified']
+                        profilePicture=row['profile_picture'],
                     )
                     login_user(user, remember=False)    #Makes session cookies reset whenever you leave the page, and stops them from tracking session age. 
                                                         #Server will track session age
@@ -122,10 +129,19 @@ def auth_login():
         flash("Invalid login")
         return render_template('login/login.html', form=request.form)
 
+# Logout
+@users.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('home.home_page'))
+
 # Admin
-@users.route("/admin/users")
-@role_required(4)
+@users.route("/admin")
+@role_required([4, 5])
 def admin_panel():
+    # existing route that shows users in a simple table
     conn = get_db_connection()
     try:
         with conn.cursor(DictCursor) as cursor:
@@ -133,6 +149,21 @@ def admin_panel():
             cursor.execute("SELECT * FROM users")
             users = cursor.fetchall()
         return render_template("adminpanel/index.html", users=users)
+    finally:
+        conn.close()
+
+
+# new route requested by navbar: serve the more polished userAdmin.html page
+@users.route("/admin/users")
+@role_required([4, 5])
+def admin_users():
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("USE flourish_bc")
+            cursor.execute("SELECT * FROM users")
+            users = cursor.fetchall()
+        return render_template("adminpanel/userAdmin.html", users=users)
     finally:
         conn.close()
 
@@ -157,11 +188,12 @@ def edit_user(user_id):
                 """, (first_name, middle_name, last_name, email, graduation_year,
                       username, role_id, user_id))
                 conn.commit()
-                flash("User updated!")
-                return redirect(url_for("users.admin_panel"))
+                flash("User updated!", "success")
+                return redirect(url_for("users.admin_users"))
 
             cursor.execute("SELECT * FROM users WHERE user_id=%s", (user_id,))
             user = cursor.fetchone()
+
     finally:
         conn.close()
 

@@ -4,6 +4,7 @@ from sqlalchemy import select
 from db import db
 from .models import resources, resource_category, content_types
 from . import resources as resources_blueprint
+from loginManager import role_required
 
 # Use the route() decorator to tell Flask what URL should trigger the function
 @resources_blueprint.route("/resources")
@@ -31,6 +32,9 @@ def resourcesearch():
             resources.url,
             resources.resource_category_id,
             resource_category.resource_category_name,
+            resources.contact_name,
+            resources.contact_email,
+            resources.contact_phone,
         )
         .join(
             resource_category,
@@ -39,21 +43,28 @@ def resourcesearch():
         dblist = db.session.execute(dbselect).mappings().all()
 
     except:
-
-       categories_list = []
-        #Exception creates example db entries so that those without the database can still design the webpage
-       dblist = [
-        {
-            'description': 'Geneva College Financial Aid Website',
-            'url': 'https://www.geneva.edu/financial-aid/',
-            'resource_category_name': 'college'
-        },
-        {
-            'description': 'Geneva Application Process',
-            'url': 'https://apply.geneva.edu/portal/applynow/tug_apply',
-            'resource_category_name': 'college'
-        }
-       ]
+        categories_list = []
+        # Exception creates example db entries so that those without the database can still design the webpage
+        dblist = [
+            {
+                'resource_id': 1,
+                'description': 'Geneva College Financial Aid Website',
+                'url': 'https://www.geneva.edu/financial-aid/',
+                'resource_category_name': 'college',
+                'contact_name': 'Dean Swank',
+                'contact_email': 'dswank@geneva.edu',
+                'contact_phone': '18005882300'
+            },
+            {
+                'resource_id': 2,
+                'description': 'Geneva Application Process',
+                'url': 'https://apply.geneva.edu/portal/applynow/tug_apply',
+                'resource_category_name': 'college',
+                'contact_name': None,
+                'contact_email': None,
+                'contact_phone': None,
+            }
+        ]
     
     return render_template('resources/resourcesearch.html', resources=dblist, categories=categories_list)
 
@@ -64,11 +75,15 @@ def resourcesearch():
 ###Should capture current user id instead of just "1"
 ###-Owen B.
 @resources_blueprint.route("/resources/upload", methods=["POST"])
+@role_required([4, 5])
 def upload_resource():
     # Get the form data that the user submitted
     title = request.form.get('title', '').strip()
     url = request.form.get('url', '').strip()
     resource_category_id = request.form.get('resource_category_id', '').strip()
+    name = request.form.get('name', '').strip()
+    email = request.form.get('email', '').strip()
+    phone = request.form.get('phone', '').strip()
     
     # Make sure all required fields were filled out
     if not title or not url or not resource_category_id:
@@ -85,7 +100,10 @@ def upload_resource():
             url=url,
             content_type_id=content_type,
             resource_category_id=int(resource_category_id),
-            user_id=1  # Change later to be signed-in user
+            user_id=1, # Change later to be signed-in user
+            contact_name=name,
+            contact_email=email,
+            contact_phone=phone,
         )
         
         # Save it to the database
@@ -99,3 +117,53 @@ def upload_resource():
         # If something went wrong, undo any changes and go back
         db.session.rollback()
         return redirect(url_for('resources.resource_directory'))
+
+
+@resources_blueprint.route("/resources/<int:resource_id>/edit", methods=["POST"])
+@role_required([4, 5])
+def edit_resource(resource_id: int):
+    """Edit an existing resource."""
+    try:
+        resource = db.session.get(resources, resource_id)
+        if not resource:
+            return redirect(url_for('resources.resourcesearch'))
+        
+        # Get the form data
+        title = request.form.get('title', '').strip()
+        url = request.form.get('url', '').strip()
+        resource_category_id = request.form.get('resource_category_id', '').strip()
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip()
+        
+        # Make sure all required fields were filled out
+        if not title or not url or not resource_category_id:
+            return redirect(url_for('resources.resourcesearch'))
+        
+        # Update the resource
+        resource.description = title
+        resource.url = url
+        resource.resource_category_id = int(resource_category_id)
+        resource.contact_name = name if name else None
+        resource.contact_email = email if email else None
+        resource.contact_phone = phone if phone else None
+        
+        db.session.commit()
+        return redirect(url_for('resources.resourcesearch'))
+    except Exception:
+        db.session.rollback()
+        return redirect(url_for('resources.resourcesearch'))
+
+
+@resources_blueprint.route("/resources/<int:resource_id>/delete", methods=["POST"])
+@role_required([4, 5])
+def delete_resource(resource_id: int):
+    """Delete a resource by ID and return to the search page."""
+    try:
+        resource = db.session.get(resources, resource_id)
+        if resource:
+            db.session.delete(resource)
+            db.session.commit()
+    except Exception:
+        db.session.rollback()
+    return redirect(url_for('resources.resourcesearch'))

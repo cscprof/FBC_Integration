@@ -1,52 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit user</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h1>Edit user {{ user.user_id }}</h1>
+{% block title %}Edit User{% endblock %}
 
-<form method="post" action="{{ url_for('.edit_user', user_id=user.user_id) }}">
-    <label>First name:
-        <input type="text" name="first_name" value="{{ user.first_name }}">
-    </label>
-    <br>
+{% block content %}
+<div class="edit-user-blob">
+    <h1>Edit User {{ user.user_id }}: {{user.first_name}} {{user.last_name}} </h1>
 
-    <label>Middle name:
-        <input type="text" name="middle_name" value="{{ user.middle_name }}">
-    </label>
-    <br>
+    <form class="edit-profile-form" method="post" action="{{ url_for('.edit_user', user_id=user.user_id) }}">
+        <label class="edituser-label">First name:</label>
+        <input class="edituser-entry-box" type="text" name="first_name" value="{{ user.first_name }}">
 
-    <label>Last name:
-        <input type="text" name="last_name" value="{{ user.last_name }}">
-    </label>
-    <br>
+        <label class="edituser-label">Middle name:</label>
+        <input class="edituser-entry-box" type="text" name="middle_name" value="{{ user.middle_name }}">
 
-    <label>Email:
-        <input type="email" name="email" value="{{ user.email }}">
-    </label>
-    <br>
+        <label class="edituser-label">Last name:</label>
+        <input class="edituser-entry-box" type="text" name="last_name" value="{{ user.last_name }}">
 
-    <label>Graduation year:
-        <input type="text" name="graduation_year" value="{{ user.graduation_year }}">
-    </label>
-    <br>
+        <label class="edituser-label">Email:</label>
+        <input class="edituser-entry-box" type="email" name="email" value="{{ user.email }}">
 
-    <label>Username:
-        <input type="text" name="username" value="{{ user.username }}">
-    </label>
-    <br>
+        <label class="edituser-label">Graduation year:</label>
+        <input class="edituser-entry-box" type="text" name="graduation_year" value="{{ user.graduation_year }}">
 
-    <label>Role ID:
-        <input type="text" name="role_id" value="{{ user.role_id }}">
-    </label>
-    <br>
+        <label class="edituser-label">Username:</label>
+        <input class="edituser-entry-box" type="text" name="username" value="{{ user.username }}">
 
-    <button type="submit">Save changes</button>
-    <a href="{{ url_for('users.edit_user', user_id=user.user_id) }}">Cancel</a>
-</form>
+        <label class="edituser-label">Role ID:</label>
+        <input class="edituser-entry-box" type="text" name="role_id" value="{{ user.role_id }}">
 
-</body>
-</html>
+        <button class="edituser-button-submit" type="submit">Save changes</button>
+        <a class="button edituser-button-cancel" href="/admin/users">Cancel</a>
+    </form>
+</div>
+{% endblock %}
