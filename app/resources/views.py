@@ -1,9 +1,11 @@
 
 from flask import render_template, request, redirect, url_for
+from flask_login import current_user
 from sqlalchemy import select
 from db import db
 from .models import resources, resource_category, content_types
 from . import resources as resources_blueprint
+from loginManager import role_required
 
 # Use the route() decorator to tell Flask what URL should trigger the function
 @resources_blueprint.route("/resources")
@@ -101,6 +103,7 @@ def resources_admin():
 ###Should capture current user id instead of just "1"
 ###-Owen B.
 @resources_blueprint.route("/resources/upload", methods=["POST"])
+@role_required([4, 5])
 def upload_resource():
     # Get the form data that the user submitted
     title = request.form.get('title', '').strip()
@@ -115,18 +118,9 @@ def upload_resource():
         return redirect(url_for('resources.resources_admin'))
     
     try:
-        # Use a default content type id so inserts do not fail on NOT NULL/FK constraints.
-        content_type = db.session.execute(
-            select(content_types.content_type_id).limit(1)
-        ).scalar()
-        if content_type is None:
-            default_content_type = content_types(
-                name="link",
-                description="Default link content type for resources"
-            )
-            db.session.add(default_content_type)
-            db.session.flush()
-            content_type = default_content_type.content_type_id
+        #Guys this might be useful later so I'll leave it here but I'm changing the value to none
+        #Idek what a content type is I don't think it's been implemented by anyone yet
+        content_type = None
         
         # Create the new resource with all the information
         new_resource = resources(
@@ -134,8 +128,8 @@ def upload_resource():
             url=url,
             content_type_id=content_type,
             resource_category_id=int(resource_category_id),
-            user_id=1, # Change later to be signed-in user
-            contact_name=name if name else "N/A",
+            user_id=current_user.id,
+            contact_name=name,
             contact_email=email,
             contact_phone=phone,
         )
@@ -154,6 +148,7 @@ def upload_resource():
 
 
 @resources_blueprint.route("/resources/<int:resource_id>/edit", methods=["POST"])
+@role_required([4, 5])
 def edit_resource(resource_id: int):
     """Edit an existing resource."""
     try:
@@ -177,7 +172,7 @@ def edit_resource(resource_id: int):
         resource.description = title
         resource.url = url
         resource.resource_category_id = int(resource_category_id)
-        resource.contact_name = name if name else "N/A"
+        resource.contact_name = name if name else None
         resource.contact_email = email if email else None
         resource.contact_phone = phone if phone else None
         
@@ -189,6 +184,7 @@ def edit_resource(resource_id: int):
 
 
 @resources_blueprint.route("/resources/<int:resource_id>/delete", methods=["POST"])
+@role_required([4, 5])
 def delete_resource(resource_id: int):
     """Delete a resource by ID and return to the search page."""
     try:

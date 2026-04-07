@@ -11,6 +11,14 @@
             Everything you need to succeed - from college prep to mental health support
         </p>
 
+        {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
+        <div class="uploadbutton">
+            <button onclick="document.getElementById('uploadModal').style.display='block'" class="uploadresourcebtn">
+                Upload Resource
+            </button>
+        </div>
+        {% endif %}
+
         <div class="resources">
             <div class="searchfilter">
                 <div class="searchcontainer">
@@ -52,6 +60,8 @@
                             {% endif %}
                         </div>
                     </a>
+
+                    {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
                     {% if resource.resource_id is defined %}
                     <button class="edit-resource-btn" 
                             title="Edit resource"
@@ -65,6 +75,8 @@
                         Edit
                     </button>
                     {% endif %}
+                    {% endif %}
+
                 </div>
                 {% endfor %}
             </div>
@@ -73,6 +85,42 @@
         
     </div>
 </section>
+
+<div id="uploadModal">
+    <div class="modalcontent">
+        <div class="modalheader">
+            <h2 class="modaltitle">Upload Resource</h2>
+        </div>
+
+        <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
+            <input type="text" name="title" placeholder="Title *" required>
+            <input type="text" name="url" placeholder="URL *" required>
+            <input type="text" name="name" placeholder="Contact Name (Optional)">
+            <input type="text" name="email" placeholder="Contact Email (Optional)">
+            <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
+            <select name="resource_category_id" required>
+                <option value="">Category *</option>
+                {% if categories %}
+                    {% for cat in categories %}
+                        <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
+                    {% endfor %}
+                {% else %}
+                    <option value="1">College</option>
+                    <option value="2">Mental</option>
+                    <option value="3">Jobs</option>
+                    <option value="4">Tutoring</option>
+                    <option value="5">Activities</option>
+                    <option value="6">Career</option>
+                {% endif %}
+            </select>
+
+            <div class="modalformactions">
+                <button type="button" onclick="document.getElementById('uploadModal').style.display='none'" class="modalbtncancel">Cancel</button>
+                <button type="submit" class="modalbtnsubmit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <div id="editModal" class="modal">
     <div class="modalcontent">

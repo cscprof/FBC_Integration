@@ -23,7 +23,13 @@ def add_user():
         middle_name = request.form.get('middle_name', '').strip()
         email = request.form.get('email', '').strip()
         graduation_year_raw = request.form.get('graduation_year', '').strip()
-        graduation_year=int(graduation_year_raw) if graduation_year_raw else None
+        if not graduation_year_raw: graduation_year = None 
+        else:
+            try: 
+                graduation_year = int(graduation_year_raw)
+            except ValueError:
+                flash("Graduation year must be an integer.")
+                return render_template('signup/signup.html', form=request.form)
         password = request.form.get('password', '').strip()
         username = request.form.get('username', '').strip()
 
@@ -59,7 +65,7 @@ def signup_page():
 
 # Login
 @users.route("/login")
-def home_page():
+def login_page():
     return render_template("login/login.html")
 
 @users.route("/auth_login", methods=["GET", "POST"])
@@ -91,7 +97,8 @@ def auth_login():
                         nameFirst=row['first_name'],
                         nameLast=row['last_name'],
                         nameMiddle=row['middle_name'],
-                        gradYear=row['graduation_year']
+                        gradYear=row['graduation_year'],
+                        profilePicture=row['profile_picture'],
                     )
                     login_user(user)
         except DatabaseError as e:
@@ -103,8 +110,8 @@ def auth_login():
         if is_auth:
             return redirect(url_for('home.home_page'))
             # return redirect(url_for('profile.profile', username=username))
-        flash("Invalid login")
-        return redirect(url_for('home.home_page'))
+        flash("Invalid Login. Username or Password is Incorrect. Please Try Again!")
+        return redirect(url_for('users.login_page'))
 
 # Logout
 @users.route('/logout')
@@ -113,22 +120,6 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('home.home_page'))
-
-# Admin
-@users.route("/admin")
-@role_required([4, 5])
-def admin_panel():
-    # existing route that shows users in a simple table
-    conn = get_db_connection()
-    try:
-        with conn.cursor(DictCursor) as cursor:
-            cursor.execute("USE flourish_bc")
-            cursor.execute("SELECT * FROM users")
-            users = cursor.fetchall()
-        return render_template("adminpanel/index.html", users=users)
-    finally:
-        conn.close()
-
 
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
@@ -154,7 +145,12 @@ def edit_user(user_id):
                 middle_name = request.form.get("middle_name") or ""
                 last_name = request.form.get("last_name") or ""
                 email = request.form.get("email") or ""
-                graduation_year = int(request.form.get("graduation_year") or 0)
+                graduation_year_raw = request.form.get("graduation_year")
+                if not graduation_year_raw or graduation_year_raw.strip().lower() == "none":
+                    graduation_year = None
+                else:
+                    graduation_year = int(graduation_year_raw)
+
                 username = request.form.get("username") or ""
                 role_id = int(request.form.get("role_id") or 0)
 
@@ -165,8 +161,8 @@ def edit_user(user_id):
                 """, (first_name, middle_name, last_name, email, graduation_year,
                       username, role_id, user_id))
                 conn.commit()
-                flash("User updated!")
-                return redirect(url_for("users.admin_panel"))
+                flash("User updated!", "success")
+                return redirect(url_for("users.admin_users"))
 
             cursor.execute("SELECT * FROM users WHERE user_id=%s", (user_id,))
             user = cursor.fetchone()
@@ -176,5 +172,5 @@ def edit_user(user_id):
 
     if not user:
         flash("User not found")
-        return redirect(url_for("users.admin_panel"))
+        return redirect(url_for("users.admin_users"))
     return render_template("adminpanel/edit_user.html", user=user)

@@ -11,6 +11,14 @@
             Everything you need to succeed - from college prep to mental health support
         </p>
 
+        {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
+        <div class="uploadbutton">
+            <button onclick="document.getElementById('uploadModal').style.display='block'" class="uploadresourcebtn">
+                Upload Resource
+            </button>
+        </div>
+        {% endif %}
+
         <div class="resources">
             <div class="searchfilter">
                 <div class="searchcontainer">
@@ -23,32 +31,49 @@
                     <select class="categoryselect">
                         <option value="all">All Categories</option>
                         <option value="college">College</option>
+                        <option value="scholarships">Scholarships</option>
                         <option value="mental">Mental Health</option>
                         <option value="jobs">Jobs</option>
-                        <option value="tutoring">Tutoring</option>
                         <option value="activities">Activities</option>
-                        <option value="career">Career</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
             </div>
 
             <div class="examplegrid" id="resourcesgrid">
+
+                <!-- College -->
                 <a href="{{ url_for('resources.resourcesearch') }}?category=college" class="resource-card-link">
                     <div class="exampleboxes" data-category="college">
-                        <h3>College and Scholarships</h3>
-                        <p>Find all kinds of scholarships here! We can help find the best fit for you.</p>
+                        <h3>College</h3>
+                        <p>Explore colleges and higher education opportunities.</p>
                         <ul>
                             <li>Geneva College</li>
-                            <li>SMART Scholarship</li>
                             <li>Pitt Beaver</li>
-                            <li>STEM Scholarships</li>
+                            <li>Application Help</li>
+                            <li>Campus Visits</li>
                         </ul>
                     </div>
                 </a>
 
+                <!-- Scholarships -->
+                <a href="{{ url_for('resources.resourcesearch') }}?category=scholarships" class="resource-card-link">
+                    <div class="exampleboxes" data-category="scholarships">
+                        <h3>Scholarships</h3>
+                        <p>Find scholarships and financial aid opportunities.</p>
+                        <ul>
+                            <li>SMART Scholarship</li>
+                            <li>STEM Scholarships</li>
+                            <li>Local Grants</li>
+                            <li>Financial Aid Help</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Mental Health -->
                 <a href="{{ url_for('resources.resourcesearch') }}?category=mental" class="resource-card-link">
                     <div class="exampleboxes" data-category="mental">
-                        <h3>Mental Health & Support</h3>
+                        <h3>Mental Health</h3>
                         <p>Free and confidential support for stress, anxiety, and other challenges.</p>
                         <ul>
                             <li>School Counselors</li>
@@ -59,9 +84,10 @@
                     </div>
                 </a>
 
+                <!-- Jobs -->
                 <a href="{{ url_for('resources.resourcesearch') }}?category=jobs" class="resource-card-link">
                     <div class="exampleboxes" data-category="jobs">
-                        <h3>Jobs & Internships</h3>
+                        <h3>Jobs</h3>
                         <p>Find part-time jobs, summer work, and internships in Beaver County.</p>
                         <ul>
                             <li>Job Listings for Teens</li>
@@ -72,22 +98,10 @@
                     </div>
                 </a>
 
-                <a href="{{ url_for('resources.resourcesearch') }}?category=tutoring" class="resource-card-link">
-                    <div class="exampleboxes" data-category="tutoring">
-                        <h3>Tutoring & Study Help</h3>
-                        <p>Free tutoring and study resources to help you ace your classes.</p>
-                        <ul>
-                            <li>Peer Tutoring Programs</li>
-                            <li>Homework Help</li>
-                            <li>Study Groups</li>
-                            <li>Online Learning Resources</li>
-                        </ul>
-                    </div>
-                </a>
-
+                <!-- Activities -->
                 <a href="{{ url_for('resources.resourcesearch') }}?category=activities" class="resource-card-link">
                     <div class="exampleboxes" data-category="activities">
-                        <h3>Activities & Clubs</h3>
+                        <h3>Activities</h3>
                         <p>Join clubs, sports, and activities to meet new people and explore interests.</p>
                         <ul>
                             <li>School Clubs & Sports</li>
@@ -98,15 +112,16 @@
                     </div>
                 </a>
 
-                <a href="{{ url_for('resources.resourcesearch') }}?category=career" class="resource-card-link">
-                    <div class="exampleboxes" data-category="career">
-                        <h3>Career Exploration</h3>
-                        <p>Discover career paths and learn about different industries and opportunities.</p>
+                <!-- Other -->
+                <a href="{{ url_for('resources.resourcesearch') }}?category=other" class="resource-card-link">
+                    <div class="exampleboxes" data-category="other">
+                        <h3>Other</h3>
+                        <p>Additional resources to support your growth and success.</p>
                         <ul>
-                            <li>Career Assessments</li>
-                            <li>Job Shadowing</li>
-                            <li>Career Fairs</li>
-                            <li>Mentorship Programs</li>
+                            <li>General Support</li>
+                            <li>Community Services</li>
+                            <li>Workshops</li>
+                            <li>Miscellaneous Resources</li>
                         </ul>
                     </div>
                 </a>
@@ -114,6 +129,43 @@
         </div>
     </div>
 </section>
+
+<div id="uploadModal">
+    <div class="modalcontent">
+        <div class="modalheader">
+            <h2 class="modaltitle">Upload Resource</h2>
+        </div>
+        
+        <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
+            <input type="text" name="title" placeholder="Title *" required>
+            <input type="text" name="url" placeholder="URL *" required>
+            <input type="text" name="name" placeholder="Contact Name (Optional)">
+            <input type="text" name="email" placeholder="Contact Email (Optional)">
+            <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
+
+            <select name="resource_category_id" required>
+                <option value="">Category *</option>
+                {% if categories %}
+                    {% for cat in categories %}
+                        <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
+                    {% endfor %}
+                {% else %}
+                    <option value="1">College</option>
+                    <option value="2">Scholarships</option>
+                    <option value="3">Mental Health</option>
+                    <option value="4">Jobs</option>
+                    <option value="5">Activities</option>
+                    <option value="6">Other</option>
+                {% endif %}
+            </select>
+            
+            <div class="modalformactions">
+                <button type="button" onclick="document.getElementById('uploadModal').style.display='none'" class="modalbtncancel">Cancel</button>
+                <button type="submit" class="modalbtnsubmit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
