@@ -71,6 +71,14 @@ def edit_profile(username):
                     )
                     os.makedirs(save_dir, exist_ok=True)
 
+                    # --- Delete old profile picture if one exists ---
+                    cursor.execute("SELECT profile_picture FROM users WHERE username=%s", (username,))
+                    existing = cursor.fetchone()
+                    if existing and existing.get("profile_picture"):
+                        old_path = os.path.join(current_app.static_folder, existing["profile_picture"])
+                        if os.path.isfile(old_path):
+                            os.remove(old_path)
+
                     ext = secure_filename(file.filename).rsplit(".", 1)[1].lower()
                     unique_filename = f"{uuid.uuid4().hex}.{ext}"
                     file.save(os.path.join(save_dir, unique_filename))
