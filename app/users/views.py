@@ -121,22 +121,6 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('home.home_page'))
 
-# Admin
-@users.route("/admin")
-@role_required([4, 5])
-def admin_panel():
-    # existing route that shows users in a simple table
-    conn = get_db_connection()
-    try:
-        with conn.cursor(DictCursor) as cursor:
-            cursor.execute("USE flourish_bc")
-            cursor.execute("SELECT * FROM users")
-            users = cursor.fetchall()
-        return render_template("adminpanel/index.html", users=users)
-    finally:
-        conn.close()
-
-
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
 @role_required([4, 5])
