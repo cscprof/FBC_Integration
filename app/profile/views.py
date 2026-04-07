@@ -7,6 +7,7 @@ from pymysql import DatabaseError
 from pymysql.cursors import DictCursor
 
 from . import profile
+from ..users.Hashing import hash_plaintext, hash_check_matches
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 
@@ -105,3 +106,60 @@ def edit_profile(username):
         flash("User not found")
         return redirect(url_for("profile.user_profile", username=username))
     return render_template("profile/edit_profile.html", user=user)
+
+
+@profile.route("/profile/<username>/change-password", methods=["GET", "POST"])
+def change_password(username):
+
+    conn = None
+    try:
+        conn = get_db_connection()
+        with conn.cursor(DictCursor) as cursor:
+
+            cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
+            user = cursor.fetchone()
+
+            if not user:
+                flash("User not found.", "error")
+                return redirect(url_for("profile.user_profile", username=username))
+
+            if request.method == "POST":
+                current_password  = request.form.get("current_password", "")
+                new_password      = request.form.get("new_password", "")
+                confirm_password  = request.form.get("confirm_password", "")
+
+                # Verify the current password against the stored Argon2 hash
+                if not hash_check_matches(current_password, user["password"]):
+                    flash("Current password is incorrect.", "error")
+                    return render_template("profile/change_password.html", user=user)
+
+                if new_password != confirm_password:
+                    flash("New passwords do not match.", "error")
+                    return render_template("profile/change_password.html", user=user)
+
+                if len(new_password) < 8:
+                    flash("New password must be at least 8 characters.", "error")
+                    return render_template("profile/change_password.html", user=user)
+
+                new_hash = hash_plaintext(new_password)
+
+                cursor.execute(
+                    "UPDATE users SET password=%s WHERE username=%s",
+                    (new_hash, username)
+                )
+                conn.commit()
+
+                flash("Password changed successfully!", "success")
+                return redirect(url_for("profile.user_profile", username=username))
+
+    except DatabaseError as e:
+        flash("Database error: " + str(e), "error")
+        if conn:
+            conn.rollback()
+        return redirect(url_for("profile.user_profile", username=username))
+
+    finally:
+        if conn:
+            conn.close()
+
+    return render_template("profile/change_password.html", user=user)
