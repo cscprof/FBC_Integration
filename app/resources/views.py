@@ -68,8 +68,32 @@ def resourcesearch():
     return render_template('resources/resourcesearch.html', resources=dblist, categories=categories_list)
 
 @resources_blueprint.route("/resources/admin")
+@resources_blueprint.route("/admin/resources")
 def resources_admin():
-    return render_template("resources/admin.html")
+    try:
+        categories_list = db.session.execute(select(resource_category)).scalars().all()
+        dbselect = (
+            select(
+                resources.resource_id,
+                resources.description,
+                resources.url,
+                resources.resource_category_id,
+                resource_category.resource_category_name,
+                resources.contact_name,
+                resources.contact_email,
+                resources.contact_phone,
+            )
+            .outerjoin(
+                resource_category,
+                resources.resource_category_id == resource_category.resource_category_id
+            )
+        )
+        dblist = db.session.execute(dbselect).mappings().all()
+    except Exception:
+        categories_list = []
+        dblist = []
+
+    return render_template("resources/admin.html", resources=dblist, categories=categories_list)
 #HEY CHANGES WE NEED TO MAKE NEXT
 ##Making sure it only exists as admin
 ##Adding other optional fields that exist in the database (Contact Name, Contact Num, etc)
@@ -88,12 +112,21 @@ def upload_resource():
     
     # Make sure all required fields were filled out
     if not title or not url or not resource_category_id:
-        return redirect(url_for('resources.resource_directory'))
+        return redirect(url_for('resources.resources_admin'))
     
     try:
-        #Guys this might be useful later so I'll leave it here but I'm changing the value to none
-        #Idek what a content type is I don't think it's been implemented by anyone yet
-        content_type = None
+        # Use a default content type id so inserts do not fail on NOT NULL/FK constraints.
+        content_type = db.session.execute(
+            select(content_types.content_type_id).limit(1)
+        ).scalar()
+        if content_type is None:
+            default_content_type = content_types(
+                name="link",
+                description="Default link content type for resources"
+            )
+            db.session.add(default_content_type)
+            db.session.flush()
+            content_type = default_content_type.content_type_id
         
         # Create the new resource with all the information
         new_resource = resources(
@@ -102,7 +135,7 @@ def upload_resource():
             content_type_id=content_type,
             resource_category_id=int(resource_category_id),
             user_id=1, # Change later to be signed-in user
-            contact_name=name,
+            contact_name=name if name else "N/A",
             contact_email=email,
             contact_phone=phone,
         )
@@ -112,12 +145,12 @@ def upload_resource():
         db.session.commit()
         
         # Show the user their newly uploaded resource
-        return redirect(url_for('resources.resourcesearch'))
+        return redirect(url_for('resources.resources_admin'))
         
     except Exception as e:
         # If something went wrong, undo any changes and go back
         db.session.rollback()
-        return redirect(url_for('resources.resource_directory'))
+        return redirect(url_for('resources.resources_admin'))
 
 
 @resources_blueprint.route("/resources/<int:resource_id>/edit", methods=["POST"])
@@ -126,7 +159,7 @@ def edit_resource(resource_id: int):
     try:
         resource = db.session.get(resources, resource_id)
         if not resource:
-            return redirect(url_for('resources.resourcesearch'))
+            return redirect(url_for('resources.resources_admin'))
         
         # Get the form data
         title = request.form.get('title', '').strip()
@@ -138,21 +171,21 @@ def edit_resource(resource_id: int):
         
         # Make sure all required fields were filled out
         if not title or not url or not resource_category_id:
-            return redirect(url_for('resources.resourcesearch'))
+            return redirect(url_for('resources.resources_admin'))
         
         # Update the resource
         resource.description = title
         resource.url = url
         resource.resource_category_id = int(resource_category_id)
-        resource.contact_name = name if name else None
+        resource.contact_name = name if name else "N/A"
         resource.contact_email = email if email else None
         resource.contact_phone = phone if phone else None
         
         db.session.commit()
-        return redirect(url_for('resources.resourcesearch'))
+        return redirect(url_for('resources.resources_admin'))
     except Exception:
         db.session.rollback()
-        return redirect(url_for('resources.resourcesearch'))
+        return redirect(url_for('resources.resources_admin'))
 
 
 @resources_blueprint.route("/resources/<int:resource_id>/delete", methods=["POST"])
@@ -165,4 +198,4 @@ def delete_resource(resource_id: int):
             db.session.commit()
     except Exception:
         db.session.rollback()
-    return redirect(url_for('resources.resourcesearch'))
+    return redirect(url_for('resources.resources_admin'))
