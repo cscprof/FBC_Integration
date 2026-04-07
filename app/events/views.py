@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from db import get_db_connection
 from datetime import datetime
 from pymysql import DatabaseError
+from loginManager import role_required
 
 from . import events
 
@@ -67,6 +68,7 @@ def fetch_approved_events_python():
 #  ADD EVENT
 # ---------------------------------------------------------
 @events.route('/add-event', methods=["GET", "POST"])
+@role_required([4, 5])
 def addEvent():
     if request.method == "POST":
         name = request.form.get('name', '').strip()
@@ -133,6 +135,7 @@ def calendar():
 
 
 @events.route('/update_event/<int:event_id>/<string:action>')
+@role_required([4, 5])
 def update_event(event_id, action):
     if action not in ["approved", "cancelled"]:
         return redirect(url_for('events.adminView'))
@@ -150,6 +153,7 @@ def update_event(event_id, action):
 
 
 @events.route('/admin/events')
+@role_required([4, 5])
 def adminView():
     conn = get_db_connection()
     with conn.cursor() as cursor:
@@ -190,6 +194,7 @@ def adminView():
 
 
 @events.route('/edit_event/<int:event_id>', methods=['GET', 'POST'])
+@role_required([4, 5])
 def edit_event(event_id):
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
@@ -266,6 +271,7 @@ def edit_event(event_id):
 
 
 @events.route('/delete_event/<int:event_id>', methods=['POST'])
+@role_required([4, 5])
 def delete_event(event_id):
     conn = get_db_connection()
     try:
