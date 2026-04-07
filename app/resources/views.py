@@ -1,5 +1,6 @@
 
 from flask import render_template, request, redirect, url_for
+from flask_login import current_user
 from sqlalchemy import select
 from db import db
 from .models import resources, resource_category, content_types
@@ -100,7 +101,7 @@ def upload_resource():
             url=url,
             content_type_id=content_type,
             resource_category_id=int(resource_category_id),
-            user_id=1, # Change later to be signed-in user
+            user_id=current_user.id,
             contact_name=name,
             contact_email=email,
             contact_phone=phone,
