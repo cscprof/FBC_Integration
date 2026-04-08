@@ -21,15 +21,6 @@
     text-decoration: none;
 }
 
-/* carousel */
-.carousel {
-    width: 70%;
-    max-width: 700px;
-    height: 400px;
-    overflow: hidden;
-    margin: auto;
-}
-
 .title {
     font-family: "Montserrat", sans-serif;
     font-optical-sizing: auto;
@@ -272,6 +263,19 @@
 }
 
 
+.past-events-collapse summary {
+    background-color: #f0f0f0;
+    color: #666;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+    padding: 8px 20px;
+    font-size: 1.2rem;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+
 .list {
     display: flex;
     flex-direction: column;
@@ -279,20 +283,6 @@
     margin-top: 10px;
 }
 
-
-.admin-resource {
-    background-color: #f0f0f0;
-    color: #2e44cc;
-    padding: 15px 20px;
-    font-weight: 600;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #ddd;
-    font-family: "Open Sans", sans-serif;
-    transition: background-color 0.3s, transform 0.1s;
-}
 
 .resource:hover {
     background-color: #e0e0e0;
@@ -327,12 +317,6 @@
     margin-top: 5px;
     font-size: 0.9rem;
     color: #333;
-}
-
-.no-data {
-    text-align: center;
-    color: #777;
-    margin-top: 1.5rem;
 }
 
 .hub-button {

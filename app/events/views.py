@@ -380,7 +380,25 @@ def get_approved_events():
 def events():
     try:
         events = fetch_approved_events_python()
-        return render_template('events/events.html', events=events)
+        today = datetime.now().date()
+
+        upcoming_events = []
+        past_events = []
+        for event in events:
+            event_end = event.get('end') or event.get('start')
+            if event_end.date() >= today:
+                upcoming_events.append(event)
+            else:
+                past_events.append(event)
+
+        upcoming_events.sort(key=lambda ev: ev['start'])
+        past_events.sort(key=lambda ev: ev['start'], reverse=True)
+
+        return render_template(
+            'events/events.html',
+            upcoming_events=upcoming_events,
+            past_events=past_events
+        )
 
     except Exception as err:
         return f"Error: {err}"

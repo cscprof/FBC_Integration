@@ -93,9 +93,6 @@ select {
   font-size: 1rem;
 }
 
-.users_table {
-    color:black;
-}
 .edituser-label {
     font-weight: 600;
     color: black;

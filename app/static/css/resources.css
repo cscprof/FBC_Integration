@@ -226,15 +226,6 @@ main {
     text-decoration: underline;
 }
 
-.about a {
-    color: #3786b8;
-    text-decoration: none;
-}
-
-.about a:hover {
-    text-decoration: underline;
-}
-
 .uploadbutton {
     text-align: center;
     margin-bottom: 20px;
