@@ -272,6 +272,19 @@
 }
 
 
+.past-events-collapse summary {
+    background-color: #f0f0f0;
+    color: #666;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+    padding: 8px 20px;
+    font-size: 1.2rem;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+
 .list {
     display: flex;
     flex-direction: column;

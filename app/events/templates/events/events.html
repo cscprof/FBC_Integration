@@ -10,8 +10,8 @@
     <div class="section">
         <div class="header">Upcoming Events</div>
         <div class="list">
-            {% if events %}
-                {% for event in events %}
+            {% if upcoming_events %}
+                {% for event in upcoming_events %}
                 <div class="resource">
                     <div>
                         <a href="/calendar?event={{ event.title | urlencode }}" class="event-link" style="text-decoration: none; color: inherit;">
@@ -24,9 +24,33 @@
                 </div>
                 {% endfor %}
             {% else %}
-                <div class="resource">No events available</div>
+                <div class="resource">No upcoming events</div>
             {% endif %}
         </div>
+    </div>
+
+    <div class="section">
+        <details class="past-events-collapse">
+            <summary>Past Events</summary>
+            <div class="list">
+                {% if past_events %}
+                    {% for event in past_events %}
+                    <div class="resource">
+                        <div>
+                            <a href="/calendar?event={{ event.title | urlencode }}" class="event-link" style="text-decoration: none; color: inherit;">
+                                <span>{{ event.title }}</span>
+                            </a><br>
+                            <small>{{ event.start.strftime('%b %d, %Y %I:%M %p') }} – {{ event.end.strftime('%b %d, %Y %I:%M %p') }}</small><br>
+                            <p>{{ event.description }}</p>
+                        </div>
+                        <a href="{{ event.url or '#' }}" target="_blank" class="arrow">➜</a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="resource">No past events</div>
+                {% endif %}
+            </div>
+        </details>
     </div>
 </div>
 
