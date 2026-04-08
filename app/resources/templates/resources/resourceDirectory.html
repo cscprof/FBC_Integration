@@ -125,7 +125,6 @@
                         </ul>
                     </div>
                 </a>
-
             </div>
         </div>
     </div>
@@ -143,7 +142,7 @@
             <input type="text" name="name" placeholder="Contact Name (Optional)">
             <input type="text" name="email" placeholder="Contact Email (Optional)">
             <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
-            
+
             <select name="resource_category_id" required>
                 <option value="">Category *</option>
                 {% if categories %}
@@ -169,7 +168,7 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector(".searchinput");
     const categorySelect = document.querySelector(".categoryselect");
     const resourceBoxes = document.querySelectorAll(".exampleboxes");
