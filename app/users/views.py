@@ -73,7 +73,7 @@ def signup_page():
 
 # Login
 @users.route("/login")
-def home_page():
+def login_page():
     return render_template("login/login.html")
 
 @users.route("/logout")
@@ -125,9 +125,10 @@ def auth_login():
             if conn:
                 conn.close()
         if is_auth:
-            return redirect("/profile")
-        flash("Invalid login")
-        return render_template('login/login.html', form=request.form)
+            return redirect(url_for('home.home_page'))
+            # return redirect(url_for('profile.profile', username=username))
+        flash("Invalid Login. Username or Password is Incorrect. Please Try Again!")
+        return redirect(url_for('users.login_page'))
 
 # Logout
 @users.route('/logout')
@@ -136,22 +137,6 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('home.home_page'))
-
-# Admin
-@users.route("/admin")
-@role_required([4, 5])
-def admin_panel():
-    # existing route that shows users in a simple table
-    conn = get_db_connection()
-    try:
-        with conn.cursor(DictCursor) as cursor:
-            cursor.execute("USE flourish_bc")
-            cursor.execute("SELECT * FROM users")
-            users = cursor.fetchall()
-        return render_template("adminpanel/index.html", users=users)
-    finally:
-        conn.close()
-
 
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
@@ -177,7 +162,12 @@ def edit_user(user_id):
                 middle_name = request.form.get("middle_name") or ""
                 last_name = request.form.get("last_name") or ""
                 email = request.form.get("email") or ""
-                graduation_year = int(request.form.get("graduation_year") or 0)
+                graduation_year_raw = request.form.get("graduation_year")
+                if not graduation_year_raw or graduation_year_raw.strip().lower() == "none":
+                    graduation_year = None
+                else:
+                    graduation_year = int(graduation_year_raw)
+
                 username = request.form.get("username") or ""
                 role_id = int(request.form.get("role_id") or 0)
 

@@ -3,32 +3,111 @@
 {% block title %}User Admin{% endblock %}
 
 {% block content %}
-<div class="events-container">
-    <h1 class="title">User Administration</h1>
-    <div class="section">
-        <div class="header">Manage Users</div>
-        <div class="list">
-            {% if users %}
-                {% for user in users %}
-                    <div class="user-card">
-                        <div class="user-name">
-                            {{ user.first_name }} {{ user.last_name }}
-                            <a class="button" href="{{ url_for('users.edit_user', user_id=user.user_id) }}">Edit</a>
-                        </div>
 
-                        <div class="user-details">
-                            <div><strong>ID:</strong> {{ user.user_id }}</div>
-                            <div><strong>Email:</strong> {{ user.email }}</div>
-                            <div><strong>Graduation:</strong> {{ user.graduation_year }}</div>
-                            <div><strong>Username:</strong> {{ user.username }}</div>
-                            <div><strong>Role ID:</strong> {{ user.role_id }}</div>
-                        </div>
-                    </div>                
-                {% endfor %}
-            {% else %}
-                <div class="resource">No users found.</div>
-            {% endif %}
-        </div>
-    </div>
+<div class="events-container">
+  <h1 class="title">User Administration</h1>
+
+  <div class="section">
+    <div class="header">Manage Users</div>
+
+    {% if users %}
+      <div class="controls-bar">
+        <input type="text" id="globalSearch" placeholder="Search users…" autocomplete="off" />
+        <span class="result-count" id="resultCount"></span>
+        <button class="clear-btn" id="clearBtn" type="button">Clear filters</button>
+      </div>
+
+      <div id="userList">
+        {% for user in users %}
+          <div class="user-card"
+               data-search="{{ (user.user_id ~ ' ' ~ user.first_name ~ ' ' ~ user.middle_name ~ ' ' ~ user.last_name ~ ' ' ~ user.email ~ ' ' ~ user.graduation_year ~ ' ' ~ user.username ~ ' ' ~ user.role_id)|lower }}">
+            <div class="user-name">
+              <span class="searchable-text">
+                {{ user.first_name }} {{ user.last_name }}
+              </span>
+              <a class="button" href="{{ url_for('users.edit_user', user_id=user.user_id) }}">Edit</a>
+            </div>
+
+            <div class="user-details">
+              <div><strong>ID:</strong> <span class="searchable-text">{{ user.user_id }}</span></div>
+              <div><strong>Email:</strong> <span class="searchable-text">{{ user.email }}</span></div>
+              <div><strong>Graduation:</strong> <span class="searchable-text">{{ user.graduation_year }}</span></div>
+              <div><strong>Username:</strong> <span class="searchable-text">{{ user.username }}</span></div>
+              <div><strong>Role ID:</strong> <span class="searchable-text">{{ user.role_id }}</span></div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <p class="no-results" id="noResults" style="display:none;">No users match your search.</p>
+    {% else %}
+      <div class="resource">No users found.</div>
+    {% endif %}
+  </div>
 </div>
+
+<script>
+(function () {
+  const search = document.getElementById('globalSearch');
+  const clearBtn = document.getElementById('clearBtn');
+  const resultCount = document.getElementById('resultCount');
+  const noResults = document.getElementById('noResults');
+  const cards = document.querySelectorAll('.user-card');
+
+  if (!search || !cards.length) return;
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function highlightText(el, term) {
+    const original = el.dataset.original || el.textContent;
+    el.dataset.original = original;
+
+    if (!term) {
+      el.innerHTML = escapeHtml(original);
+      return;
+    }
+
+    const lower = original.toLowerCase();
+    const idx = lower.indexOf(term);
+    if (idx === -1) {
+      el.innerHTML = escapeHtml(original);
+      return;
+    }
+
+    el.innerHTML =
+      escapeHtml(original.slice(0, idx)) +
+      '<span class="highlight">' + escapeHtml(original.slice(idx, idx + term.length)) + '</span>' +
+      escapeHtml(original.slice(idx + term.length));
+  }
+
+  function applyFilter() {
+    const term = search.value.trim().toLowerCase();
+    let visible = 0;
+
+    cards.forEach(card => {
+      const haystack = card.dataset.search || '';
+      const show = !term || haystack.includes(term);
+      card.classList.toggle('hidden', !show);
+
+      card.querySelectorAll('.searchable-text').forEach(el => highlightText(el, term));
+      if (show) visible++;
+    });
+
+    resultCount.textContent = `${visible} / ${cards.length} users`;
+    noResults.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  search.addEventListener('input', applyFilter);
+
+  clearBtn.addEventListener('click', () => {
+    search.value = '';
+    applyFilter();
+    search.focus();
+  });
+
+  applyFilter();
+})();
+</script>
 {% endblock %}
