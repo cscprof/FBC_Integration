@@ -19,6 +19,17 @@
                         </a><br>
                         <small>{{ event.start.strftime('%b %d, %Y %I:%M %p') }} – {{ event.end.strftime('%b %d, %Y %I:%M %p') }}</small><br>
                         <p>{{ event.description }}</p>
+                        {% set addr_parts = [event.event_address1, event.event_address2, event.event_city, event.event_state, event.event_postal_code] | select | list %}
+                        {% if addr_parts %}
+                        <small><strong>Address:</strong> {{ addr_parts | join(', ') }}</small><br>
+                        {% endif %}
+                        {% if event.contact_name or event.contact_phone or event.contact_email %}
+                        <small><strong>Contact:</strong>
+                            {{ event.contact_name or '' }}
+                            {% if event.contact_phone %} | {{ event.contact_phone }}{% endif %}
+                            {% if event.contact_email %} | {{ event.contact_email }}{% endif %}
+                        </small><br>
+                        {% endif %}
                     </div>
                     <a href="{{ event.url or '#' }}" target="_blank" class="arrow">➜</a>
                 </div>

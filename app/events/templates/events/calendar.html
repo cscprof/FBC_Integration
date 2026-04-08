@@ -115,16 +115,20 @@ document.addEventListener('DOMContentLoaded', function() {
     contentHeight: 'auto',
     events: [], 
     eventClick: function(info) {
+      const ep = info.event.extendedProps;
+      const addr = [ep.event_address1, ep.event_address2, ep.event_city, ep.event_state, ep.event_postal_code].filter(Boolean).join(', ');
       popup.innerHTML = `
         <span id="eventPopupClose">X</span>
         <h3>${info.event.title}</h3>
         <p><strong>Start:</strong> ${info.event.start.toLocaleString()}</p>
         <p><strong>End:</strong> ${info.event.end.toLocaleString()}</p>
-        <p><strong>Registration Deadline:</strong> ${info.event.extendedProps.registration_deadline 
-        ? new Date(info.event.extendedProps.registration_deadline).toLocaleString() 
+        <p><strong>Registration Deadline:</strong> ${ep.registration_deadline
+        ? new Date(ep.registration_deadline).toLocaleString()
         : 'N/A'}</p>
-        <p><strong>Description:</strong> ${info.event.extendedProps.description || "N/A"}</p>
-        <p><strong>URL:</strong> <a href="${info.event.url}" classname="link" target="_blank">${info.event.url || "N/A"}</a></p>
+        <p><strong>Description:</strong> ${ep.description || "N/A"}</p>
+        <p><strong>Address:</strong> ${addr || "N/A"}</p>
+        <p><strong>Contact:</strong> ${ep.contact_name || "N/A"}${ep.contact_phone ? ' | ' + ep.contact_phone : ''}${ep.contact_email ? ' | ' + ep.contact_email : ''}</p>
+        <p><strong>URL:</strong> <a href="${info.event.url}" class="link" target="_blank">${info.event.url || "N/A"}</a></p>
       `;
       popup.style.display = 'block';
       overlay.style.display = 'block'; 
@@ -157,15 +161,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (targetEvent) {
           // Wait a moment for the calendar to render, then show the popup
           setTimeout(() => {
+            const tAddr = [targetEvent.event_address1, targetEvent.event_address2, targetEvent.event_city, targetEvent.event_state, targetEvent.event_postal_code].filter(Boolean).join(', ');
             popup.innerHTML = `
               <span id="eventPopupClose">X</span>
               <h3>${targetEvent.title}</h3>
               <p><strong>Start:</strong> ${new Date(targetEvent.start).toLocaleString()}</p>
               <p><strong>End:</strong> ${new Date(targetEvent.end).toLocaleString()}</p>
-              <p><strong>Registration Deadline:</strong> ${targetEvent.registration_deadline 
-              ? new Date(targetEvent.registration_deadline).toLocaleString() 
+              <p><strong>Registration Deadline:</strong> ${targetEvent.registration_deadline
+              ? new Date(targetEvent.registration_deadline).toLocaleString()
               : 'N/A'}</p>
               <p><strong>Description:</strong> ${targetEvent.description || "N/A"}</p>
+              <p><strong>Address:</strong> ${tAddr || "N/A"}</p>
+              <p><strong>Contact:</strong> ${targetEvent.contact_name || "N/A"}${targetEvent.contact_phone ? ' | ' + targetEvent.contact_phone : ''}${targetEvent.contact_email ? ' | ' + targetEvent.contact_email : ''}</p>
               <p><strong>URL:</strong> <a href="${targetEvent.url}" class="link" target="_blank">${targetEvent.url || "N/A"}</a></p>
             `;
             popup.style.display = 'block';
