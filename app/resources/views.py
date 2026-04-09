@@ -2,7 +2,8 @@
 from flask import render_template, request, redirect, url_for
 from sqlalchemy import select
 from db import db
-from .models import resources, resource_category, content_types
+from .models import resources, resource_tags, resource_category, content_types
+from tagmanager import get_tags, give_tag
 from . import resources as resources_blueprint
 
 # Use the route() decorator to tell Flask what URL should trigger the function
@@ -22,6 +23,8 @@ def resourcesearch():
     try:
         #Taken from above method for add resource button
         categories_list = db.session.execute(select(resource_category)).scalars().all()
+        tag_list = db.session.execute(select(resource_tags)).scalars().all()
+        get_tags()
 
         #To load resources from db
         dbselect = (
@@ -34,6 +37,7 @@ def resourcesearch():
             resources.contact_name,
             resources.contact_email,
             resources.contact_phone,
+            resources.resource_tags,
         )
         .join(
             resource_category,
@@ -82,6 +86,7 @@ def upload_resource():
     name = request.form.get('name', '').strip()
     email = request.form.get('email', '').strip()
     phone = request.form.get('phone', '').strip()
+    resource_tags = request.form.get('all the input', '').strip()
     
     # Make sure all required fields were filled out
     if not title or not url or not resource_category_id:
@@ -102,6 +107,7 @@ def upload_resource():
             contact_name=name,
             contact_email=email,
             contact_phone=phone,
+            resource_tags=resource_tags,
         )
         
         # Save it to the database
@@ -132,6 +138,7 @@ def edit_resource(resource_id: int):
         name = request.form.get('name', '').strip()
         email = request.form.get('email', '').strip()
         phone = request.form.get('phone', '').strip()
+        resource_tags = request.form.get('All the tags', '').strip()
         
         # Make sure all required fields were filled out
         if not title or not url or not resource_category_id:
@@ -144,6 +151,7 @@ def edit_resource(resource_id: int):
         resource.contact_name = name if name else None
         resource.contact_email = email if email else None
         resource.contact_phone = phone if phone else None
+        resource.resource_tags = resource_tags if resource_tags else None
         
         db.session.commit()
         return redirect(url_for('resources.resourcesearch'))
