@@ -7,7 +7,7 @@
 <section class="section">
     <div class="container">
         <h1 class="title has-text-centered">Resource Directory</h1>
-        <p class="has-text-centered is-size-5 mb-5" style="color: #666; margin-top: 10px;">
+        <p class="has-text-centered is-size-5 mb-5" style="color: #666;">
             Everything you need to succeed - from college prep to mental health support
         </p>
 
@@ -19,182 +19,236 @@
         </div>
         {% endif %}
 
-        <div class="resources">
-            <div class="searchfilter">
-                <div class="searchcontainer">
-                    <form class="searchform">
-                        <input type="text" placeholder="Search resources..." class="searchinput" name="search">
-                    </form>
-                </div>
+        <!-- Search + Filter -->
+        <div class="searchfilter">
+            <input type="text" placeholder="Search resources..." class="searchinput">
 
-                <div class="categorydropdown">
-                    <select class="categoryselect">
-                        <option value="all">All Categories</option>
-                        <option value="college">College</option>
-                        <option value="scholarships">Scholarships</option>
-                        <option value="mental">Mental Health</option>
-                        <option value="jobs">Jobs</option>
-                        <option value="activities">Activities</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
+            <select class="categoryselect">
+                <option value="all">All Categories</option>
+                <option value="college">College</option>
+                <option value="scholarships">Scholarships</option>
+                <option value="mental">Mental Health</option>
+                <option value="jobs">Jobs</option>
+                <option value="activities">Activities</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <!-- RESOURCE CARDS -->
+        <div class="examplegrid">
+
+            <!-- College -->
+            <div class="exampleboxes"
+                data-category="college"
+                data-title="College"
+                data-description="Explore colleges and higher education opportunities."
+                data-items="Geneva College, Pitt Beaver, Application Help, Campus Visits"
+                data-link="{{ url_for('resources.resourcesearch') }}?category=college">
+                <h3>College</h3>
             </div>
 
-            <div class="examplegrid" id="resourcesgrid">
-
-                <!-- College -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=college" class="resource-card-link">
-                    <div class="exampleboxes" data-category="college">
-                        <h3>College</h3>
-                        <p>Explore colleges and higher education opportunities.</p>
-                        <ul>
-                            <li>Geneva College</li>
-                            <li>Pitt Beaver</li>
-                            <li>Application Help</li>
-                            <li>Campus Visits</li>
-                        </ul>
-                    </div>
-                </a>
-
-                <!-- Scholarships -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=scholarships" class="resource-card-link">
-                    <div class="exampleboxes" data-category="scholarships">
-                        <h3>Scholarships</h3>
-                        <p>Find scholarships and financial aid opportunities.</p>
-                        <ul>
-                            <li>SMART Scholarship</li>
-                            <li>STEM Scholarships</li>
-                            <li>Local Grants</li>
-                            <li>Financial Aid Help</li>
-                        </ul>
-                    </div>
-                </a>
-
-                <!-- Mental Health -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=mental" class="resource-card-link">
-                    <div class="exampleboxes" data-category="mental">
-                        <h3>Mental Health</h3>
-                        <p>Free and confidential support for stress, anxiety, and other challenges.</p>
-                        <ul>
-                            <li>School Counselors</li>
-                            <li>Teen Support Groups</li>
-                            <li>Crisis Hotlines</li>
-                            <li>Wellness Resources</li>
-                        </ul>
-                    </div>
-                </a>
-
-                <!-- Jobs -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=jobs" class="resource-card-link">
-                    <div class="exampleboxes" data-category="jobs">
-                        <h3>Jobs</h3>
-                        <p>Find part-time jobs, summer work, and internships in Beaver County.</p>
-                        <ul>
-                            <li>Job Listings for Teens</li>
-                            <li>Summer Employment</li>
-                            <li>Internship Opportunities</li>
-                            <li>Resume & Interview Help</li>
-                        </ul>
-                    </div>
-                </a>
-
-                <!-- Activities -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=activities" class="resource-card-link">
-                    <div class="exampleboxes" data-category="activities">
-                        <h3>Activities</h3>
-                        <p>Join clubs, sports, and activities to meet new people and explore interests.</p>
-                        <ul>
-                            <li>School Clubs & Sports</li>
-                            <li>Community Programs</li>
-                            <li>Volunteer Opportunities</li>
-                            <li>Youth Groups</li>
-                        </ul>
-                    </div>
-                </a>
-
-                <!-- Other -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=other" class="resource-card-link">
-                    <div class="exampleboxes" data-category="other">
-                        <h3>Other</h3>
-                        <p>Additional resources to support your growth and success.</p>
-                        <ul>
-                            <li>General Support</li>
-                            <li>Community Services</li>
-                            <li>Workshops</li>
-                            <li>Miscellaneous Resources</li>
-                        </ul>
-                    </div>
-                </a>
+            <!-- Scholarships -->
+            <div class="exampleboxes"
+                data-category="scholarships"
+                data-title="Scholarships"
+                data-description="Find scholarships and financial aid opportunities."
+                data-items="SMART Scholarship, STEM Scholarships, Local Grants, Financial Aid Help"
+                data-link="{{ url_for('resources.resourcesearch') }}?category=scholarships">
+                <h3>Scholarships</h3>
             </div>
+
+            <!-- Mental -->
+            <div class="exampleboxes"
+                data-category="mental"
+                data-title="Mental Health"
+                data-description="Free and confidential support for stress and anxiety."
+                data-items="School Counselors, Teen Support Groups, Crisis Hotlines, Wellness Resources"
+                data-link="{{ url_for('resources.resourcesearch') }}?category=mental">
+                <h3>Mental Health</h3>
+            </div>
+
+            <!-- Jobs -->
+            <div class="exampleboxes"
+                data-category="jobs"
+                data-title="Jobs"
+                data-description="Find jobs and internships in Beaver County."
+                data-items="Teen Jobs, Summer Work, Internships, Resume Help"
+                data-link="{{ url_for('resources.resourcesearch') }}?category=jobs">
+                <h3>Jobs</h3>
+            </div>
+
+            <!-- Activities -->
+            <div class="exampleboxes"
+                data-category="activities"
+                data-title="Activities"
+                data-description="Clubs, sports, and community programs."
+                data-items="School Clubs, Community Programs, Volunteering, Youth Groups"
+                data-link="{{ url_for('resources.resourcesearch') }}?category=activities">
+                <h3>Activities</h3>
+            </div>
+
+            <!-- Other -->
+            <div class="exampleboxes"
+                data-category="other"
+                data-title="Other"
+                data-description="Additional support and services."
+                data-items="Community Services, Workshops, General Help"
+                data-link="{{ url_for('resources.resourcesearch') }}?category=other">
+                <h3>Other</h3>
+            </div>
+
         </div>
     </div>
 </section>
 
-<div id="uploadModal">
-    <div class="modalcontent">
-        <div class="modalheader">
-            <h2 class="modaltitle">Upload Resource</h2>
-        </div>
-        
-        <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
-            <input type="text" name="title" placeholder="Title *" required>
-            <input type="text" name="url" placeholder="URL *" required>
-            <input type="text" name="name" placeholder="Contact Name (Optional)">
-            <input type="text" name="email" placeholder="Contact Email (Optional)">
-            <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
+<!-- MODAL -->
+<div id="resourceModal" class="resourcemodal">
+    <div class="resourcemodal-content">
+        <span class="closemodal">&times;</span>
 
-            <select name="resource_category_id" required>
-                <option value="">Category *</option>
-                {% if categories %}
-                    {% for cat in categories %}
-                        <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
-                    {% endfor %}
-                {% else %}
-                    <option value="1">College</option>
-                    <option value="2">Scholarships</option>
-                    <option value="3">Mental Health</option>
-                    <option value="4">Jobs</option>
-                    <option value="5">Activities</option>
-                    <option value="6">Other</option>
-                {% endif %}
-            </select>
-            
-            <div class="modalformactions">
-                <button type="button" onclick="document.getElementById('uploadModal').style.display='none'" class="modalbtncancel">Cancel</button>
-                <button type="submit" class="modalbtnsubmit">Submit</button>
-            </div>
-        </form>
+        <h2 id="modalTitle"></h2>
+        <p id="modalDescription"></p>
+
+        <ul id="modalList"></ul>
+
+        <a id="modalLink" class="modalbtn">View Full Resources</a>
     </div>
 </div>
 
+<!-- STYLES -->
+<style>
+.examplegrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.exampleboxes {
+    background: #f5f5f5;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.exampleboxes:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Modal */
+.resourcemodal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(6px);
+}
+
+.resourcemodal-content {
+    background: white;
+    width: 50%;
+    margin: 8% auto;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.closemodal {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modalbtn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #3273dc;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+/* Search */
+.searchfilter {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.searchinput, .categoryselect {
+    padding: 10px;
+    width: 100%;
+}
+</style>
+
+<!-- SCRIPT -->
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
+
+    const boxes = document.querySelectorAll(".exampleboxes");
+    const modal = document.getElementById("resourceModal");
+    const closeBtn = document.querySelector(".closemodal");
+
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalList = document.getElementById("modalList");
+    const modalLink = document.getElementById("modalLink");
+
     const searchInput = document.querySelector(".searchinput");
     const categorySelect = document.querySelector(".categoryselect");
-    const resourceBoxes = document.querySelectorAll(".exampleboxes");
 
+    /* OPEN MODAL */
+    boxes.forEach(box => {
+        box.addEventListener("click", () => {
+
+            modalTitle.innerText = box.dataset.title;
+            modalDescription.innerText = box.dataset.description;
+
+            modalList.innerHTML = "";
+            box.dataset.items.split(",").forEach(item => {
+                const li = document.createElement("li");
+                li.innerText = item.trim();
+                modalList.appendChild(li);
+            });
+
+            modalLink.href = box.dataset.link;
+
+            modal.style.display = "block";
+        });
+    });
+
+    /* CLOSE MODAL */
+    closeBtn.onclick = () => modal.style.display = "none";
+
+    window.onclick = (e) => {
+        if (e.target === modal) modal.style.display = "none";
+    };
+
+    /* SEARCH + FILTER */
     function filterResources() {
-        const searchValue = searchInput.value.toLowerCase();
-        const selectedCategory = categorySelect.value;
+        const search = searchInput.value.toLowerCase();
+        const category = categorySelect.value;
 
-        resourceBoxes.forEach(box => {
-            const boxCategory = box.getAttribute("data-category");
-            const textContent = box.innerText.toLowerCase();
+        boxes.forEach(box => {
+            const text = box.innerText.toLowerCase();
+            const matchesSearch = text.includes(search);
+            const matchesCategory = category === "all" || box.dataset.category === category;
 
-            const matchesSearch = textContent.includes(searchValue);
-            const matchesCategory =
-                selectedCategory === "all" || boxCategory === selectedCategory;
-
-            if (matchesSearch && matchesCategory) {
-                box.style.display = "block";
-            } else {
-                box.style.display = "none";
-            }
+            box.style.display = (matchesSearch && matchesCategory) ? "block" : "none";
         });
     }
 
     searchInput.addEventListener("keyup", filterResources);
     categorySelect.addEventListener("change", filterResources);
+
 });
 </script>
 
