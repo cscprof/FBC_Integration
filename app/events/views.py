@@ -17,24 +17,41 @@ def fetch_approved_events_json():
     conn = get_db_connection()
     with conn.cursor() as cursor:
         cursor.execute("""
-            SELECT name, start_date, end_date, url, description, content_type, registration_deadline,
-                   contact_name, contact_phone, contact_email,
-                   event_address1, event_address2, event_city, event_state, event_postal_code
-            FROM events
-            WHERE status='approved'
+            SELECT e.event_id, e.name, e.start_date, e.end_date, e.url, e.description, e.content_type, e.registration_deadline,
+                   e.contact_name, e.contact_phone, e.contact_email,
+                   e.event_address1, e.event_address2, e.event_city, e.event_state, e.event_postal_code,
+                   ct.name as content_type_name
+            FROM events e
+            LEFT JOIN content_types ct ON e.content_type = ct.content_type_id
+            WHERE e.status='approved'
         """)
         rows = cursor.fetchall()
     conn.close()
 
     events = []
     for row in rows:
+        # Get schools for this event
+        conn = get_db_connection()
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                SELECT t.tag
+                FROM event_tags et
+                JOIN tags t ON et.tag_id = t.tag_id
+                WHERE et.event_id = %s
+            """, (row['event_id'],))
+            school_rows = cursor.fetchall()
+        conn.close()
+        
+        schools = [s['tag'] for s in school_rows]
+        
         events.append({
             "title": row['name'],
             "start": row['start_date'].isoformat(),
             "end": row['end_date'].isoformat(),
             "url": row.get('url'),
             "description": row.get('description'),
-            "content_type": row['content_type'],
+            "tag": row.get('content_type_name') or "N/A",
+            "schools": schools,
             "registration_deadline": row['registration_deadline'].isoformat() if row['registration_deadline'] else None,
             "contact_name": row.get('contact_name'),
             "contact_phone": row.get('contact_phone'),
@@ -90,10 +107,35 @@ def fetch_approved_events_python():
 @events.route('/add-event', methods=["GET", "POST"])
 @role_required([4, 5])
 def addEvent():
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cursor:
+            content_types = [
+                ('Worship', 'Worship events'),
+                ('Retreat', 'Retreat events'),
+                ('Training', 'Training events'),
+                ('Service', 'Service events'),
+                ('Meeting', 'Meeting events')
+            ]
+            for name, desc in content_types:
+                cursor.execute('SELECT 1 FROM content_types WHERE name = %s', (name,))
+                if not cursor.fetchone():
+                    cursor.execute('INSERT INTO content_types (name, description) VALUES (%s, %s)', (name, desc))
+            conn.commit()
+            
+            cursor.execute("SELECT MIN(content_type_id) as content_type_id, name FROM content_types GROUP BY name")
+            tags = cursor.fetchall()
+            cursor.execute("SELECT tag_id as school_tag_id, tag as school_name FROM tags")
+            school_tags = cursor.fetchall()
+    finally:
+        conn.close()
+
     if request.method == "POST":
         name = request.form.get('name', '').strip()
         description = request.form.get('description', '').strip()
         url = request.form.get('url', '').strip()
+        content_type_id = request.form.get('tag', '').strip()
+        schools = request.form.getlist('schools')
         starting_date_raw = request.form.get('starting_date', '').strip()
         ending_date_raw = request.form.get('ending_date', '').strip()
         deadline_raw = request.form.get('deadline', '').strip()
@@ -112,14 +154,18 @@ def addEvent():
 
         if not name:
             flash("Name is required.", "error")
-            return render_template('events/addEvent.html', form=request.form)
+            return render_template('events/addEvent.html', form=request.form, tags=tags, school_tags=school_tags)
+
+        if not content_type_id:
+            flash("Content Type is required.", "error")
+            return render_template('events/addEvent.html', form=request.form, tags=tags, school_tags=school_tags)
 
         starting_date = datetime.fromisoformat(starting_date_raw)
         ending_date = datetime.fromisoformat(ending_date_raw)
 
         if ending_date <= starting_date:
             flash("Ending date and time must be after the starting date and time.", "error")
-            return render_template('events/addEvent.html', form=request.form)
+            return render_template('events/addEvent.html', form=request.form, tags=tags, school_tags=school_tags)
 
         # prefer authenticated user's id; fall back to session value or default user 1
         if getattr(current_user, 'is_authenticated', False):
@@ -133,18 +179,23 @@ def addEvent():
             with conn.cursor() as cursor:
                 sql = """
                     INSERT INTO events
-                    (name, description, url, start_date, end_date, user_id, status, posting_date, registration_deadline,
+                    (name, description, content_type, url, start_date, end_date, user_id, status, posting_date, registration_deadline,
                      contact_name, contact_phone, contact_email,
                      event_address1, event_address2, event_city, event_state, event_postal_code)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 cursor.execute(sql, (
-                    name, description, url or None, starting_date, ending_date,
+                    name, description, content_type_id, url or None, starting_date, ending_date,
                     user_id, 'pending', posting_date, deadline,
                     contact_name or None, contact_phone or None, contact_email or None,
                     event_address1 or None, event_address2 or None, event_city or None,
                     event_state or None, event_postal_code or None
                 ))
+                event_id = cursor.lastrowid
+                
+                # Insert school tags
+                for school_id in schools:
+                    cursor.execute("INSERT INTO event_tags (event_id, tag_id) VALUES (%s, %s)", (event_id, school_id))
             conn.commit()
 
         except DatabaseError as e:
@@ -152,7 +203,7 @@ def addEvent():
             flash("Database error: " + str(e), "error")
             if conn:
                 conn.rollback()
-            return render_template('events/addEvent.html', form=request.form)
+            return render_template('events/addEvent.html', form=request.form, tags=tags, school_tags=school_tags)
 
         finally:
             if conn:
@@ -160,12 +211,19 @@ def addEvent():
 
         return render_template('events/confirmEvent.html', event_name=name)
 
-    return render_template('events/addEvent.html')
+    return render_template('events/addEvent.html', tags=tags, school_tags=school_tags)
 
 
 @events.route('/calendar')
 def calendar():
-    return render_template('events/calendar.html')
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT tag FROM tags ORDER BY tag")
+            schools = [row['tag'] for row in cursor.fetchall()]
+    finally:
+        conn.close()
+    return render_template('events/calendar.html', schools=schools)
 
 
 @events.route('/update_event/<int:event_id>/<string:action>')
