@@ -28,7 +28,7 @@
         <h1>
             <!-- If middle_name is null, just omit it server-side -->
             {{ user.first_name }} <span class="muted">{{ user.middle_name }}</span> {{ user.last_name }}
-            <a href="{{ url_for('profile.edit_profile', username=user.username) }}" class="edit-user-info">Edit user info?</a>
+            <a href="{{ url_for('users.edit_profile', username=user.username) }}" class="edit-user-info">Edit user info?</a>
         </h1>
     </div>
 
@@ -105,7 +105,7 @@
         <div class="profile-field">
             <div class="profile-label">Password:</div>
             <div class="profile-value">
-                ••••••••••• <a href="{{ url_for('profile.change_password', username=user.username) }}" class="button change-password">Change Password</a>
+                ••••••••••• <a href="{{ url_for('users.change_password', username=user.username) }}" class="button change-password">Change Password</a>
             </div>
         </div>
     </div>
