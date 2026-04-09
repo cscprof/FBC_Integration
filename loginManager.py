@@ -35,7 +35,7 @@ def load_user(user_id):
             nameLast=row['last_name'].capitalize(),
             nameMiddle=row['middle_name'].capitalize(),
             gradYear=row['graduation_year'],
-            emailIsVerified=row['email_is_verified']
+            emailIsVerified=row['email_is_verified'],
             profilePicture=row['profile_picture'],
         )
     return None
