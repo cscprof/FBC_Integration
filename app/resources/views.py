@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for
 from sqlalchemy import select
 from db import db
 from .models import resources, resource_tags, resource_category, content_types
-from tagmanager import get_tags, give_tag
+from tagmanager import get_tags, give_tag, check_tag, get_tag_id, remove_tag
 from . import resources as resources_blueprint
 
 # Use the route() decorator to tell Flask what URL should trigger the function
@@ -23,8 +23,9 @@ def resourcesearch():
     try:
         #Taken from above method for add resource button
         categories_list = db.session.execute(select(resource_category)).scalars().all()
-        tag_list = db.session.execute(select(resource_tags)).scalars().all()
-        get_tags()
+        required_tags = []
+        
+
 
         #To load resources from db
         dbselect = (
@@ -41,9 +42,31 @@ def resourcesearch():
         )
         .join(
             resource_category,
-            resources.resource_category_id == resource_category.resource_category_id ))
+            resources.resource_category_id == resource_category.resource_category_id, ))
+        result = db.session.execute(dbselect).mappings().all()
 
-        dblist = db.session.execute(dbselect).mappings().all()
+        if required_tags and len(required_tags) > 0:
+            filtering = []
+            for row in result:
+             allowed = False
+             for tag in required_tags:
+                if check_tag(get_tag_id(tag), row.resource_id, "Resource"):
+                 allowed = True
+            if allowed:
+                filtering.append(row)
+            result = filtering
+        dblist = []    
+
+        for row in result:
+            dblist.append({
+                'resource_id': row.resource_id,
+                'description': row.description,
+                'url': row.url,
+                'resource_category_name': row.resource_category_name,
+                'contact_name': row.contact_name,
+                'contact_email': row.contact_email,
+                'contact_phone': row.contact_phone,
+            })
 
     except:
         categories_list = []
@@ -86,7 +109,7 @@ def upload_resource():
     name = request.form.get('name', '').strip()
     email = request.form.get('email', '').strip()
     phone = request.form.get('phone', '').strip()
-    resource_tags = request.form.get('all the input', '').strip()
+    resource_tags = request.form.get('tags', '').strip()
     
     # Make sure all required fields were filled out
     if not title or not url or not resource_category_id:
@@ -138,12 +161,40 @@ def edit_resource(resource_id: int):
         name = request.form.get('name', '').strip()
         email = request.form.get('email', '').strip()
         phone = request.form.get('phone', '').strip()
-        resource_tags = request.form.get('All the tags', '').strip()
+        resource_tags = request.form.get('resource_tags', '').strip()
         
         # Make sure all required fields were filled out
         if not title or not url or not resource_category_id:
             return redirect(url_for('resources.resourcesearch'))
         
+        element_tags = resource_tags.split(',')
+        element_tags = [item.strip() for item in element_tags]
+
+        try:
+            tag_ids = [int(x) for x in element_tags]
+        except ValueError:
+            tag_ids = []
+    
+        tag_list = get_tags(resource_id, "Resource")
+        for tag in tag_list:
+            in_list = False
+            for resource_tag in tag_ids:
+                if tag == resource_tag:
+                    in_list = True
+                    break
+            if in_list == False:
+                remove_tag(tag, resource_id, "Resource")
+        
+        tag_list = get_tags(resource_id, "Resource")
+        for resource_tag in tag_ids:
+            in_list = False
+            for tag in tag_list:
+                if tag == resource_tag:
+                    in_list = True
+                    break
+            if in_list == False:
+                give_tag(tag, resource_id, "Resource")
+
         # Update the resource
         resource.description = title
         resource.url = url

@@ -2,33 +2,37 @@
 from flask import render_template, request, redirect, url_for
 from sqlalchemy import select
 from db import db
-from app.resources.models import resources, events, tags, users
+from app.resources.models import resources, events, tags, users, resource_tags, event_tags, user_tags
 
-
+def get_tag_id(tag):
+    dbselect = (select(tags.tag_id).where(tags.tag == tag))
+    tag_id_list = connection.execute(dbselect).mappings().all()
+    tag_id = tag_id_list[0]
+    if tag_id != None:
+        return tag_id
+    else:
+        return
+    
 def get_tags(element_id, element_type):
     if element_type == "Resource":
-        dbselect = (select(resources.resource_tags).where(resources.resource_id == element_id))
+        dbselect = (select(resource_tags.tag_id).where(resources.resource_id == element_id))
     if element_type == "Event":
-        dbselect = (select(events.event_tags).where(events.event_id == element_id))
+        dbselect = (select(event_tags.tag_id).where(events.event_id == element_id))
     if element_type == "User":
-        dbselect = (select(users.user_tags).where(users.user_id == element_id))
+        dbselect = (select(user_tags.tag_id).where(users.user_id == element_id))
 
     selection = connection.execute(dbselect).fetchone()
-    element_tags = selection.split(',')
-    element_tags = [item.strip() for item in element_tags]
-
+    
     try:
-        tag_ids = [int(x) for x in element_tags]
+        tag_ids = [int(x) for x in selection]
     except ValueError:
         return
     return tag_ids
 
-def check_tag(element_id, tag, element_type):
+def check_tag(desired_tag_id, element_id, element_type):
     tag_ids = get_tags(element_id, element_type)
-    dbselect = (select(tags.tag_id).where(tags.tag == tag))
-    desired_tag = connection.execute(dbselect).fetchone()
     for tag_id in tag_ids:
-        if tag_id == desired_tag:
+        if tag_id == desired_tag_id:
             return True
     return False
 
@@ -58,12 +62,10 @@ def edit_tag(tag_id: int):
         db.session.rollback()
         return redirect(url_for('resources.resourcesearch'))
     
-def add_tag():
-    tag = request.form.get('tag', '').strip()
-    description  = request.form.get('description', '').strip()
+def add_tag(tag, description):
 
     if not tag or not description:
-        return redirect(url_for('resources.resource_directory'))
+        return
     try:
         new_tag = tags(
                 tag=tag,
@@ -73,38 +75,60 @@ def add_tag():
         db.session.add(new_tag)
         db.session.commit()
 
-        return redirect(url_for('resources.resourcesearch'))
+        return
     except Exception as e:
         # If something went wrong, undo any changes and go back
         db.session.rollback()
-        return redirect(url_for('resources.resource_directory'))    
+        return   
         # Save it to the database
         db.session.add(new_resource_tag)
         db.session.commit()
 
-def give_tag(element_type):
-    tag = request.form.get('tag', '').strip()
-    element_id  = request.form.get('element', '').strip()
-
-
-    if not tag or not element_id:
-        return redirect(url_for('resources.resource_directory'))
+def give_tag(tag_id, element_id, element_type):
     
-    
-    element_tags = get_tags(element_id, element_type)
-    element_tags.append[tag]
-
-    element_tag_string = ','.join(map(str, element_tags))
-    resources.resource_tags = element_tag_string
-
-    db.session.commit()
-
-    return redirect(url_for('resources.resourcesearch'))
-    
-
-def remove_tag(tag_id):
+    if not tag_id or not element_id or not element_type:
+        return
     try:
-        tag = db.session.get(tags, tag_id)
+        if element_type == "Resource":
+            new_resource_tag = resource_tags(
+                resource_id = element_id,
+                tag_id = tag_id
+            )
+            db.session.add(new_resource_tag)
+            db.session.commit()
+        if element_type == "Event":
+            new_event_tag = event_tags(
+                event_id = element_id,
+                tag_id = tag_id
+            )
+            db.session.add(new_event_tag)
+            db.session.commit()
+        if element_type == "User":
+            new_user_tag = user_tags(
+                resource_id = element_id,
+                tag_id = tag_id
+            )
+            db.session.add(new_user_tag)
+            db.session.commit()
+        return
+    except Exception as e:
+        # If something went wrong, undo any changes and go back
+        db.session.rollback()
+        return   
+        # Save it to the database
+        db.session.add(new_resource_tag)
+        db.session.commit()
+    
+    
+
+def remove_tag(tag_id, element_id, element_type):
+    try:
+        if element_type == "Resource":
+            tag = db.session.get(resource_tags, tag_id).where(resource_tags, resource_id = element_id)
+        if element_type == "Event":
+            tag = db.session.get(event_tags, tag_id).where(event_tags, event_id = element_id)
+        if element_type == "User":
+            tag = db.session.get(user_tags, tag_id).where(user_tags, user_id = element_id)
         if tag:
             db.session.delete(tag)
             db.session.commit()

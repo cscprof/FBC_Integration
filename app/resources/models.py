@@ -88,6 +88,11 @@ class resource_tags(db.Model):
     resource_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(resources.resource_id), index=True, nullable=False)
     tag_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(tags.tag_id), index=True, nullable=False)
 
+class user_tags(db.Model):
+    User_tag_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
+    User_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(users.user_id), index=True, nullable=False)
+    tag_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(tags.tag_id), index=True, nullable=False)
+
 #This table was added by us
 class saved_resources(db.Model):
     saved_resource_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
