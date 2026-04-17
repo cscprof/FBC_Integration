@@ -13,7 +13,7 @@
 
         {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
         <div class="uploadbutton">
-            <button onclick="document.getElementById('uploadModal').style.display='block'" class="uploadresourcebtn">
+            <button onclick="document.getElementById('uploadModal').style.display='flex'" class="uploadresourcebtn">
                 Upload Resource
             </button>
         </div>
@@ -43,23 +43,20 @@
 
             <div class="examplegrid" id="resourcesgrid">
                 {% for resource in resources %}
-                <div class="resource-card-wrapper" data-category="{{ resource.resource_category_name }}">
-                    <a href="{{ resource.url }}" class="resource-card-link" target="_blank" rel="noopener noreferrer">
+                <div class="resource-card-wrapper"
+                     data-category="{{ resource.resource_category_name }}"
+                     data-title="{{ resource.description|e }}"
+                     data-url="{{ resource.url|e }}"
+                     data-category-name="{{ resource.resource_category_name|e }}"
+                     data-name="{{ resource.contact_name or ''|e }}"
+                     data-email="{{ resource.contact_email or ''|e }}"
+                     data-phone="{{ resource.contact_phone or ''|e }}"
+                >
+                    <div class="resource-card-link" role="button" tabindex="0" aria-label="View resource details">
                         <div class="exampleboxes">
                             <h3>{{ resource.description }}</h3>
-
-                            {%  if resource.contact_name %}
-                            <br>
-                            <h4>{{ resource.contact_name }}</h4>
-                            {% endif %}
-                            {%  if resource.contact_email %}
-                            <h6>{{ resource.contact_email }}</h6>
-                            {% endif %}
-                            {%  if resource.contact_phone %}
-                            <h6>{{ resource.contact_phone }}</h6>
-                            {% endif %}
                         </div>
-                    </a>
+                    </div>
 
                     {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
                     {% if resource.resource_id is defined %}
@@ -173,6 +170,39 @@
     </div>
 </div>
 
+<div id="resourceInfoModal" class="modal" aria-hidden="true">
+    <div class="modalcontent resource-info-modal">
+        <div class="modalheader">
+            <h2 class="modaltitle" id="resourceInfoTitle">Resource</h2>
+            <button type="button" onclick="closeResourceInfoModal()" class="modalclose" aria-label="Close">&times;</button>
+        </div>
+
+        <div class="resource-info-body">
+            <div class="resource-info-section">
+                <div class="resource-info-row">
+                    <div class="resource-info-label">Category</div>
+                    <div class="resource-info-value" id="resourceInfoCategory">-</div>
+                </div>
+            </div>
+
+            <div class="resource-info-section">
+                <div class="resource-info-section-title">Contact</div>
+                <div class="resource-info-contact">
+                    <div class="resource-info-contact-line" id="resourceInfoName"></div>
+                    <div class="resource-info-contact-line" id="resourceInfoEmail"></div>
+                    <div class="resource-info-contact-line" id="resourceInfoPhone"></div>
+                    <div class="resource-info-contact-empty" id="resourceInfoNoContact">No contact information provided.</div>
+                </div>
+            </div>
+
+            <div class="modalformactions resource-info-actions">
+                <a id="resourceInfoLink" class="modalbtnsubmit resource-info-primary" target="_blank" rel="noopener noreferrer">Open Link</a>
+                <button type="button" onclick="closeResourceInfoModal()" class="modalbtncancel">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function deleteResource() {
         const resourceId = document.getElementById('editResourceId').value;
@@ -187,6 +217,44 @@
 
     function closeEditModal() {
         document.getElementById('editModal').style.display = 'none';
+    }
+
+    function closeResourceInfoModal() {
+        const modal = document.getElementById('resourceInfoModal');
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+    }
+
+    function openResourceInfoModal(wrapper) {
+        const title = wrapper.getAttribute('data-title') || 'Resource';
+        const url = wrapper.getAttribute('data-url') || '';
+        const categoryName = wrapper.getAttribute('data-category-name') || '-';
+        const name = wrapper.getAttribute('data-name') || '';
+        const email = wrapper.getAttribute('data-email') || '';
+        const phone = wrapper.getAttribute('data-phone') || '';
+
+        document.getElementById('resourceInfoTitle').innerText = title;
+        document.getElementById('resourceInfoCategory').innerText = categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
+
+        const nameEl = document.getElementById('resourceInfoName');
+        const emailEl = document.getElementById('resourceInfoEmail');
+        const phoneEl = document.getElementById('resourceInfoPhone');
+        const noContactEl = document.getElementById('resourceInfoNoContact');
+
+        nameEl.innerText = name ? name : '';
+        emailEl.innerText = email ? email : '';
+        phoneEl.innerText = phone ? phone : '';
+        const hasContact = Boolean(name || email || phone);
+        noContactEl.style.display = hasContact ? 'none' : 'block';
+
+        const link = document.getElementById('resourceInfoLink');
+        link.href = url;
+        link.style.pointerEvents = url ? 'auto' : 'none';
+        link.style.opacity = url ? '1' : '0.5';
+
+        const modal = document.getElementById('resourceInfoModal');
+        modal.style.display = 'flex';
+        modal.setAttribute('aria-hidden', 'false');
     }
 
     document.getElementById('editForm').addEventListener('submit', function(e) {
@@ -240,7 +308,7 @@
         document.getElementById('editName').value = name || '';
         document.getElementById('editEmail').value = email || '';
         document.getElementById('editPhone').value = phone || '';
-        document.getElementById('editModal').style.display = 'block';
+        document.getElementById('editModal').style.display = 'flex';
     }
 
     document.querySelectorAll('.edit-resource-btn').forEach(button => {
@@ -250,10 +318,27 @@
         });
     });
 
+    resourceBoxes.forEach(wrapper => {
+        wrapper.addEventListener('click', function () {
+            openResourceInfoModal(this);
+        });
+        wrapper.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openResourceInfoModal(this);
+            }
+        });
+    });
+
     window.onclick = function(event) {
         const editModal = document.getElementById('editModal');
         if (event.target == editModal) {
             editModal.style.display = 'none';
+        }
+
+        const infoModal = document.getElementById('resourceInfoModal');
+        if (event.target == infoModal) {
+            closeResourceInfoModal();
         }
     }
 
