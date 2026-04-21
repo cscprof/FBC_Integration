@@ -16,22 +16,25 @@ from flask_login import login_user, login_required, logout_user, current_user
 from loginManager import role_required
 from app.Models.Account import Account
 
+# allowed files types for user pfps
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Sign Up
+# Signup
 @users.route("/add_user", methods=["GET", "POST"])
 def add_user():
     if request.method == "POST":
+        # get the entered values from the signup page
         role_id = request.form.get('userRole', '').strip()
         first_name = request.form.get('first_name', '').strip()
         last_name = request.form.get('last_name', '').strip()
         middle_name = request.form.get('middle_name', '').strip()
         email = request.form.get('email', '').strip()
         graduation_year_raw = request.form.get('graduation_year', '').strip()
+        # checks if the entered grad year is valid
         if not graduation_year_raw: graduation_year = None 
         else:
             try: 
@@ -43,11 +46,13 @@ def add_user():
         passwordConfirmation = request.form.get('passwordConfirmation', '').strip()
         username = request.form.get('username', '').strip().lower()
 
+        # checks if entered password is the same if both fields
         if password != passwordConfirmation:
             flash("Passwords do not match", "error")
             return redirect(url_for('users.signup_page'))
 
         conn = None
+        # pass the given info to the database
         try:
             conn = get_db_connection()
             with conn.cursor() as cursor:
@@ -62,9 +67,11 @@ def add_user():
                 ))
                 conn.commit()
                 flash("User created!", "success")
+        # error handling for an already used username
         except pymysql.err.IntegrityError:
             flash('Username taken!')
         
+        # error handling for a daatabase error
         except DatabaseError as e:
             print(f"DB Error: {e}")
             flash(f"Error: {e}", "error")
@@ -157,6 +164,7 @@ def admin_users():
 @users.route("/admin/user/<int:user_id>/edit", methods=["GET", "POST"])  # FIXED route
 def edit_user(user_id):
     conn = get_db_connection()
+    # gets dats from data pass and passes it to edit_profile.html
     try:
         with conn.cursor(DictCursor) as cursor:
             if request.method == "POST":
@@ -189,6 +197,7 @@ def edit_user(user_id):
     finally:
         conn.close()
 
+    # error handling to for if a user does not exist
     if not user:
         flash("User not found")
         return redirect(url_for("users.admin_panel"))
@@ -199,6 +208,7 @@ def edit_user(user_id):
 def profile():
 
     conn = None
+    # allows logged in users to go to their respective profile page
     try:
         conn = get_db_connection()
         with conn.cursor() as cursor:
@@ -227,6 +237,7 @@ def profile():
 def edit_profile(username):
 
     conn = get_db_connection()
+    # gets user data from database and passes 
     try:
         with conn.cursor(DictCursor) as cursor:
             if request.method == "POST":
@@ -240,7 +251,7 @@ def edit_profile(username):
                 else:
                     graduation_year = int(graduation_year_raw)
 
-                # --- Profile picture upload ---
+                # Profile picture upload
                 profile_picture_path = None
                 file = request.files.get("profile_picture")
                 if file and file.filename and allowed_file(file.filename):
@@ -250,7 +261,7 @@ def edit_profile(username):
                     )
                     os.makedirs(save_dir, exist_ok=True)
 
-                    # --- Delete old profile picture if one exists ---
+                    # Delete old profile picture if one exists
                     cursor.execute("SELECT profile_picture FROM users WHERE username=%s", (username,))
                     existing = cursor.fetchone()
                     if existing and existing.get("profile_picture"):
