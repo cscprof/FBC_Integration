@@ -22,7 +22,8 @@ def add_user():
         last_name = request.form.get('last_name', '').strip()
         middle_name = request.form.get('middle_name', '').strip()
         email = request.form.get('email', '').strip()
-        graduation_year = request.form.get('graduation_year', '').strip()
+        graduation_year_raw = request.form.get('graduation_year', '').strip()
+        graduation_year=int(graduation_year_raw) if graduation_year_raw else None
         password = request.form.get('password', '').strip()
         username = request.form.get('username', '').strip()
 
@@ -123,11 +124,36 @@ def admin_panel():
         with conn.cursor(DictCursor) as cursor:
             cursor.execute("USE flourish_bc")
             cursor.execute("SELECT * FROM users")
-            users = cursor.fetchall()
-        return render_template("adminpanel/index.html", users=users)
+            users_list = cursor.fetchall()
+            
+        return render_template("adminpanel/index.html", users=users_list)
     finally:
         conn.close()
 
+# Add tag route only available for admins
+@users.route("/admin/tags/add", methods=["POST"])
+@role_required([4, 5])
+def add_tag():
+    tag_name = request.form.get('tag', '').strip()
+    
+    if tag_name:
+        conn = get_db_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("INSERT INTO tags (tag) VALUES (%s)", (tag_name,))
+                conn.commit()
+                flash("Tag created successfully!", "success")
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            flash(f"Error creating tag: {e}", "error")
+        finally:
+            if conn:
+                conn.close()
+    else:
+        flash("Tag name cannot be empty.", "error")
+        
+    return redirect(url_for('users.admin_users'))
 
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
@@ -139,7 +165,11 @@ def admin_users():
             cursor.execute("USE flourish_bc")
             cursor.execute("SELECT * FROM users")
             users = cursor.fetchall()
-        return render_template("adminpanel/userAdmin.html", users=users)
+            
+            cursor.execute("SELECT * FROM tags")
+            all_tags = cursor.fetchall()
+            
+        return render_template("adminpanel/userAdmin.html", users=users, tags=all_tags)
     finally:
         conn.close()
 

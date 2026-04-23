@@ -71,7 +71,8 @@
                             data-category-id="{{ resource.resource_category_id }}"
                             data-name="{{ resource.contact_name or ''|e }}"
                             data-email="{{ resource.contact_email or ''|e }}"
-                            data-phone="{{ resource.contact_phone or ''|e }}">
+                            data-phone="{{ resource.contact_phone or ''|e }}"
+                            data-tags="{{ resource.reourcce_tags or ''|e }}">
                         Edit
                     </button>
                     {% endif %}
@@ -105,6 +106,21 @@
                         <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
                     {% endfor %}
                 {% else %}
+                    <option value="1">College</option>
+                    <option value="2">Mental</option>
+                    <option value="3">Jobs</option>
+                    <option value="4">Tutoring</option>
+                    <option value="5">Activities</option>
+                    <option value="6">Career</option>
+                {% endif %}
+            </select>
+            </select name="resource_tags" optional>
+                <option value="">Tag *</option>
+                {% if tags %}
+                    {% for tag in tags %}
+                        <option value="{{ tag.resource_tags }}">{{ tag.tag_name|title }}</option>
+                    {% endfor %}
+                {% else %} - will convert to resources
                     <option value="1">College</option>
                     <option value="2">Mental</option>
                     <option value="3">Jobs</option>

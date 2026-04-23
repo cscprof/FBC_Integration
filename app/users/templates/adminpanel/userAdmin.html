@@ -29,5 +29,45 @@
             {% endif %}
         </div>
     </div>
+
+
+    <!-- Section for Adding Tags -->
+    <div class="section">
+        <div class="header">Manage Tags</div>
+        <div class="add-tag-section" style="margin-top: 1rem; margin-bottom: 2rem;">
+            <h3>Create New Tag</h3>
+            
+            <form action="{{ url_for('users.add_tag') }}" method="POST" style="margin-top: 1rem;">
+                <label for="tag">Tag Name:</label>
+                <input type="text" id="tag" name="tag" required style="margin-right: 1rem;">
+                
+                <button type="submit" class="btn btn-primary">Add Tag</button>
+            </form>
+        </div>
+
+        <h3>Existing Tags</h3>
+        <div class="list" style="margin-top: 1rem;">
+            {% if tags %}
+                <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #f2f2f2;">
+                            <th style="padding: 8px;">Tag ID</th>
+                            <th style="padding: 8px;">Tag Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tag in tags %}
+                        <tr>
+                            <td style="padding: 8px;">{{ tag.tag_id }}</td>
+                            <td style="padding: 8px;">{{ tag.tag }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="resource">No tags found.</div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}

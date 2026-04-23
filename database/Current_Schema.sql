@@ -133,7 +133,7 @@ CREATE TABLE `users` (
   `username` varchar(64) NOT NULL,
   `password` varchar(128) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
-  `grdauation_year` int DEFAULT NULL,
+  `graduation_year` int DEFAULT NULL,
   `role_id` int NOT NULL,
   `partner_id` int DEFAULT NULL,
   PRIMARY KEY (`user_id`),
@@ -208,6 +208,6 @@ COMMIT;
 BEGIN;
 LOCK TABLES `flourish_bc`.`users` WRITE;
 DELETE FROM `flourish_bc`.`users`;
-INSERT INTO `flourish_bc`.`users` (`user_id`,`first_name`,`last_name`,`middle_name`,`username`,`password`,`email`,`grdauation_year`,`role_id`,`partner_id`) VALUES (1, 'Kathleen', 'Grehl', NULL, 'kgehl', 'asdfasdf', 'kgrehl@genevaa.edu', NULL, 5, 1);
+INSERT INTO `flourish_bc`.`users` (`user_id`,`first_name`,`last_name`,`middle_name`,`username`,`password`,`email`,`graduation_year`,`role_id`,`partner_id`) VALUES (1, 'Kathleen', 'Grehl', NULL, 'kgehl', 'asdfasdf', 'kgrehl@genevaa.edu', NULL, 5, 1);
 UNLOCK TABLES;
 COMMIT;
