@@ -136,7 +136,7 @@ COMMIT;
 BEGIN;
 LOCK TABLES `flourish_bc`.`partners` WRITE;
 DELETE FROM `flourish_bc`.`partners`;
-INSERT INTO `flourish_bc`.`partners` (`partner_id`,`name`,`description`,`phone`,`email`,`contact_name`,`address1`,`address2`,`city`,`state`,`zip`) VALUES (1, 'Geneva College', 'Liberal arts college located in Beaver Falls', 'https://geneva.edu', '7246466717', 'admisions@geneva.eduu', 'Kathleen Grehl', '3200 College Ave', NULL, 'Beaver Falls', 'PA', '15010');
+INSERT INTO `flourish_bc`.`partners` (`partner_id`,`name`,`description`,`url`,`phone`,`email`,`contact_name`,`address1`,`address2`,`city`,`state`,`zip`) VALUES (1, 'Geneva College', 'Liberal arts college located in Beaver Falls', 'https://geneva.edu', '7246466717', 'admisions@geneva.eduu', 'Kathleen Grehl', '3200 College Ave', NULL, 'Beaver Falls', 'PA', '15010');
 UNLOCK TABLES;
 COMMIT;
 BEGIN;
