@@ -25,6 +25,7 @@ class partners(db.Model):
     partner_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
     name: so.Mapped[str] = so.mapped_column(sa.String(128), nullable=False, index=True)
     description: so.Mapped[str] = so.mapped_column(sa.String(5000))
+    url: so.Mapped[str] = so.mapped_column(sa.String(255))
     phone: so.Mapped[str] = so.mapped_column(sa.String(32))
     email: so.Mapped[str] = so.mapped_column(sa.String(128))
     contact_name: so.Mapped[str] = so.mapped_column(sa.String(128))
