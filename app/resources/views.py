@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for
 from flask_login import current_user
 from sqlalchemy import select
 from db import db
-from .models import resources, resource_category, content_types
+from .models import resources, resource_category, content_types, partners
 from . import resources as resources_blueprint
 from loginManager import role_required
 
@@ -19,7 +19,6 @@ def resource_directory():
 
 
 @resources_blueprint.route("/resourcesearch")
-
 def resourcesearch():
     try:
         #Taken from above method for add resource button
@@ -68,6 +67,26 @@ def resourcesearch():
         ]
     
     return render_template('resources/resourcesearch.html', resources=dblist, categories=categories_list)
+
+@resources_blueprint.route("/partners")
+def partner():
+    dbselect = (
+        select(
+            partners.name,
+            partners.description,
+            partners.url,
+            partners.contact_name,
+            partners.phone,
+            partners.email,
+            partners.address1,
+            partners.address2,
+            partners.city,
+            partners.state,
+            partners.zip,
+        )
+    )
+    partnerList = db.session.execute(dbselect).mappings().all()
+    return render_template("resources/partners.html", partners=partnerList)
 
 @resources_blueprint.route("/resources/admin")
 @resources_blueprint.route("/admin/resources")
