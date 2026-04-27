@@ -50,7 +50,7 @@ CREATE TABLE `events` (
 CREATE TABLE `partners` (
   `partner_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
+  `description` varchar(5000) DEFAULT NULL,
   `phone` varchar(32) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
   `contact_name` varchar(128) DEFAULT NULL,
@@ -80,9 +80,12 @@ CREATE TABLE `resources` (
   `contact_email` varchar(128) DEFAULT NULL,
   `contact_phone` varchar(32) DEFAULT NULL,
   `user_id` int NOT NULL,
+  `partner_id` int NOT NULL,
   PRIMARY KEY (`resource_id`),
   KEY `content_types_fk` (`content_type_id`),
-  CONSTRAINT `content_types_fk` FOREIGN KEY (`content_type_id`) REFERENCES `content_types` (`content_type_id`)
+  CONSTRAINT `content_types_fk` FOREIGN KEY (`content_type_id`) REFERENCES `content_types` (`content_type_id`),
+  KEY `partners_fk` (`partner_id`),
+  CONSTRAINT `partners_fk` FOREIGN KEY (`partner_id`) REFERENCES `partners` (`partner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `roles` (
   `role_id` int NOT NULL AUTO_INCREMENT,
