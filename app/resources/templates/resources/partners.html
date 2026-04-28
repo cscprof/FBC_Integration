@@ -11,15 +11,6 @@
             Those who help our community thrive!
 
         <div class="resources">
-            <div class="searchfilter">
-                <div class="searchcontainer">
-                    <form class="searchform">
-                        <input type="text" placeholder="Search resources..." class="searchinput" name="search">
-                        
-                    </form>
-                </div>
-            </div>
-
             <div class="examplegrid" id="resourcesgrid">
                 {% for partner in partners %}
                 <a href="{{ partner.url }}" class="resource-card-link" target="_blank" rel="noopener noreferrer">
