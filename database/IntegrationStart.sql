@@ -50,8 +50,7 @@ CREATE TABLE `events` (
 CREATE TABLE `partners` (
   `partner_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
-  `description` varchar(5000) DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   `phone` varchar(32) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
   `contact_name` varchar(128) DEFAULT NULL,
@@ -81,12 +80,9 @@ CREATE TABLE `resources` (
   `contact_email` varchar(128) DEFAULT NULL,
   `contact_phone` varchar(32) DEFAULT NULL,
   `user_id` int NOT NULL,
-  `partner_id` int NOT NULL,
   PRIMARY KEY (`resource_id`),
   KEY `content_types_fk` (`content_type_id`),
   CONSTRAINT `content_types_fk` FOREIGN KEY (`content_type_id`) REFERENCES `content_types` (`content_type_id`),
-  KEY `partners_fk` (`partner_id`),
-  CONSTRAINT `partners_fk` FOREIGN KEY (`partner_id`) REFERENCES `partners` (`partner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `roles` (
   `role_id` int NOT NULL AUTO_INCREMENT,
@@ -136,7 +132,7 @@ COMMIT;
 BEGIN;
 LOCK TABLES `flourish_bc`.`partners` WRITE;
 DELETE FROM `flourish_bc`.`partners`;
-INSERT INTO `flourish_bc`.`partners` (`partner_id`,`name`,`description`,`url`,`phone`,`email`,`contact_name`,`address1`,`address2`,`city`,`state`,`zip`) VALUES (1, 'Geneva College', 'Liberal arts college located in Beaver Falls', 'https://geneva.edu', '7246466717', 'admisions@geneva.eduu', 'Kathleen Grehl', '3200 College Ave', NULL, 'Beaver Falls', 'PA', '15010');
+INSERT INTO `flourish_bc`.`partners` (`partner_id`,`name`,`description`,`phone`,`email`,`contact_name`,`address1`,`address2`,`city`,`state`,`zip`) VALUES (1, 'Geneva College', 'Liberal arts college located in Beaver Falls', '7246466717', 'admisions@geneva.eduu', 'Kathleen Grehl', '3200 College Ave', NULL, 'Beaver Falls', 'PA', '15010');
 UNLOCK TABLES;
 COMMIT;
 BEGIN;
