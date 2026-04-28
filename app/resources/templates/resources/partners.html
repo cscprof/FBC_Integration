@@ -37,22 +37,24 @@
                         <h6>{{ partner.phone }}</h6>
                         {% endif %}
                         {%  if partner.email %}
+                        <h6>{{ partner.email }}</h6>
+                        {% endif %}
                         <br>
                         {%  if partner.address1 %}
-                        <h6>{{ partner.address1 }}</h6>
+                        <h6>{{ partner.address1 }},
                         {% endif %}
                         {%  if partner.address2 %}
-                        <h6>{{ partner.address2 }}</h6>
+                        ,{{ partner.address2 }}</h6>
                         {% endif %}
-                        {%  if partner.city %}
-                        <h6>{{ partner.city }}</h6>
+                        <h6>{%  if partner.city %}
+                        {{ partner.city }}
                         {% endif %}
                         {%  if partner.state %}
-                        <h6>{{ partner.state }}</h6>
+                        {{ partner.state }}
                         {% endif %}
                         {%  if partner.zip %}
-                        <h6>{{ partner.zip }}</h6>
-                        {% endif %}
+                        {{ partner.zip }}
+                        {% endif %}</h6>
                     </div>
                 </a>
                 {% endfor %}
