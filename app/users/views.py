@@ -155,6 +155,25 @@ def add_tag():
         
     return redirect(url_for('users.admin_users'))
 
+# Route for deleting tag
+@users.route("/admin/tags/<int:tag_id>/delete", methods=["POST"])
+@role_required([4, 5])
+def delete_tag(tag_id):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("DELETE FROM tags WHERE tag_id = %s", (tag_id,))
+            conn.commit()
+            flash("Tag deleted successfully!", "success")
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        flash(f"Error deleting tag: {e}", "error")
+    finally:
+        if conn:
+            conn.close()
+    return redirect(url_for('users.admin_users'))
+
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
 @role_required([4, 5])
