@@ -82,7 +82,7 @@ CREATE TABLE `resources` (
   `user_id` int NOT NULL,
   PRIMARY KEY (`resource_id`),
   KEY `content_types_fk` (`content_type_id`),
-  CONSTRAINT `content_types_fk` FOREIGN KEY (`content_type_id`) REFERENCES `content_types` (`content_type_id`),
+  CONSTRAINT `content_types_fk` FOREIGN KEY (`content_type_id`) REFERENCES `content_types` (`content_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `roles` (
   `role_id` int NOT NULL AUTO_INCREMENT,

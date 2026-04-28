@@ -3,7 +3,7 @@ MySQL Backup
 Database: flourish_bc
 Backup Time: 2026-04-09 11:38:32
 */
-
+USE flourish_bc;
 SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `flourish_bc`.`alembic_version`;
 DROP TABLE IF EXISTS `flourish_bc`.`content_types`;
@@ -100,12 +100,12 @@ CREATE TABLE `resources` (
   `contact_phone` varchar(32) DEFAULT NULL,
   `user_id` int NOT NULL,
   `resource_category_id` int NOT NULL,
-  `partner_id` int NOT NULL,
+  `partner_id` int DEFAULT NULL,
   PRIMARY KEY (`resource_id`),
   KEY `content_types_fk` (`content_type_id`),
   KEY `resource_category_fk` (`resource_category_id`),
-  CONSTRAINT `content_types_fk` FOREIGN KEY (`content_type_id`) REFERENCES `content_types` (`content_type_id`),
   KEY `partners_fk` (`partner_id`),
+  CONSTRAINT `content_types_fk` FOREIGN KEY (`content_type_id`) REFERENCES `content_types` (`content_type_id`),
   CONSTRAINT `partners_fk` FOREIGN KEY (`partner_id`) REFERENCES `partners` (`partner_id`),
   CONSTRAINT `resource_category_fk` FOREIGN KEY (`resource_category_id`) REFERENCES `resource_category` (`resource_category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
