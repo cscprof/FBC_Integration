@@ -121,9 +121,9 @@ def auth_login():
                         nameFirst=row['first_name'],
                         nameLast=row['last_name'],  
                         nameMiddle=row['middle_name'],
-                        gradYear=row['graduation_year'],
-                        emailIsVerified=row['email_is_verified'],
-                        profilePicture=row['profile_picture'],
+                        gradYear=row.get('graduation_year'),
+                        emailIsVerified=row.get('email_is_verified', False),
+                        profilePicture=row.get('profile_picture', None),
                     )
                     login_user(user, remember=False)    #Makes session cookies reset whenever you leave the page, and stops them from tracking session age. 
                                                         #Server will track session age

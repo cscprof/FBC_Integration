@@ -35,7 +35,7 @@ def load_user(user_id):
             nameLast=row['last_name'].capitalize() if row['last_name'] else '',
             nameMiddle=row['middle_name'].capitalize() if row['middle_name'] else None,
             gradYear=row['graduation_year'],
-            emailIsVerified=row['email_is_verified'],
+            emailIsVerified=row.get('email_is_verified', False),
             profilePicture=row.get('profile_picture', None),
         )
     return None
