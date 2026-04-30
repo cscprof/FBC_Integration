@@ -19,6 +19,8 @@ from db import db #Added by resource team for SQLAlchemy integration
 
 # Create Flask extensions
 # mysql = MySQL()
+from flask_mail import Mail
+mail = Mail()
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -43,16 +45,9 @@ def create_app(config_name):
     from .users import users as users_blueprint
     app.register_blueprint(users_blueprint)
 
-    # from .signup import signup as signup_blueprint
-    # app,register_blueprint(users_blueprint)
-
-    # from .admin_panel import admin_panel as admin_panel_blueprint
-    # app.register_blueprint(admin_panel_blueprint)
-
-    # Load the profile page section
-    from .profile import profile as profile_blueprint
-    app.register_blueprint(profile_blueprint)
-
+    #for email verification
+    mail.init_app(app)
+    
     # Load login manager
     from loginManager import login_manager
     login_manager.init_app(app)

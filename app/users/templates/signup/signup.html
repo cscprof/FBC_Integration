@@ -56,9 +56,37 @@
             }
         </script>
 
+        <div class="password-box">
+            <input placeholder="Confirm Password" type="password" name="passwordConfirmation" id="passwordConfirmation" minlength="8" required>
+            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}" id="eyeicon" alt="hide-password">
+        </div>
+        <script>
+            let eyeicon = document.getElementById("eyeicon")
+            let passwordConfirmation = document.getElementById("passwordConfirmation")
+
+            eyeicon.onclick = function(){
+                if (password.type == "password"){
+                    password.type = "text";
+                    eyeicon.src = "{{ url_for('static', filename='images/eyeopen.png') }}";
+                }else{
+                    password.type = "password";
+                    eyeicon.src = "{{ url_for('static', filename='images/eyeclosed.png') }}";
+                }
+            }
+        </script>
+
         <button class="button-submit" type="submit">Submit</button>
 
     </form>
     </div>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flashes">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
 </div>
 {% endblock %}

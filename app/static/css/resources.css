@@ -226,15 +226,6 @@ main {
     text-decoration: underline;
 }
 
-.about a {
-    color: #3786b8;
-    text-decoration: none;
-}
-
-.about a:hover {
-    text-decoration: underline;
-}
-
 .uploadbutton {
     text-align: center;
     margin-bottom: 20px;
@@ -380,6 +371,32 @@ main {
     background-color: #a02121;
 }
 
+.admin-resource-table {
+    border: 1px solid #d9defa;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.admin-resource-table thead th {
+    background-color: #f0f3ff;
+    color: #2e44cc;
+    border-bottom: 2px solid #d9defa;
+}
+
+.admin-resource-table td {
+    vertical-align: middle;
+}
+
+.edit-resource-btn-inline {
+    background-color: #2e44cc;
+    color: #fff;
+    border: none;
+}
+
+.edit-resource-btn-inline:hover {
+    background-color: #1e34aa;
+    color: #fff;
+}
 
 
 

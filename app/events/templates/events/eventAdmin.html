@@ -22,7 +22,15 @@
                               data-description="{{ event['description'] }}"
                               data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
                               data-url="{{ event['url'] or '' }}"
-                              data-status="{{ event['status'] if event['status'] else 'pending' }}">
+                              data-status="{{ event['status'] if event['status'] else 'pending' }}"
+                              data-contact-name="{{ event['contact_name'] or '' }}"
+                              data-contact-phone="{{ event['contact_phone'] or '' }}"
+                              data-contact-email="{{ event['contact_email'] or '' }}"
+                              data-address1="{{ event['event_address1'] or '' }}"
+                              data-address2="{{ event['event_address2'] or '' }}"
+                              data-city="{{ event['event_city'] or '' }}"
+                              data-state="{{ event['event_state'] or '' }}"
+                              data-postal="{{ event['event_postal_code'] or '' }}">
                             {{ event['name'] }}
                         </span><br>
                         <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
@@ -68,7 +76,15 @@
                               data-description="{{ event['description'] }}"
                               data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
                               data-url="{{ event['url'] or '' }}"
-                              data-status="{{ event['status'] if event['status'] else 'pending' }}">
+                              data-status="{{ event['status'] if event['status'] else 'pending' }}"
+                              data-contact-name="{{ event['contact_name'] or '' }}"
+                              data-contact-phone="{{ event['contact_phone'] or '' }}"
+                              data-contact-email="{{ event['contact_email'] or '' }}"
+                              data-address1="{{ event['event_address1'] or '' }}"
+                              data-address2="{{ event['event_address2'] or '' }}"
+                              data-city="{{ event['event_city'] or '' }}"
+                              data-state="{{ event['event_state'] or '' }}"
+                              data-postal="{{ event['event_postal_code'] or '' }}">
                             {{ event['name'] }}
                         </span><br>
                         <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
@@ -114,7 +130,15 @@
                               data-description="{{ event['description'] }}"
                               data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
                               data-url="{{ event['url'] or '' }}"
-                              data-status="{{ event['status'] if event['status'] else 'pending' }}">
+                              data-status="{{ event['status'] if event['status'] else 'pending' }}"
+                              data-contact-name="{{ event['contact_name'] or '' }}"
+                              data-contact-phone="{{ event['contact_phone'] or '' }}"
+                              data-contact-email="{{ event['contact_email'] or '' }}"
+                              data-address1="{{ event['event_address1'] or '' }}"
+                              data-address2="{{ event['event_address2'] or '' }}"
+                              data-city="{{ event['event_city'] or '' }}"
+                              data-state="{{ event['event_state'] or '' }}"
+                              data-postal="{{ event['event_postal_code'] or '' }}">
                             {{ event['name'] }}
                         </span><br>
                         <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
@@ -157,6 +181,8 @@
     <p><strong>Registration Deadline:</strong> <span id="popupEventDeadline"></span></p>
     <p><strong>URL:</strong> <span id="popupEventURL"></span></p>
     <p id="popupEventDescription"></p>
+    <p><strong>Address:</strong> <span id="popupEventAddress"></span></p>
+    <p><strong>Contact:</strong> <span id="popupEventContact"></span></p>
     <p><strong>Status:</strong> <span id="popupEventStatus"></span></p>
 </div>
 
@@ -172,6 +198,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const popupURL = document.getElementById('popupEventURL');
     const popupDescription = document.getElementById('popupEventDescription');
     const popupStatus = document.getElementById('popupEventStatus');
+    const popupAddress = document.getElementById('popupEventAddress');
+    const popupContact = document.getElementById('popupEventContact');
 
     document.querySelectorAll('.event-link').forEach(link => {
         link.addEventListener('click', function() {
@@ -191,6 +219,10 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 popupURL.textContent = 'N/A';
             }
+            const addrParts = [this.dataset.address1, this.dataset.address2, this.dataset.city, this.dataset.state, this.dataset.postal].filter(Boolean);
+            popupAddress.textContent = addrParts.length ? addrParts.join(', ') : 'N/A';
+            const contactParts = [this.dataset.contactName, this.dataset.contactPhone, this.dataset.contactEmail].filter(Boolean);
+            popupContact.textContent = contactParts.length ? contactParts.join(' | ') : 'N/A';
         });
     });
 

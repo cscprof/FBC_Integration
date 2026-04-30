@@ -25,6 +25,30 @@
 
       <input class="entry-box" type="url" name="url" placeholder="Event URL" value="{{ event.url }}">
 
+      <label class="event-label">Contact Name</label>
+      <input class="entry-box" type="text" name="contact_name" placeholder="Contact Name" value="{{ event.contact_name }}">
+
+      <label class="event-label">Contact Phone</label>
+      <input class="entry-box" type="tel" name="contact_phone" placeholder="Contact Phone" value="{{ event.contact_phone }}">
+
+      <label class="event-label">Contact Email</label>
+      <input class="entry-box" type="email" name="contact_email" placeholder="Contact Email" value="{{ event.contact_email }}">
+
+      <label class="event-label">Address Line 1</label>
+      <input class="entry-box" type="text" name="event_address1" placeholder="Address Line 1" value="{{ event.event_address1 }}">
+
+      <label class="event-label">Address Line 2</label>
+      <input class="entry-box" type="text" name="event_address2" placeholder="Address Line 2" value="{{ event.event_address2 }}">
+
+      <label class="event-label">City</label>
+      <input class="entry-box" type="text" name="event_city" placeholder="City" value="{{ event.event_city }}">
+
+      <label class="event-label">State</label>
+      <input class="entry-box" type="text" name="event_state" placeholder="State" value="{{ event.event_state }}">
+
+      <label class="event-label">Postal Code</label>
+      <input class="entry-box" type="text" name="event_postal_code" placeholder="Postal Code" value="{{ event.event_postal_code }}">
+
       <label class="event-label">Starting Date & Time</label>
       <input class="entry-box" type="datetime-local" name="starting_date" required value="{{ event.start_date }}">
 

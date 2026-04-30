@@ -115,16 +115,23 @@ document.addEventListener('DOMContentLoaded', function() {
     contentHeight: 'auto',
     events: [], 
     eventClick: function(info) {
+      const ep = info.event.extendedProps;
+      const addr = [ep.event_address1, ep.event_address2, ep.event_city, ep.event_state, ep.event_postal_code].filter(Boolean).join(', ');
+      const schoolsList = ep.schools && ep.schools.length > 0 ? ep.schools.join(', ') : 'N/A';
       popup.innerHTML = `
         <span id="eventPopupClose">X</span>
         <h3>${info.event.title}</h3>
+        <p><strong>Content Type:</strong> ${ep.tag || "N/A"}</p>
+        <p><strong>Schools:</strong> ${schoolsList}</p>
         <p><strong>Start:</strong> ${info.event.start.toLocaleString()}</p>
         <p><strong>End:</strong> ${info.event.end.toLocaleString()}</p>
-        <p><strong>Registration Deadline:</strong> ${info.event.extendedProps.registration_deadline 
-        ? new Date(info.event.extendedProps.registration_deadline).toLocaleString() 
+        <p><strong>Registration Deadline:</strong> ${ep.registration_deadline
+        ? new Date(ep.registration_deadline).toLocaleString()
         : 'N/A'}</p>
-        <p><strong>Description:</strong> ${info.event.extendedProps.description || "N/A"}</p>
-        <p><strong>URL:</strong> <a href="${info.event.url}" classname="link" target="_blank">${info.event.url || "N/A"}</a></p>
+        <p><strong>Description:</strong> ${ep.description || "N/A"}</p>
+        <p><strong>Address:</strong> ${addr || "N/A"}</p>
+        <p><strong>Contact:</strong> ${ep.contact_name || "N/A"}${ep.contact_phone ? ' | ' + ep.contact_phone : ''}${ep.contact_email ? ' | ' + ep.contact_email : ''}</p>
+        <p><strong>URL:</strong> <a href="${info.event.url}" class="link" target="_blank">${info.event.url || "N/A"}</a></p>
       `;
       popup.style.display = 'block';
       overlay.style.display = 'block'; 
@@ -157,15 +164,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (targetEvent) {
           // Wait a moment for the calendar to render, then show the popup
           setTimeout(() => {
+            const tAddr = [targetEvent.event_address1, targetEvent.event_address2, targetEvent.event_city, targetEvent.event_state, targetEvent.event_postal_code].filter(Boolean).join(', ');
             popup.innerHTML = `
               <span id="eventPopupClose">X</span>
               <h3>${targetEvent.title}</h3>
               <p><strong>Start:</strong> ${new Date(targetEvent.start).toLocaleString()}</p>
               <p><strong>End:</strong> ${new Date(targetEvent.end).toLocaleString()}</p>
-              <p><strong>Registration Deadline:</strong> ${targetEvent.registration_deadline 
-              ? new Date(targetEvent.registration_deadline).toLocaleString() 
+              <p><strong>Registration Deadline:</strong> ${targetEvent.registration_deadline
+              ? new Date(targetEvent.registration_deadline).toLocaleString()
               : 'N/A'}</p>
               <p><strong>Description:</strong> ${targetEvent.description || "N/A"}</p>
+              <p><strong>Address:</strong> ${tAddr || "N/A"}</p>
+              <p><strong>Contact:</strong> ${targetEvent.contact_name || "N/A"}${targetEvent.contact_phone ? ' | ' + targetEvent.contact_phone : ''}${targetEvent.contact_email ? ' | ' + targetEvent.contact_email : ''}</p>
               <p><strong>URL:</strong> <a href="${targetEvent.url}" class="link" target="_blank">${targetEvent.url || "N/A"}</a></p>
             `;
             popup.style.display = 'block';
@@ -185,16 +195,24 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(err => console.error(err));
 
-  filterSelect.addEventListener('change', function() {
-    const selectedType = filterSelect.value;
+  const schoolFilter = document.getElementById('schoolFilter');
 
-    const filteredEvents = selectedType
-      ? allEvents.filter(e => String(e.content_type) === selectedType)
-      : allEvents;
+  function applyFilters() {
+    const selectedType = filterSelect.value;
+    const selectedSchool = schoolFilter.value;
+
+    const filteredEvents = allEvents.filter(e => {
+      const typeMatch = !selectedType || e.tag === selectedType;
+      const schoolMatch = !selectedSchool || (e.schools && e.schools.includes(selectedSchool));
+      return typeMatch && schoolMatch;
+    });
 
     calendar.removeAllEvents();
     calendar.addEventSource(filteredEvents);
-  });
+  }
+
+  filterSelect.addEventListener('change', applyFilters);
+  schoolFilter.addEventListener('change', applyFilters);
 
   calendar.render();
 });
@@ -208,11 +226,19 @@ document.addEventListener('DOMContentLoaded', function() {
     <label for="contentTypeFilter">Content Type:</label>
     <select id="contentTypeFilter" class="form-select d-inline-block w-auto">
       <option value="">All</option>
-      <option value="1">Worship</option>
-      <option value="2">Retreat</option>
-      <option value="3">Training</option>
-      <option value="4">Service</option>
-      <option value="5">Meeting</option>
+      <option value="Worship">Worship</option>
+      <option value="Retreat">Retreat</option>
+      <option value="Training">Training</option>
+      <option value="Service">Service</option>
+      <option value="Meeting">Meeting</option>
+    </select>
+
+    <label for="schoolFilter" class="ms-3">School:</label>
+    <select id="schoolFilter" class="form-select d-inline-block w-auto">
+      <option value="">All</option>
+      {% for school in schools %}
+      <option value="{{ school }}">{{ school }}</option>
+      {% endfor %}
     </select>
   </div>
 

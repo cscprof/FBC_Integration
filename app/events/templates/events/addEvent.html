@@ -35,6 +35,46 @@
 
             <input class="entry-box" type="url" name="url" placeholder="Event URL" required>
 
+            <label class="event-label">Content Type</label>
+            <select class="entry-box" name="tag" required>
+                <option value="">Select a Content Type</option>
+                {% for tag in tags %}
+                <option value="{{ tag.content_type_id }}">{{ tag.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label class="event-label">Schools</label>
+            <select class="entry-box" name="schools" multiple>
+                {% for school in school_tags %}
+                <option value="{{ school.school_tag_id }}">{{ school.school_name }}</option>
+                {% endfor %}
+            </select>
+            <small>Hold Ctrl (or Cmd on Mac) to select multiple schools.</small>
+
+            <label class="event-label">Contact Name</label>
+            <input class="entry-box" type="text" name="contact_name" placeholder="Contact Name">
+
+            <label class="event-label">Contact Phone</label>
+            <input class="entry-box" type="tel" name="contact_phone" placeholder="Contact Phone">
+
+            <label class="event-label">Contact Email</label>
+            <input class="entry-box" type="email" name="contact_email" placeholder="Contact Email">
+
+            <label class="event-label">Address Line 1</label>
+            <input class="entry-box" type="text" name="event_address1" placeholder="Address Line 1">
+
+            <label class="event-label">Address Line 2</label>
+            <input class="entry-box" type="text" name="event_address2" placeholder="Address Line 2">
+
+            <label class="event-label">City</label>
+            <input class="entry-box" type="text" name="event_city" placeholder="City">
+
+            <label class="event-label">State</label>
+            <input class="entry-box" type="text" name="event_state" placeholder="State">
+
+            <label class="event-label">Postal Code</label>
+            <input class="entry-box" type="text" name="event_postal_code" placeholder="Postal Code">
+
             <label class="event-label">Starting Date & Time</label>
             <input class="entry-box" type="datetime-local" name="starting_date" required>
 

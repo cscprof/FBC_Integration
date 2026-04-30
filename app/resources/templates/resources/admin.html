@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+{% block title %}Flourish Beaver County - Resource Admin{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="title has-text-centered">Resource Administration</h1>
+        <p class="has-text-centered is-size-6 mb-5" style="color: #666; margin-top: 10px;">
+            Manage uploaded resources, update details, and remove outdated links.
+        </p>
+
+        <div class="uploadbutton">
+            <button onclick="document.getElementById('uploadModal').style.display='block'" class="uploadresourcebtn">
+                Add Resource
+            </button>
+        </div>
+
+        <div class="resources">
+            <div class="searchfilter">
+                <div class="searchcontainer">
+                    <form class="searchform" onsubmit="return false;">
+                        <input type="text" placeholder="Search by title, URL, contact..." class="searchinput" id="adminSearchInput">
+                    </form>
+                </div>
+                <div class="categorydropdown">
+                    <select class="categoryselect" id="adminCategorySelect">
+                        <option value="all">All Categories</option>
+                        {% if categories %}
+                            {% for cat in categories %}
+                                <option value="{{ cat.resource_category_name }}">{{ cat.resource_category_name|title }}</option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table is-fullwidth is-striped admin-resource-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Contact</th>
+                            <th>Add Link</th>
+                            <th class="has-text-centered">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminResourceRows">
+                        {% for resource in resources %}
+                        <tr
+                            data-category="{{ resource.resource_category_name }}"
+                            data-search="{{ resource.description }} {{ resource.url }} {{ resource.contact_name or '' }} {{ resource.contact_email or '' }} {{ resource.contact_phone or '' }}"
+                        >
+                            <td>{{ resource.description }}</td>
+                            <td>{{ resource.resource_category_name|title }}</td>
+                            <td>
+                                {% if resource.contact_name %}<div>{{ resource.contact_name }}</div>{% endif %}
+                                {% if resource.contact_email %}<div>{{ resource.contact_email }}</div>{% endif %}
+                                {% if resource.contact_phone %}<div>{{ resource.contact_phone }}</div>{% endif %}
+                                {% if not resource.contact_name and not resource.contact_email and not resource.contact_phone %}
+                                <span style="color:#777;">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ resource.url }}" target="_blank" rel="noopener noreferrer" class="resourcelink">
+                                    Open Link
+                                </a>
+                            </td>
+                            <td class="has-text-centered">
+                                <button
+                                    class="button is-small edit-resource-btn-inline"
+                                    data-resource-id="{{ resource.resource_id }}"
+                                    data-title="{{ resource.description|e }}"
+                                    data-url="{{ resource.url|e }}"
+                                    data-category-id="{{ resource.resource_category_id }}"
+                                    data-name="{{ resource.contact_name or ''|e }}"
+                                    data-email="{{ resource.contact_email or ''|e }}"
+                                    data-phone="{{ resource.contact_phone or ''|e }}"
+                                >
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="has-text-centered" style="color:#666;">No resources found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="uploadModal">
+    <div class="modalcontent">
+        <div class="modalheader">
+            <h2 class="modaltitle">Add Resource</h2>
+        </div>
+
+        <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
+            <input type="text" name="title" placeholder="Title *" required>
+            <input type="text" name="url" placeholder="Add Link *" required>
+            <input type="text" name="name" placeholder="Contact Name (Optional)">
+            <input type="text" name="email" placeholder="Contact Email (Optional)">
+            <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
+            <select name="resource_category_id" required>
+                <option value="">Category *</option>
+                {% if categories %}
+                    {% for cat in categories %}
+                        <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
+                    {% endfor %}
+                {% else %}
+                    <option value="1">College</option>
+                    <option value="2">Mental</option>
+                    <option value="3">Jobs</option>
+                    <option value="4">Tutoring</option>
+                    <option value="5">Activities</option>
+                    <option value="6">Career</option>
+                {% endif %}
+            </select>
+
+            <div class="modalformactions">
+                <button type="button" onclick="document.getElementById('uploadModal').style.display='none'" class="modalbtncancel">Cancel</button>
+                <button type="submit" class="modalbtnsubmit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modalcontent">
+        <div class="modalheader">
+            <h2 class="modaltitle">Edit Resource</h2>
+            <button onclick="closeEditModal()" class="modalclose">&times;</button>
+        </div>
+
+        <form action="{{ url_for('resources.edit_resource', resource_id=0) }}" method="POST" class="modalform" id="editForm">
+            <input type="hidden" id="editResourceId" name="resource_id">
+
+            <label for="editTitle" class="modallabel">Title *</label>
+            <input type="text" id="editTitle" name="title" placeholder="Title *" required>
+
+            <label for="editUrl" class="modallabel">Add Link *</label>
+            <input type="text" id="editUrl" name="url" placeholder="Add Link *" required>
+
+            <label for="editName" class="modallabel">Contact Name (Optional)</label>
+            <input type="text" id="editName" name="name" placeholder="Contact Name (Optional)">
+
+            <label for="editEmail" class="modallabel">Contact Email (Optional)</label>
+            <input type="text" id="editEmail" name="email" placeholder="Contact Email (Optional)">
+
+            <label for="editPhone" class="modallabel">Contact Phone Number (Optional)</label>
+            <input type="text" id="editPhone" name="phone" placeholder="Contact Phone Number (Optional)">
+
+            <label for="editCategory" class="modallabel">Category *</label>
+            <select id="editCategory" name="resource_category_id" required>
+                <option value="">Category *</option>
+                {% if categories %}
+                    {% for cat in categories %}
+                        <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
+                    {% endfor %}
+                {% else %}
+                    <option value="1">College</option>
+                    <option value="2">Mental</option>
+                    <option value="3">Jobs</option>
+                    <option value="4">Tutoring</option>
+                    <option value="5">Activities</option>
+                    <option value="6">Career</option>
+                {% endif %}
+            </select>
+
+            <div class="modalformactions">
+                <button type="button" onclick="closeEditModal()" class="modalbtncancel">Cancel</button>
+                <button type="button" onclick="deleteResource()" class="modalbtndelete">Delete</button>
+                <button type="submit" class="modalbtnsubmit">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function deleteResource() {
+        const resourceId = document.getElementById('editResourceId').value;
+        if (confirm('Are you sure you want to delete this resource?')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ url_for("resources.delete_resource", resource_id=0) }}'.replace('0', resourceId);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+
+    document.getElementById('editForm').addEventListener('submit', function () {
+        const resourceId = document.getElementById('editResourceId').value;
+        this.action = '{{ url_for("resources.edit_resource", resource_id=0) }}'.replace('0', resourceId);
+    });
+
+    function openEditModal(button) {
+        document.getElementById('editResourceId').value = button.getAttribute('data-resource-id');
+        document.getElementById('editTitle').value = button.getAttribute('data-title');
+        document.getElementById('editUrl').value = button.getAttribute('data-url');
+        document.getElementById('editCategory').value = button.getAttribute('data-category-id');
+        document.getElementById('editName').value = button.getAttribute('data-name') || '';
+        document.getElementById('editEmail').value = button.getAttribute('data-email') || '';
+        document.getElementById('editPhone').value = button.getAttribute('data-phone') || '';
+        document.getElementById('editModal').style.display = 'block';
+    }
+
+    function filterAdminRows() {
+        const searchValue = document.getElementById('adminSearchInput').value.toLowerCase();
+        const selectedCategory = document.getElementById('adminCategorySelect').value;
+        const rows = document.querySelectorAll('#adminResourceRows tr[data-category]');
+
+        rows.forEach((row) => {
+            const rowCategory = row.getAttribute('data-category');
+            const rowSearchText = row.getAttribute('data-search').toLowerCase();
+            const matchesSearch = rowSearchText.includes(searchValue);
+            const matchesCategory = selectedCategory === 'all' || rowCategory === selectedCategory;
+            row.style.display = matchesSearch && matchesCategory ? '' : 'none';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.edit-resource-btn-inline').forEach((button) => {
+            button.addEventListener('click', function () {
+                openEditModal(this);
+            });
+        });
+
+        document.getElementById('adminSearchInput').addEventListener('keyup', filterAdminRows);
+        document.getElementById('adminCategorySelect').addEventListener('change', filterAdminRows);
+
+        window.onclick = function (event) {
+            const editModal = document.getElementById('editModal');
+            const uploadModal = document.getElementById('uploadModal');
+            if (event.target === editModal) {
+                editModal.style.display = 'none';
+            }
+            if (event.target === uploadModal) {
+                uploadModal.style.display = 'none';
+            }
+        };
+    });
+</script>
+{% endblock %}
