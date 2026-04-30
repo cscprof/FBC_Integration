@@ -136,6 +136,7 @@ def addEvent():
         url = request.form.get('url', '').strip()
         content_type_id = request.form.get('tag', '').strip()
         schools = request.form.getlist('schools')
+        event_tags = request.form.getlist('event_tags')
         starting_date_raw = request.form.get('starting_date', '').strip()
         ending_date_raw = request.form.get('ending_date', '').strip()
         deadline_raw = request.form.get('deadline', '').strip()
@@ -193,9 +194,11 @@ def addEvent():
                 ))
                 event_id = cursor.lastrowid
                 
-                # Insert school tags
-                for school_id in schools:
-                    cursor.execute("INSERT INTO event_tags (event_id, tag_id) VALUES (%s, %s)", (event_id, school_id))
+                # Insert school and event tags
+                all_tags = set(schools + event_tags)
+                for tag_id in all_tags:
+                    if tag_id:
+                        cursor.execute("INSERT INTO event_tags (event_id, tag_id) VALUES (%s, %s)", (event_id, tag_id))
             conn.commit()
 
         except DatabaseError as e:
