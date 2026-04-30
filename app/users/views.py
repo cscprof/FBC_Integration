@@ -140,6 +140,23 @@ def auth_login():
         return redirect(url_for('users.login_page'))
 
 # Add tag route only available for admins
+@users.route('/admin/tags')
+@role_required([4, 5])
+def tagsAdmin():
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("SELECT * FROM tags")
+            tags = cursor.fetchall()
+            return render_template('adminpanel/tagsAdmin.html', tags=tags)
+    except Exception as e:
+        flash(f"Error loading tags: {e}", "danger")
+        return redirect(url_for('home.index'))
+    finally:
+        if conn:
+            conn.close()
+
+# Route for adding a new tag
 @users.route("/admin/tags/add", methods=["POST"])
 @role_required([4, 5])
 def add_tag():
@@ -162,7 +179,7 @@ def add_tag():
     else:
         flash("Tag name cannot be empty.", "error")
         
-    return redirect(url_for('users.admin_users'))
+    return redirect(url_for('users.tagsAdmin'))
 
 # Route for deleting tag
 @users.route("/admin/tags/<int:tag_id>/delete", methods=["POST"])
@@ -181,7 +198,7 @@ def delete_tag(tag_id):
     finally:
         if conn:
             conn.close()
-    return redirect(url_for('users.admin_users'))
+    return redirect(url_for('users.tagsAdmin'))
 
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
