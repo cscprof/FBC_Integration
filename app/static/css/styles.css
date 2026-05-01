@@ -169,6 +169,9 @@
     resize: none;
     overflow: auto;
 }
+/*signup form css end*/
+
+/*events admin page buttons*/
 .btn-approve {
     background-color: #4CAF50; 
     color: white;
@@ -199,19 +202,19 @@
     font-weight: 700;
 }
 
+/*div class for event admin buttons*/
 .actions {
-    background: white;
     padding: 8px;
     border-radius: 8px;
     display: flex;
     gap: 8px;
     align-items: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
 }
 
 .actions a {
     display: inline;
 }
+/*event admin page buttons end*/
 
 .actions form {
     display: inline;
@@ -226,7 +229,7 @@
     padding: 15px 20px;
 }
 
-
+/*page titles*/
 .title {
     font-family: "Montserrat", sans-serif;
     font-weight: 800;
@@ -240,7 +243,7 @@
     max-width: 1500px;
 }
 
-
+/*custom heading*/
 .header {
     background-color: #aaeb54;
     color: #2e44cc;
@@ -251,6 +254,7 @@
     border-radius: 4px 4px 0 0;
 }
 
+/*custom h2*/
 .header-2 {
     background-color: #aaeb54;
     color: #2e44cc;
@@ -275,14 +279,12 @@
     margin-top: 20px;
 }
 
-
 .list {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-top: 10px;
 }
-
 
 .resource:hover {
     background-color: #e0e0e0;
@@ -603,6 +605,7 @@
     background-color: red;
 }
 
+/* edit user profile information start*/
 .edit-user-blob {
     background: #8ac926;
     color: white;
@@ -711,3 +714,4 @@
 .back-button:hover {
     background-color: #1e33b8;
 }
+/*edit user profile info end*/
