@@ -70,22 +70,25 @@ def resourcesearch():
 
 @resources_blueprint.route("/partners")
 def partner():
-    dbselect = (
-        select(
-            partners.name,
-            partners.description,
-            partners.url,
-            partners.contact_name,
-            partners.phone,
-            partners.email,
-            partners.address1,
-            partners.address2,
-            partners.city,
-            partners.state,
-            partners.zip,
+    try:
+        dbselect = (
+            select(
+                partners.name,
+                partners.description,
+                partners.url,
+                partners.contact_name,
+                partners.phone,
+                partners.email,
+                partners.address1,
+                partners.address2,
+                partners.city,
+                partners.state,
+                partners.zip,
+            )
         )
-    )
-    partnerList = db.session.execute(dbselect).mappings().all()
+        partnerList = db.session.execute(dbselect).mappings().all()
+    except:
+        partnerList = []
     return render_template("resources/partners.html", partners=partnerList)
 
 @resources_blueprint.route("/resources/admin")
@@ -138,7 +141,7 @@ def upload_resource():
         return redirect(url_for('resources.resources_admin'))
     
     try:
-        #Guys this might be useful later so I'll leave it here but I'm changing the value to none
+        #Guys this might be useful later so I'll leave it here, but I'm changing the value to none
         #Idek what a content type is I don't think it's been implemented by anyone yet
         content_type = None
         
