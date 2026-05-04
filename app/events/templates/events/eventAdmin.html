@@ -170,6 +170,48 @@
             {% endif %}
         </div>
     </div>
+
+    <div class="section">
+        <details class="past-events-collapse">
+            <summary>Past Events</summary>
+            <div class="list">
+                {% if past_events %}
+                    {% for event in past_events %}
+                    <div class="resource">
+                        <div>
+                            <span class="event-link" 
+                                  data-name="{{ event['name'] }}" 
+                                  data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') }}"
+                                  data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') }}"
+                                  data-description="{{ event['description'] }}"
+                                  data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
+                                  data-url="{{ event['url'] or '' }}"
+                                  data-status="{{ event['status'] if event['status'] else 'pending' }}"
+                                  data-contact-name="{{ event['contact_name'] or '' }}"
+                                  data-contact-phone="{{ event['contact_phone'] or '' }}"
+                                  data-contact-email="{{ event['contact_email'] or '' }}"
+                                  data-address1="{{ event['event_address1'] or '' }}"
+                                  data-address2="{{ event['event_address2'] or '' }}"
+                                  data-city="{{ event['event_city'] or '' }}"
+                                  data-state="{{ event['event_state'] or '' }}"
+                                  data-postal="{{ event['event_postal_code'] or '' }}">
+                                {{ event['name'] }}
+                            </span><br>
+                            <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
+                            <p>{{ event['description'] }}</p>
+                            <small>Submitted by: {{ event['submitted_by'] }}</small>
+                            <div class="status">
+                                Status: {{ event['status'] if event['status'] else 'pending' }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="resource">No past events</div>
+                {% endif %}
+            </div>
+        </details>
+    </div>
 </div>
 
 <div id="overlay"></div>
