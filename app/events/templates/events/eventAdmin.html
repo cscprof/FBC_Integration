@@ -8,12 +8,34 @@
 
     <div class="section">
         <div class="header">Manage Events</div>
+        <div class="mb-3 mt-3">
+            <label for="contentTypeFilter">Content Type:</label>
+            <select id="contentTypeFilter" class="form-select d-inline-block w-auto">
+                <option value="">All</option>
+                <option value="Worship">Worship</option>
+                <option value="Retreat">Retreat</option>
+                <option value="Training">Training</option>
+                <option value="Service">Service</option>
+                <option value="Meeting">Meeting</option>
+            </select>
+
+            <label for="schoolFilter" class="ms-3">School:</label>
+            <select id="schoolFilter" class="form-select d-inline-block w-auto">
+                <option value="">All</option>
+                {% for school in schools %}
+                <option value="{{ school }}">{{ school }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
         <div class="header-2">Approved Events</div>
         <div class="list">
             {% if events %}
                 {% for event in events %}
                 {% if event['status'] == 'approved' %}
-                <div class="resource">
+                <div class="resource event-item"
+                     data-type="{{ event['tag'] }}"
+                     data-schools='{{ event["schools"] | tojson }}'>
                     <div>
                         <span class="event-link" 
                               data-name="{{ event['name'] }}" 
@@ -67,7 +89,9 @@
             {% if events %}
                 {% for event in events %}
                 {% if event['status'] == 'cancelled' %}
-                <div class="resource">
+                <div class="resource event-item"
+                     data-type="{{ event['tag'] }}"
+                     data-schools='{{ event["schools"] | tojson }}'>
                     <div>
                         <span class="event-link" 
                               data-name="{{ event['name'] }}" 
@@ -121,7 +145,9 @@
             {% if events %}
                 {% for event in events %}
                 {% if event['status'] == 'pending' or not event['status'] %}
-                <div class="resource">
+                <div class="resource event-item"
+                     data-type="{{ event['tag'] }}"
+                     data-schools='{{ event["schools"] | tojson }}'>
                     <div>
                         <span class="event-link" 
                               data-name="{{ event['name'] }}" 
@@ -188,6 +214,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const typeFilter = document.getElementById('contentTypeFilter');
+    const schoolFilter = document.getElementById('schoolFilter');
+    const eventItems = document.querySelectorAll('.event-item');
     const popup = document.getElementById('eventPopup');
     const overlay = document.getElementById('overlay');
     const popupClose = document.getElementById('eventPopupClose');
@@ -200,6 +229,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const popupStatus = document.getElementById('popupEventStatus');
     const popupAddress = document.getElementById('popupEventAddress');
     const popupContact = document.getElementById('popupEventContact');
+
+    function applyFilters() {
+        const selectedType = typeFilter.value;
+        const selectedSchool = schoolFilter.value;
+
+        eventItems.forEach(item => {
+            const itemType = item.dataset.type || "";
+            const itemSchools = item.dataset.schools ? JSON.parse(item.dataset.schools) : [];
+
+            const typeMatch = !selectedType || itemType === selectedType;
+            const schoolMatch = !selectedSchool || itemSchools.includes(selectedSchool);
+
+            item.style.display = (typeMatch && schoolMatch) ? '' : 'none';
+        });
+    }
+
+    typeFilter.addEventListener('change', applyFilters);
+    schoolFilter.addEventListener('change', applyFilters);
 
     document.querySelectorAll('.event-link').forEach(link => {
         link.addEventListener('click', function() {

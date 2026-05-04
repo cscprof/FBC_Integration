@@ -70,32 +70,44 @@ def fetch_approved_events_python():
     conn = get_db_connection()
     with conn.cursor() as cursor:
         cursor.execute("""
-            SELECT name, start_date, end_date, url, description,
+            SELECT e.event_id, e.name, e.start_date, e.end_date, e.url, e.description,
+                   ct.name as content_type_name,
                    contact_name, contact_phone, contact_email,
                    event_address1, event_address2, event_city, event_state, event_postal_code
-            FROM events
-            WHERE status='approved'
+            FROM events e
+            LEFT JOIN content_types ct ON e.content_type = ct.content_type_id
+            WHERE e.status='approved'
         """)
         rows = cursor.fetchall()
-    conn.close()
 
-    events = []
-    for row in rows:
-        events.append({
-            "title": row['name'],
-            "start": row['start_date'],
-            "end": row['end_date'],
-            "description": row.get('description'),
-            "url": row.get('url'),
-            "contact_name": row.get('contact_name'),
-            "contact_phone": row.get('contact_phone'),
-            "contact_email": row.get('contact_email'),
-            "event_address1": row.get('event_address1'),
-            "event_address2": row.get('event_address2'),
-            "event_city": row.get('event_city'),
-            "event_state": row.get('event_state'),
-            "event_postal_code": row.get('event_postal_code'),
-        })
+        events = []
+        for row in rows:
+            cursor.execute("""
+                SELECT t.tag
+                FROM event_tags et
+                JOIN tags t ON et.tag_id = t.tag_id
+                WHERE et.event_id = %s
+            """, (row['event_id'],))
+            schools = [s['tag'] for s in cursor.fetchall()]
+
+            events.append({
+                "title": row['name'],
+                "start": row['start_date'],
+                "end": row['end_date'],
+                "description": row.get('description'),
+                "url": row.get('url'),
+                "tag": row.get('content_type_name') or "N/A",
+                "schools": schools,
+                "contact_name": row.get('contact_name'),
+                "contact_phone": row.get('contact_phone'),
+                "contact_email": row.get('contact_email'),
+                "event_address1": row.get('event_address1'),
+                "event_address2": row.get('event_address2'),
+                "event_city": row.get('event_city'),
+                "event_state": row.get('event_state'),
+                "event_postal_code": row.get('event_postal_code'),
+            })
+    conn.close()
 
     return events
 
@@ -254,50 +266,66 @@ def adminView():
                    e.registration_deadline, e.user_id,
                    e.contact_name, e.contact_phone, e.contact_email,
                    e.event_address1, e.event_address2, e.event_city, e.event_state, e.event_postal_code,
+                   ct.name as content_type_name,
                    u.username, u.first_name, u.last_name
             FROM events e
             LEFT JOIN users u ON e.user_id = u.user_id
+            LEFT JOIN content_types ct ON e.content_type = ct.content_type_id
             ORDER BY CASE WHEN e.status = 'pending' THEN 0 ELSE 1 END, e.start_date ASC
         """)
         rows = cursor.fetchall()
+
+        cursor.execute("SELECT tag FROM tags ORDER BY tag")
+        schools = [row['tag'] for row in cursor.fetchall()]
+
+        events = []
+        for row in rows:
+            cursor.execute("""
+                SELECT t.tag
+                FROM event_tags et
+                JOIN tags t ON et.tag_id = t.tag_id
+                WHERE et.event_id = %s
+            """, (row['event_id'],))
+            event_schools = [s['tag'] for s in cursor.fetchall()]
+
+            # build a readable submitter name
+            if row.get('first_name') or row.get('last_name'):
+                submitted_by = f"{row.get('first_name') or ''} {row.get('last_name') or ''}".strip()
+            else:
+                submitted_by = row.get('username') or 'Unknown'
+
+            events.append({
+                "event_id": row["event_id"],
+                "name": row["name"],
+                "description": row.get("description"),
+                "status": row.get("status"),
+                "start": row.get("start_date"),
+                "end": row.get("end_date"),
+                "url": row.get("url"),
+                "tag": row.get("content_type_name") or "N/A",
+                "schools": event_schools,
+                "registration_deadline": row.get("registration_deadline"),
+                "user_id": row.get("user_id"),
+                "submitted_by": submitted_by,
+                "contact_name": row.get("contact_name"),
+                "contact_phone": row.get("contact_phone"),
+                "contact_email": row.get("contact_email"),
+                "event_address1": row.get("event_address1"),
+                "event_address2": row.get("event_address2"),
+                "event_city": row.get("event_city"),
+                "event_state": row.get("event_state"),
+                "event_postal_code": row.get("event_postal_code"),
+            })
     conn.close()
 
-    events = []
-    for row in rows:
-        # build a readable submitter name
-        if row.get('first_name') or row.get('last_name'):
-            submitted_by = f"{row.get('first_name') or ''} {row.get('last_name') or ''}".strip()
-        else:
-            submitted_by = row.get('username') or 'Unknown'
-
-        events.append({
-            "event_id": row["event_id"],
-            "name": row["name"],
-            "description": row.get("description"),
-            "status": row.get("status"),
-            "start": row.get("start_date"),
-            "end": row.get("end_date"),
-            "url": row.get("url"),
-            "registration_deadline": row.get("registration_deadline"),
-            "user_id": row.get("user_id"),
-            "submitted_by": submitted_by,
-            "contact_name": row.get("contact_name"),
-            "contact_phone": row.get("contact_phone"),
-            "contact_email": row.get("contact_email"),
-            "event_address1": row.get("event_address1"),
-            "event_address2": row.get("event_address2"),
-            "event_city": row.get("event_city"),
-            "event_state": row.get("event_state"),
-            "event_postal_code": row.get("event_postal_code"),
-        })
-
-    return render_template('events/eventAdmin.html', events=events)
+    return render_template('events/eventAdmin.html', events=events, schools=schools)
 
 
 
 @events.route('/edit_event/<int:event_id>', methods=['GET', 'POST'])
 @role_required([4, 5])
 def edit_event(event_id):
+
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
         description = request.form.get('description', '').strip()
@@ -305,81 +333,122 @@ def edit_event(event_id):
         starting_date_raw = request.form.get('starting_date', '').strip()
         ending_date_raw = request.form.get('ending_date', '').strip()
         deadline_raw = request.form.get('deadline', '').strip()
+
         contact_name = request.form.get('contact_name', '').strip()
         contact_phone = request.form.get('contact_phone', '').strip()
         contact_email = request.form.get('contact_email', '').strip()
+
         event_address1 = request.form.get('event_address1', '').strip()
         event_address2 = request.form.get('event_address2', '').strip()
         event_city = request.form.get('event_city', '').strip()
         event_state = request.form.get('event_state', '').strip()
         event_postal_code = request.form.get('event_postal_code', '').strip()
 
-        print(f"DEBUG: name={name}, url={url}")
-        print(f"DEBUG: starting_date_raw={starting_date_raw}")
-        print(f"DEBUG: ending_date_raw={ending_date_raw}")
-        print(f"DEBUG: deadline_raw={deadline_raw}")
+        tag_id = request.form.get('tag', '').strip()
+        selected_schools = request.form.getlist('schools')
 
         if not name:
             flash('Name is required.', 'error')
             return redirect(url_for('events.edit_event', event_id=event_id))
+        if not tag_id:
+            flash('Content Type is required.', 'error')
+            return redirect(url_for('events.edit_event', event_id=event_id))
 
+        conn = None
         try:
             starting_date = datetime.fromisoformat(starting_date_raw)
             ending_date = datetime.fromisoformat(ending_date_raw)
             deadline = datetime.fromisoformat(deadline_raw) if deadline_raw else None
 
-            print(f"DEBUG: starting_date={starting_date} (type: {type(starting_date)})")
-            print(f"DEBUG: ending_date={ending_date} (type: {type(ending_date)})")
-            print(f"DEBUG: ending_date > starting_date = {ending_date > starting_date}")
-            print(f"DEBUG: ending_date <= starting_date = {ending_date <= starting_date}")
-
             if ending_date <= starting_date:
-                flash('Ending date and time must be after the starting date and time.', 'error')
+                flash('Ending date must be after starting date.', 'error')
                 return redirect(url_for('events.edit_event', event_id=event_id))
 
             conn = get_db_connection()
             with conn.cursor() as cursor:
+
                 cursor.execute("""
-                    UPDATE events SET name=%s, description=%s, url=%s, start_date=%s, end_date=%s, registration_deadline=%s,
-                    contact_name=%s, contact_phone=%s, contact_email=%s,
-                    event_address1=%s, event_address2=%s, event_city=%s, event_state=%s, event_postal_code=%s
+                    UPDATE events SET 
+                        name=%s, description=%s, url=%s,
+                        content_type=%s,
+                        start_date=%s, end_date=%s, registration_deadline=%s,
+                        contact_name=%s, contact_phone=%s, contact_email=%s,
+                        event_address1=%s, event_address2=%s, event_city=%s, 
+                        event_state=%s, event_postal_code=%s
                     WHERE event_id=%s
-                """, (name, description, url, starting_date, ending_date, deadline,
-                      contact_name or None, contact_phone or None, contact_email or None,
-                      event_address1 or None, event_address2 or None, event_city or None,
-                      event_state or None, event_postal_code or None, event_id))
+                """, (
+                    name, description, url, tag_id,
+                    starting_date, ending_date, deadline,
+                    contact_name or None, contact_phone or None, contact_email or None,
+                    event_address1 or None, event_address2 or None,
+                    event_city or None, event_state or None, event_postal_code or None,
+                    event_id
+                ))
+
+                cursor.execute("DELETE FROM event_tags WHERE event_id=%s", (event_id,))
+
+                for school_id in selected_schools:
+                    cursor.execute(
+                        "INSERT INTO event_tags (event_id, tag_id) VALUES (%s, %s)",
+                        (event_id, school_id)
+                    )
+
             conn.commit()
-            conn.close()
-            print(f"DEBUG: Event {event_id} updated successfully")
             flash('Event updated successfully.', 'success')
             return redirect(url_for('events.adminView'))
 
         except Exception as e:
-            print(f"DEBUG: Error - {e}")
-            import traceback
-            traceback.print_exc()
+            print(e)
+            if conn:
+                conn.rollback()
             flash('Error updating event: ' + str(e), 'error')
             return redirect(url_for('events.edit_event', event_id=event_id))
 
-    # GET: fetch event and render form
+        finally:
+            if conn:
+                conn.close()
+
     conn = get_db_connection()
     with conn.cursor() as cursor:
-        cursor.execute("""SELECT event_id, name, description, url, start_date, end_date, registration_deadline,
-                          contact_name, contact_phone, contact_email,
-                          event_address1, event_address2, event_city, event_state, event_postal_code
-                       FROM events WHERE event_id=%s""", (event_id,))
-        row = cursor.fetchone()
-    conn.close()
 
-    if not row:
-        flash('Event not found.', 'error')
-        return redirect(url_for('events.adminView'))
+        # event data
+        cursor.execute("""
+            SELECT event_id, name, description, url, content_type,
+                   start_date, end_date, registration_deadline,
+                   contact_name, contact_phone, contact_email,
+                   event_address1, event_address2, event_city, event_state, event_postal_code
+            FROM events
+            WHERE event_id=%s
+        """, (event_id,))
+        row = cursor.fetchone()
+        if not row:
+            flash('Event not found.', 'error')
+            conn.close()
+            return redirect(url_for('events.adminView'))
+
+        # all tags
+        cursor.execute("SELECT MIN(content_type_id) as content_type_id, name FROM content_types GROUP BY name")
+        tags = cursor.fetchall()
+
+        # all schools
+        cursor.execute("SELECT tag_id as school_tag_id, tag as school_name FROM tags ORDER BY tag")
+        school_tags = cursor.fetchall()
+
+        # selected schools
+        cursor.execute("""
+            SELECT tag_id FROM event_tags
+            WHERE event_id=%s
+        """, (event_id,))
+        selected_school_ids = [r['tag_id'] for r in cursor.fetchall()]
+
+    conn.close()
 
     event = {
         'event_id': row['event_id'],
         'name': row['name'],
         'description': row.get('description') or '',
         'url': row.get('url') or '',
+        'content_type_id': row.get('content_type'),
         'start_date': row['start_date'].isoformat() if row['start_date'] else '',
         'end_date': row['end_date'].isoformat() if row['end_date'] else '',
         'registration_deadline': row['registration_deadline'].isoformat() if row['registration_deadline'] else '',
@@ -393,8 +462,14 @@ def edit_event(event_id):
         'event_postal_code': row.get('event_postal_code') or '',
     }
 
-    return render_template('events/editEvent.html', event=event)
-
+    return render_template(
+        'events/editEvent.html',
+        event=event,
+        tags=tags,
+        school_tags=school_tags,
+        selected_tag_id=event['content_type_id'],
+        selected_school_ids=selected_school_ids
+    )
 
 @events.route('/delete_event/<int:event_id>', methods=['POST'])
 @role_required([4, 5])
@@ -402,17 +477,22 @@ def delete_event(event_id):
     conn = get_db_connection()
     try:
         with conn.cursor() as cursor:
+            # delete related school mappings FIRST (avoid FK issues)
+            cursor.execute("DELETE FROM event_tags WHERE event_id=%s", (event_id,))
+            
+            # delete the event
             cursor.execute("DELETE FROM events WHERE event_id=%s", (event_id,))
+
         conn.commit()
         flash('Event deleted.', 'success')
+
     except Exception as e:
         print(e)
-        if conn:
-            conn.rollback()
+        conn.rollback()
         flash('Error deleting event: ' + str(e), 'error')
+
     finally:
-        if conn:
-            conn.close()
+        conn.close()
 
     return redirect(url_for('events.adminView'))
 
@@ -452,10 +532,19 @@ def events():
         upcoming_events.sort(key=lambda ev: ev['start'])
         past_events.sort(key=lambda ev: ev['start'], reverse=True)
 
+        conn = get_db_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT tag FROM tags ORDER BY tag")
+                schools = [row['tag'] for row in cursor.fetchall()]
+        finally:
+            conn.close()
+
         return render_template(
             'events/events.html',
             upcoming_events=upcoming_events,
-            past_events=past_events
+            past_events=past_events,
+            schools=schools
         )
 
     except Exception as err:
