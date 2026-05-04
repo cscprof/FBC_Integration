@@ -262,7 +262,9 @@ def adminView():
         rows = cursor.fetchall()
     conn.close()
 
-    events = []
+    today = datetime.now().date()
+    current_events = []
+    past_events = []
     for row in rows:
         # build a readable submitter name
         if row.get('first_name') or row.get('last_name'):
@@ -270,7 +272,7 @@ def adminView():
         else:
             submitted_by = row.get('username') or 'Unknown'
 
-        events.append({
+        event_dict = {
             "event_id": row["event_id"],
             "name": row["name"],
             "description": row.get("description"),
@@ -289,9 +291,16 @@ def adminView():
             "event_city": row.get("event_city"),
             "event_state": row.get("event_state"),
             "event_postal_code": row.get("event_postal_code"),
-        })
+        }
 
-    return render_template('events/eventAdmin.html', events=events)
+        # Split into current and past based on end date
+        event_end = row.get("end_date") or row.get("start_date")
+        if event_end and event_end.date() >= today:
+            current_events.append(event_dict)
+        else:
+            past_events.append(event_dict)
+
+    return render_template('events/eventAdmin.html', events=current_events, past_events=past_events)
 
 
 
