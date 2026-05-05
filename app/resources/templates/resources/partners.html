@@ -11,7 +11,7 @@
             Those who help our community thrive!
         </p>
 
-        {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
+        {% if current_user.is_authenticated and (current_user.role == 4 or current_user.role == 5) %}
         <div class="uploadbutton">
             <button onclick="document.getElementById('uploadModal').style.display='block'" class="uploadresourcebtn">
                 Upload Partner
@@ -20,6 +20,7 @@
         {% endif %}
 
         <div class="resources">
+
             <!-- SEARCH -->
             <div class="searchfilter">
                 <div class="searchcontainer">
@@ -33,33 +34,36 @@
             <div class="examplegrid" id="partnersgrid">
                 {% for partner in partners %}
                 <div class="resource-card-wrapper">
-                    <a href="{{ partner.url }}" class="resource-card-link" target="_blank">
+
+                    <a href="{{ partner.url }}" class="resource-card-link" target="_blank" rel="noopener noreferrer">
                         <div class="exampleboxes">
                             <h3>{{ partner.name }}</h3>
 
                             {% if partner.description %}
-                                <br><h4>{{ partner.description }}</h4>
+                            <br>
+                            <h4>{{ partner.description }}</h4>
                             {% endif %}
 
                             {% if partner.contact_name %}
-                                <h6>{{ partner.contact_name }}</h6>
+                            <h6>{{ partner.contact_name }}</h6>
                             {% endif %}
 
                             {% if partner.phone %}
-                                <h6>{{ partner.phone }}</h6>
+                            <h6>{{ partner.phone }}</h6>
                             {% endif %}
 
                             {% if partner.email %}
-                                <h6>{{ partner.email }}</h6>
+                            <h6>{{ partner.email }}</h6>
                             {% endif %}
 
                             <br>
 
                             {% if partner.address1 %}
-                                <h6>{{ partner.address1 }}</h6>
+                            <h6>{{ partner.address1 }}</h6>
                             {% endif %}
+
                             {% if partner.address2 %}
-                                <h6>{{ partner.address2 }}</h6>
+                            <h6>{{ partner.address2 }}</h6>
                             {% endif %}
 
                             <h6>
@@ -68,7 +72,7 @@
                         </div>
                     </a>
 
-                    {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
+                    {% if current_user.is_authenticated and (current_user.role == 4 or current_user.role == 5) %}
                     <button class="edit-partner-btn"
                         data-id="{{ partner.partner_id }}"
                         data-name="{{ partner.name|e }}"
@@ -85,6 +89,7 @@
                         Edit
                     </button>
                     {% endif %}
+
                 </div>
                 {% endfor %}
             </div>
@@ -92,36 +97,44 @@
     </div>
 </section>
 
-<!-- UPLOAD MODAL -->
-<div id="uploadModal">
+<!-- ================= UPLOAD MODAL ================= -->
+<div id="uploadModal" style="display:none;">
     <div class="modalcontent">
         <h2>Upload Partner</h2>
 
-        <form action="{{ url_for('partners.upload_partner') }}" method="POST">
-            <input name="name" placeholder="Name *" required>
-            <input name="url" placeholder="Website URL *" required>
-            <input name="description" placeholder="Description">
-            <input name="contact_name" placeholder="Contact Name">
-            <input name="phone" placeholder="Phone">
-            <input name="email" placeholder="Email">
-            <input name="address1" placeholder="Address Line 1">
-            <input name="address2" placeholder="Address Line 2">
-            <input name="city" placeholder="City">
-            <input name="state" placeholder="State">
-            <input name="zip" placeholder="Zip">
+        <form action="{{ url_for('resources.upload_resource') }}" method="POST">
 
-            <button type="button" onclick="closeUpload()">Cancel</button>
-            <button type="submit">Submit</button>
+            <input type="text" name="name" placeholder="Name *" required>
+            <input type="text" name="url" placeholder="Website URL *" required>
+            <input type="text" name="description" placeholder="Description">
+            <input type="text" name="contact_name" placeholder="Contact Name">
+            <input type="text" name="phone" placeholder="Phone">
+            <input type="text" name="email" placeholder="Email">
+            <input type="text" name="address1" placeholder="Address Line 1">
+            <input type="text" name="address2" placeholder="Address Line 2">
+            <input type="text" name="city" placeholder="City">
+            <input type="text" name="state" placeholder="State">
+            <input type="text" name="zip" placeholder="Zip">
+
+            <div class="modalformactions">
+                <button type="button" onclick="document.getElementById('uploadModal').style.display='none'">
+                    Cancel
+                </button>
+                <button type="submit">
+                    Submit
+                </button>
+            </div>
         </form>
     </div>
 </div>
 
-<!-- EDIT MODAL -->
-<div id="editModal">
+<!-- ================= EDIT MODAL ================= -->
+<div id="editModal" style="display:none;">
     <div class="modalcontent">
         <h2>Edit Partner</h2>
 
         <form id="editForm" method="POST">
+
             <input type="hidden" id="editId" name="partner_id">
 
             <input id="editName" name="name" required>
@@ -136,29 +149,32 @@
             <input id="editState" name="state">
             <input id="editZip" name="zip">
 
-            <button type="button" onclick="deletePartner()">Delete</button>
-            <button type="submit">Save</button>
+            <div class="modalformactions">
+                <button type="button" onclick="deletePartner()">Delete</button>
+                <button type="submit">Save</button>
+            </div>
         </form>
     </div>
 </div>
 
+<!-- ================= SCRIPT ================= -->
 <script>
-// SEARCH
+
 const searchInput = document.querySelector(".searchinput");
 const cards = document.querySelectorAll(".resource-card-wrapper");
 
 searchInput.addEventListener("keyup", () => {
     const val = searchInput.value.toLowerCase();
+
     cards.forEach(card => {
         card.style.display = card.innerText.toLowerCase().includes(val)
-            ? "block" : "none";
+            ? "block"
+            : "none";
     });
 });
 
-// OPEN EDIT
 document.querySelectorAll(".edit-partner-btn").forEach(btn => {
-    btn.addEventListener("click", e => {
-        e.stopPropagation();
+    btn.addEventListener("click", () => {
 
         document.getElementById("editId").value = btn.dataset.id;
         document.getElementById("editName").value = btn.dataset.name;
@@ -177,17 +193,18 @@ document.querySelectorAll(".edit-partner-btn").forEach(btn => {
     });
 });
 
-// DELETE
 function deletePartner() {
     const id = document.getElementById("editId").value;
-    if (confirm("Delete this partner?")) {
+
+    if (confirm("Are you sure you want to delete this partner?")) {
         const form = document.createElement("form");
         form.method = "POST";
-        form.action = `/partners/delete/${id}`;
+        form.action = `/resources/delete/${id}`;
         document.body.appendChild(form);
         form.submit();
     }
 }
+
 </script>
 
 {% endblock %}
