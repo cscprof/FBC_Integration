@@ -150,12 +150,8 @@ def resources_admin():
         dblist = []
 
     return render_template("resources/admin.html", resources=dblist, categories=categories_list)
-#HEY CHANGES WE NEED TO MAKE NEXT
-##Making sure it only exists as admin
-##Adding other optional fields that exist in the database (Contact Name, Contact Num, etc)
-##Whatever content type is should probably be figured out
-###Should capture current user id instead of just "1"
-###-Owen B.
+
+
 @resources_blueprint.route("/resources/upload", methods=["POST"])
 @role_required([4, 5])
 def upload_resource():
