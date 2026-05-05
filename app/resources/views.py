@@ -70,9 +70,11 @@ def resourcesearch():
 
 @resources_blueprint.route("/partners")
 def partner():
+    """Render partner directory cards for all visitors."""
     try:
         dbselect = (
             select(
+                partners.partner_id,
                 partners.name,
                 partners.description,
                 partners.url,
@@ -90,6 +92,35 @@ def partner():
     except:
         partnerList = []
     return render_template("resources/partners.html", partners=partnerList)
+
+
+@resources_blueprint.route("/partners/admin")
+@resources_blueprint.route("/admin/partners")
+@role_required([4, 5])
+def partners_admin():
+    """Render partner administration page for admin/partner roles."""
+    try:
+        dbselect = (
+            select(
+                partners.partner_id,
+                partners.name,
+                partners.description,
+                partners.url,
+                partners.contact_name,
+                partners.phone,
+                partners.email,
+                partners.address1,
+                partners.address2,
+                partners.city,
+                partners.state,
+                partners.zip,
+            )
+        )
+        partner_list = db.session.execute(dbselect).mappings().all()
+    except Exception:
+        partner_list = []
+
+    return render_template("resources/partners_admin.html", partners=partner_list)
 
 @resources_blueprint.route("/resources/admin")
 @resources_blueprint.route("/admin/resources")
@@ -218,3 +249,102 @@ def delete_resource(resource_id: int):
     except Exception:
         db.session.rollback()
     return redirect(url_for('resources.resources_admin'))
+
+
+@resources_blueprint.route("/partners/upload", methods=["POST"])
+@role_required([4, 5])
+def upload_partner():
+    """Create a partner record from admin form fields."""
+    name = request.form.get('name', '').strip()
+    description = request.form.get('description', '').strip()
+    url = request.form.get('url', '').strip()
+    contact_name = request.form.get('contact_name', '').strip()
+    phone = request.form.get('phone', '').strip()
+    email = request.form.get('email', '').strip()
+    address1 = request.form.get('address1', '').strip()
+    address2 = request.form.get('address2', '').strip()
+    city = request.form.get('city', '').strip()
+    state = request.form.get('state', '').strip()
+    zip_code = request.form.get('zip', '').strip()
+
+    if not name:
+        return redirect(url_for('resources.partners_admin'))
+
+    try:
+        new_partner = partners(
+            name=name,
+            description=description if description else None,
+            url=url if url else None,
+            contact_name=contact_name if contact_name else None,
+            phone=phone if phone else None,
+            email=email if email else None,
+            address1=address1 if address1 else None,
+            address2=address2 if address2 else None,
+            city=city if city else None,
+            state=state if state else None,
+            zip=zip_code if zip_code else None,
+        )
+        db.session.add(new_partner)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+
+    return redirect(url_for('resources.partners_admin'))
+
+
+@resources_blueprint.route("/partners/<int:partner_id>/edit", methods=["POST"])
+@role_required([4, 5])
+def edit_partner(partner_id: int):
+    """Edit an existing partner by ID."""
+    try:
+        partner_record = db.session.get(partners, partner_id)
+        if not partner_record:
+            return redirect(url_for('resources.partners_admin'))
+
+        name = request.form.get('name', '').strip()
+        description = request.form.get('description', '').strip()
+        url = request.form.get('url', '').strip()
+        contact_name = request.form.get('contact_name', '').strip()
+        phone = request.form.get('phone', '').strip()
+        email = request.form.get('email', '').strip()
+        address1 = request.form.get('address1', '').strip()
+        address2 = request.form.get('address2', '').strip()
+        city = request.form.get('city', '').strip()
+        state = request.form.get('state', '').strip()
+        zip_code = request.form.get('zip', '').strip()
+
+        if not name:
+            return redirect(url_for('resources.partners_admin'))
+
+        partner_record.name = name
+        partner_record.description = description if description else None
+        partner_record.url = url if url else None
+        partner_record.contact_name = contact_name if contact_name else None
+        partner_record.phone = phone if phone else None
+        partner_record.email = email if email else None
+        partner_record.address1 = address1 if address1 else None
+        partner_record.address2 = address2 if address2 else None
+        partner_record.city = city if city else None
+        partner_record.state = state if state else None
+        partner_record.zip = zip_code if zip_code else None
+
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+
+    return redirect(url_for('resources.partners_admin'))
+
+
+@resources_blueprint.route("/partners/<int:partner_id>/delete", methods=["POST"])
+@role_required([4, 5])
+def delete_partner(partner_id: int):
+    """Delete a partner record by ID."""
+    try:
+        partner_record = db.session.get(partners, partner_id)
+        if partner_record:
+            db.session.delete(partner_record)
+            db.session.commit()
+    except Exception:
+        db.session.rollback()
+
+    return redirect(url_for('resources.partners_admin'))

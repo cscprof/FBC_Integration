@@ -11,31 +11,23 @@
             Those who help our community thrive!
         </p>
 
-        {% if current_user.is_authenticated and (current_user.role == 4 or current_user.role == 5) %}
-        <div class="uploadbutton">
-            <button onclick="document.getElementById('uploadModal').style.display='block'" class="uploadresourcebtn">
-                Upload Partner
-            </button>
-        </div>
-        {% endif %}
-
         <div class="resources">
-
-            <!-- SEARCH -->
             <div class="searchfilter">
                 <div class="searchcontainer">
-                    <form class="searchform">
-                        <input type="text" placeholder="Search partners..." class="searchinput">
+                    <form class="searchform" onsubmit="return false;">
+                        <input type="text" placeholder="Search partners..." class="searchinput" id="partnerSearchInput">
                     </form>
                 </div>
             </div>
 
-            <!-- GRID -->
-            <div class="examplegrid" id="partnersgrid">
+            <div class="examplegrid" id="resourcesgrid">
                 {% for partner in partners %}
-                <div class="resource-card-wrapper">
-
+                <div class="resource-card-wrapper" data-search="{{ partner.name }} {{ partner.description or '' }} {{ partner.contact_name or '' }} {{ partner.phone or '' }} {{ partner.email or '' }} {{ partner.address1 or '' }} {{ partner.address2 or '' }} {{ partner.city or '' }} {{ partner.state or '' }} {{ partner.zip or '' }}">
+                    {% if partner.url %}
                     <a href="{{ partner.url }}" class="resource-card-link" target="_blank" rel="noopener noreferrer">
+                    {% else %}
+                    <a href="#" class="resource-card-link" onclick="event.preventDefault();">
+                    {% endif %}
                         <div class="exampleboxes">
                             <h3>{{ partner.name }}</h3>
 
@@ -43,168 +35,46 @@
                             <br>
                             <h4>{{ partner.description }}</h4>
                             {% endif %}
-
                             {% if partner.contact_name %}
                             <h6>{{ partner.contact_name }}</h6>
                             {% endif %}
-
                             {% if partner.phone %}
                             <h6>{{ partner.phone }}</h6>
                             {% endif %}
-
                             {% if partner.email %}
                             <h6>{{ partner.email }}</h6>
                             {% endif %}
-
+                            {% if partner.address1 or partner.address2 or partner.city or partner.state or partner.zip %}
                             <br>
-
-                            {% if partner.address1 %}
-                            <h6>{{ partner.address1 }}</h6>
+                            {% if partner.address1 %}<h6>{{ partner.address1 }}</h6>{% endif %}
+                            {% if partner.address2 %}<h6>{{ partner.address2 }}</h6>{% endif %}
+                            <h6>{{ partner.city or '' }} {{ partner.state or '' }} {{ partner.zip or '' }}</h6>
                             {% endif %}
-
-                            {% if partner.address2 %}
-                            <h6>{{ partner.address2 }}</h6>
-                            {% endif %}
-
-                            <h6>
-                                {{ partner.city }} {{ partner.state }} {{ partner.zip }}
-                            </h6>
                         </div>
                     </a>
-
-                    {% if current_user.is_authenticated and (current_user.role == 4 or current_user.role == 5) %}
-                    <button class="edit-partner-btn"
-                        data-id="{{ partner.partner_id }}"
-                        data-name="{{ partner.name|e }}"
-                        data-url="{{ partner.url|e }}"
-                        data-description="{{ partner.description|e }}"
-                        data-contact="{{ partner.contact_name|e }}"
-                        data-phone="{{ partner.phone|e }}"
-                        data-email="{{ partner.email|e }}"
-                        data-address1="{{ partner.address1|e }}"
-                        data-address2="{{ partner.address2|e }}"
-                        data-city="{{ partner.city|e }}"
-                        data-state="{{ partner.state|e }}"
-                        data-zip="{{ partner.zip|e }}">
-                        Edit
-                    </button>
-                    {% endif %}
-
                 </div>
+                {% else %}
+                <div class="has-text-centered" style="color:#666;">No partners found.</div>
                 {% endfor %}
             </div>
         </div>
     </div>
 </section>
 
-<!-- ================= UPLOAD MODAL ================= -->
-<div id="uploadModal" style="display:none;">
-    <div class="modalcontent">
-        <h2>Upload Partner</h2>
-
-        <form action="{{ url_for('resources.upload_resource') }}" method="POST">
-
-            <input type="text" name="name" placeholder="Name *" required>
-            <input type="text" name="url" placeholder="Website URL *" required>
-            <input type="text" name="description" placeholder="Description">
-            <input type="text" name="contact_name" placeholder="Contact Name">
-            <input type="text" name="phone" placeholder="Phone">
-            <input type="text" name="email" placeholder="Email">
-            <input type="text" name="address1" placeholder="Address Line 1">
-            <input type="text" name="address2" placeholder="Address Line 2">
-            <input type="text" name="city" placeholder="City">
-            <input type="text" name="state" placeholder="State">
-            <input type="text" name="zip" placeholder="Zip">
-
-            <div class="modalformactions">
-                <button type="button" onclick="document.getElementById('uploadModal').style.display='none'">
-                    Cancel
-                </button>
-                <button type="submit">
-                    Submit
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- ================= EDIT MODAL ================= -->
-<div id="editModal" style="display:none;">
-    <div class="modalcontent">
-        <h2>Edit Partner</h2>
-
-        <form id="editForm" method="POST">
-
-            <input type="hidden" id="editId" name="partner_id">
-
-            <input id="editName" name="name" required>
-            <input id="editUrl" name="url" required>
-            <input id="editDescription" name="description">
-            <input id="editContact" name="contact_name">
-            <input id="editPhone" name="phone">
-            <input id="editEmail" name="email">
-            <input id="editAddress1" name="address1">
-            <input id="editAddress2" name="address2">
-            <input id="editCity" name="city">
-            <input id="editState" name="state">
-            <input id="editZip" name="zip">
-
-            <div class="modalformactions">
-                <button type="button" onclick="deletePartner()">Delete</button>
-                <button type="submit">Save</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- ================= SCRIPT ================= -->
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const partnerSearchInput = document.getElementById('partnerSearchInput');
+        const partnerCards = document.querySelectorAll('.resource-card-wrapper');
 
-const searchInput = document.querySelector(".searchinput");
-const cards = document.querySelectorAll(".resource-card-wrapper");
+        function filterPartners() {
+            const searchValue = partnerSearchInput.value.toLowerCase();
+            partnerCards.forEach((card) => {
+                const cardText = card.getAttribute('data-search').toLowerCase();
+                card.style.display = cardText.includes(searchValue) ? 'block' : 'none';
+            });
+        }
 
-searchInput.addEventListener("keyup", () => {
-    const val = searchInput.value.toLowerCase();
-
-    cards.forEach(card => {
-        card.style.display = card.innerText.toLowerCase().includes(val)
-            ? "block"
-            : "none";
+        partnerSearchInput.addEventListener('keyup', filterPartners);
     });
-});
-
-document.querySelectorAll(".edit-partner-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-
-        document.getElementById("editId").value = btn.dataset.id;
-        document.getElementById("editName").value = btn.dataset.name;
-        document.getElementById("editUrl").value = btn.dataset.url;
-        document.getElementById("editDescription").value = btn.dataset.description;
-        document.getElementById("editContact").value = btn.dataset.contact;
-        document.getElementById("editPhone").value = btn.dataset.phone;
-        document.getElementById("editEmail").value = btn.dataset.email;
-        document.getElementById("editAddress1").value = btn.dataset.address1;
-        document.getElementById("editAddress2").value = btn.dataset.address2;
-        document.getElementById("editCity").value = btn.dataset.city;
-        document.getElementById("editState").value = btn.dataset.state;
-        document.getElementById("editZip").value = btn.dataset.zip;
-
-        document.getElementById("editModal").style.display = "block";
-    });
-});
-
-function deletePartner() {
-    const id = document.getElementById("editId").value;
-
-    if (confirm("Are you sure you want to delete this partner?")) {
-        const form = document.createElement("form");
-        form.method = "POST";
-        form.action = `/resources/delete/${id}`;
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
-
 </script>
-
 {% endblock %}
