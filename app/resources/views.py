@@ -7,7 +7,7 @@ from .models import resources, resource_category, content_types, partners
 from . import resources as resources_blueprint
 from loginManager import role_required
 
-# Use the route() decorator to tell Flask what URL should trigger the function
+
 @resources_blueprint.route("/resources")
 @resources_blueprint.route("/resource-directory")
 def resource_directory():
@@ -98,7 +98,6 @@ def partner():
 @resources_blueprint.route("/admin/partners")
 @role_required([4, 5])
 def partners_admin():
-    """Render partner administration page for admin/partner roles."""
     try:
         dbselect = (
             select(
@@ -263,6 +262,7 @@ def upload_partner():
     state = request.form.get('state', '').strip()
     zip_code = request.form.get('zip', '').strip()
 
+    #Technically the only required field, so we have to fail if it isn't included
     if not name:
         return redirect(url_for('resources.partners_admin'))
 
@@ -291,7 +291,7 @@ def upload_partner():
 @resources_blueprint.route("/partners/<int:partner_id>/edit", methods=["POST"])
 @role_required([4, 5])
 def edit_partner(partner_id: int):
-    """Edit an existing partner by ID."""
+    #This is basically the same as add, but we have to start with an existing id
     try:
         partner_record = db.session.get(partners, partner_id)
         if not partner_record:
