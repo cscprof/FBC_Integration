@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Flourish Beaver County - Resource Directory{% endblock %}
+{% block title %}Flourish Beaver County - Partners{% endblock %}
 
 {% block content %}
 
@@ -9,50 +9,185 @@
         <h1 class="title has-text-centered">Partners</h1>
         <p class="has-text-centered is-size-5 mb-5" style="color: #666; margin-top: 10px;">
             Those who help our community thrive!
+        </p>
+
+        {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
+        <div class="uploadbutton">
+            <button onclick="document.getElementById('uploadModal').style.display='block'" class="uploadresourcebtn">
+                Upload Partner
+            </button>
+        </div>
+        {% endif %}
 
         <div class="resources">
-            <div class="examplegrid" id="resourcesgrid">
-                {% for partner in partners %}
-                <a href="{{ partner.url }}" class="resource-card-link" target="_blank" rel="noopener noreferrer">
-                    <div class="exampleboxes">
-                        <h3>{{ partner.name }}</h3>
+            <!-- SEARCH -->
+            <div class="searchfilter">
+                <div class="searchcontainer">
+                    <form class="searchform">
+                        <input type="text" placeholder="Search partners..." class="searchinput">
+                    </form>
+                </div>
+            </div>
 
-                        {%  if partner.description %}
-                        <br>
-                        <h4>{{ partner.description }}</h4>
-                        {% endif %}
-                        {%  if partner.contact_name %}
-                        <h6>{{ partner.contact_name }}</h6>
-                        {% endif %}
-                        {%  if partner.phone %}
-                        <h6>{{ partner.phone }}</h6>
-                        {% endif %}
-                        {%  if partner.email %}
-                        <h6>{{ partner.email }}</h6>
-                        {% endif %}
-                        <br>
-                        {%  if partner.address1 %}
-                        <h6>{{ partner.address1 }},
-                        {% endif %}
-                        {%  if partner.address2 %}
-                        ,{{ partner.address2 }}</h6>
-                        {% endif %}
-                        <h6>{%  if partner.city %}
-                        {{ partner.city }}
-                        {% endif %}
-                        {%  if partner.state %}
-                        {{ partner.state }}
-                        {% endif %}
-                        {%  if partner.zip %}
-                        {{ partner.zip }}
-                        {% endif %}</h6>
-                    </div>
-                </a>
+            <!-- GRID -->
+            <div class="examplegrid" id="partnersgrid">
+                {% for partner in partners %}
+                <div class="resource-card-wrapper">
+                    <a href="{{ partner.url }}" class="resource-card-link" target="_blank">
+                        <div class="exampleboxes">
+                            <h3>{{ partner.name }}</h3>
+
+                            {% if partner.description %}
+                                <br><h4>{{ partner.description }}</h4>
+                            {% endif %}
+
+                            {% if partner.contact_name %}
+                                <h6>{{ partner.contact_name }}</h6>
+                            {% endif %}
+
+                            {% if partner.phone %}
+                                <h6>{{ partner.phone }}</h6>
+                            {% endif %}
+
+                            {% if partner.email %}
+                                <h6>{{ partner.email }}</h6>
+                            {% endif %}
+
+                            <br>
+
+                            {% if partner.address1 %}
+                                <h6>{{ partner.address1 }}</h6>
+                            {% endif %}
+                            {% if partner.address2 %}
+                                <h6>{{ partner.address2 }}</h6>
+                            {% endif %}
+
+                            <h6>
+                                {{ partner.city }} {{ partner.state }} {{ partner.zip }}
+                            </h6>
+                        </div>
+                    </a>
+
+                    {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
+                    <button class="edit-partner-btn"
+                        data-id="{{ partner.partner_id }}"
+                        data-name="{{ partner.name|e }}"
+                        data-url="{{ partner.url|e }}"
+                        data-description="{{ partner.description|e }}"
+                        data-contact="{{ partner.contact_name|e }}"
+                        data-phone="{{ partner.phone|e }}"
+                        data-email="{{ partner.email|e }}"
+                        data-address1="{{ partner.address1|e }}"
+                        data-address2="{{ partner.address2|e }}"
+                        data-city="{{ partner.city|e }}"
+                        data-state="{{ partner.state|e }}"
+                        data-zip="{{ partner.zip|e }}">
+                        Edit
+                    </button>
+                    {% endif %}
+                </div>
                 {% endfor %}
             </div>
         </div>
-
-        
     </div>
 </section>
+
+<!-- UPLOAD MODAL -->
+<div id="uploadModal">
+    <div class="modalcontent">
+        <h2>Upload Partner</h2>
+
+        <form action="{{ url_for('partners.upload_partner') }}" method="POST">
+            <input name="name" placeholder="Name *" required>
+            <input name="url" placeholder="Website URL *" required>
+            <input name="description" placeholder="Description">
+            <input name="contact_name" placeholder="Contact Name">
+            <input name="phone" placeholder="Phone">
+            <input name="email" placeholder="Email">
+            <input name="address1" placeholder="Address Line 1">
+            <input name="address2" placeholder="Address Line 2">
+            <input name="city" placeholder="City">
+            <input name="state" placeholder="State">
+            <input name="zip" placeholder="Zip">
+
+            <button type="button" onclick="closeUpload()">Cancel</button>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="editModal">
+    <div class="modalcontent">
+        <h2>Edit Partner</h2>
+
+        <form id="editForm" method="POST">
+            <input type="hidden" id="editId" name="partner_id">
+
+            <input id="editName" name="name" required>
+            <input id="editUrl" name="url" required>
+            <input id="editDescription" name="description">
+            <input id="editContact" name="contact_name">
+            <input id="editPhone" name="phone">
+            <input id="editEmail" name="email">
+            <input id="editAddress1" name="address1">
+            <input id="editAddress2" name="address2">
+            <input id="editCity" name="city">
+            <input id="editState" name="state">
+            <input id="editZip" name="zip">
+
+            <button type="button" onclick="deletePartner()">Delete</button>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</div>
+
+<script>
+// SEARCH
+const searchInput = document.querySelector(".searchinput");
+const cards = document.querySelectorAll(".resource-card-wrapper");
+
+searchInput.addEventListener("keyup", () => {
+    const val = searchInput.value.toLowerCase();
+    cards.forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(val)
+            ? "block" : "none";
+    });
+});
+
+// OPEN EDIT
+document.querySelectorAll(".edit-partner-btn").forEach(btn => {
+    btn.addEventListener("click", e => {
+        e.stopPropagation();
+
+        document.getElementById("editId").value = btn.dataset.id;
+        document.getElementById("editName").value = btn.dataset.name;
+        document.getElementById("editUrl").value = btn.dataset.url;
+        document.getElementById("editDescription").value = btn.dataset.description;
+        document.getElementById("editContact").value = btn.dataset.contact;
+        document.getElementById("editPhone").value = btn.dataset.phone;
+        document.getElementById("editEmail").value = btn.dataset.email;
+        document.getElementById("editAddress1").value = btn.dataset.address1;
+        document.getElementById("editAddress2").value = btn.dataset.address2;
+        document.getElementById("editCity").value = btn.dataset.city;
+        document.getElementById("editState").value = btn.dataset.state;
+        document.getElementById("editZip").value = btn.dataset.zip;
+
+        document.getElementById("editModal").style.display = "block";
+    });
+});
+
+// DELETE
+function deletePartner() {
+    const id = document.getElementById("editId").value;
+    if (confirm("Delete this partner?")) {
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = `/partners/delete/${id}`;
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+
 {% endblock %}
