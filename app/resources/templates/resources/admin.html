@@ -11,7 +11,7 @@
         </p>
 
         <div class="uploadbutton">
-            <button onclick="document.getElementById('uploadModal').style.display='block'" class="uploadresourcebtn">
+            <button onclick="document.getElementById('uploadModal').style.display='flex'" class="uploadresourcebtn">
                 Add Resource
             </button>
         </div>
@@ -210,7 +210,7 @@
         document.getElementById('editName').value = button.getAttribute('data-name') || '';
         document.getElementById('editEmail').value = button.getAttribute('data-email') || '';
         document.getElementById('editPhone').value = button.getAttribute('data-phone') || '';
-        document.getElementById('editModal').style.display = 'block';
+        document.getElementById('editModal').style.display = 'flex';
     }
 
     function filterAdminRows() {

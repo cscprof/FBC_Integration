@@ -92,16 +92,16 @@
           <!-- Show log out if user is authenticaed -->
           {% elif current_user.is_authenticated %}
             {% if current_user.profilePicture %}
-              <a href="{{ url_for('users.profile', username=current_user.username) }}" class="navbar-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0;">
-                <span style="line-height: 3;"> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </span>
-                <img src="{{ url_for('static', filename=current_user.profilePicture) }}"  style="width: 32px; height: 32px; border-radius: 50%;">
+              <a href="{{ url_for('users.profile', username=current_user.username) }}" class="navbar-item navbar-profile-link">
+                <span> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </span>
+                <img src="{{ url_for('static', filename=current_user.profilePicture) }}" class="navbar-picture">
               </a>
               <a class="button is-light" href="{{ url_for('users.logout') }}"> Log out </a>
               
             {% else %}
-              <a href="{{ url_for('users.profile', username=current_user.username) }}" class="navbar-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0;">
-                <span style="line-height: 3;"> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </span>
-                <div class="profile-picture-placeholder" style="width: 32px; height: 32px; border-radius: 50%;">&#128100;</div>
+              <a href="{{ url_for('users.profile', username=current_user.username) }}" class="navbar-item navbar-profile-link">
+                <span> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </span>
+                <div class="profile-picture-placeholder navbar-picture">&#128100;</div>
               </a>
               <a class="button is-light" href="{{ url_for('users.logout') }}"> Log out </a>
 
