@@ -90,7 +90,7 @@ def partner():
         )
         partnerList = db.session.execute(dbselect).mappings().all()
     except:
-        partnerList = []
+        partnerList = [] #This list can be filled with "dummy" resources if you want, just like the resources, so the design can be worked on w/o connecting the DB
     return render_template("resources/partners.html", partners=partnerList)
 
 

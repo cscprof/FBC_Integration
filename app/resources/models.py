@@ -4,9 +4,8 @@ import sqlalchemy.orm as so
 from db import db
 from datetime import datetime, timezone
 
-#These tables may be replaced by other groups that specialize in these tables, they are just here for FK identification
-#That being said they will properly build the database on init
-#So maybe just tweak them so you don't have to rewrite it if you haven't yet idk
+#Most of these tables have not been updated since the initial database schema was created
+#Doesn't matter since they aren't imported to views.py, but if you ever need them for some reason keep that in mind
 class content_types(db.Model):
     content_type_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
     name: so.Mapped[str] = so.mapped_column(sa.String(64), nullable=False)
@@ -21,6 +20,7 @@ class roles(db.Model):
     role: so.Mapped[str] = so.mapped_column(sa.Enum("Student","Parent","Guardian","Admin","Partner", name="role"), index=True, nullable=False)
     description: so.Mapped[str] = so.mapped_column(sa.String(255), nullable=False)
 
+#This table is up to date as of 5/5/26
 class partners(db.Model):
     partner_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
     name: so.Mapped[str] = so.mapped_column(sa.String(128), nullable=False, index=True)
@@ -64,13 +64,12 @@ class event_tags(db.Model):
     event_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(events.event_id), index=True, nullable=False)
     tag_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(tags.tag_id), index=True, nullable=False)
 
-#This table was added by us
+#These rest of these tables have been implemented by us in views.py and reflect the current schema
+#Up to date as of 5/5/26
 class resource_category(db.Model):
     resource_category_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
     resource_category_name: so.Mapped[str] = so.mapped_column(sa.Enum("college","scholarship","mental","job","activities","other", name="category"), nullable=False)
 
-
-#These tables must be implemented as written in final product
 class resources(db.Model):
     resource_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
     description: so.Mapped[str] = so.mapped_column(sa.String(255), nullable=False)
@@ -88,7 +87,6 @@ class resource_tags(db.Model):
     resource_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(resources.resource_id), index=True, nullable=False)
     tag_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(tags.tag_id), index=True, nullable=False)
 
-#This table was added by us
 class saved_resources(db.Model):
     saved_resource_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(users.user_id), index=True, nullable=False)
