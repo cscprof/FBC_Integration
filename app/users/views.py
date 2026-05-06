@@ -128,9 +128,9 @@ def auth_login():
                         nameFirst=row['first_name'],
                         nameLast=row['last_name'],  
                         nameMiddle=row['middle_name'],
-                        gradYear=row['graduation_year'],
-                        emailIsVerified=row['email_is_verified'],
-                        profilePicture=row['profile_picture'],
+                        gradYear=row.get('graduation_year'),
+                        emailIsVerified=row.get('email_is_verified', False),
+                        profilePicture=row.get('profile_picture', None),
                     )
                     login_user(user, remember=False)    #Makes session cookies reset whenever you leave the page, and stops them from tracking session age. 
                                                         #Server will track session age
@@ -146,6 +146,66 @@ def auth_login():
         flash("Invalid Login. Username or Password is Incorrect. Please Try Again!")
         return redirect(url_for('users.login_page'))
 
+# Add tag route only available for admins
+@users.route('/admin/tags')
+@role_required([4, 5])
+def tagsAdmin():
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("SELECT * FROM tags")
+            tags = cursor.fetchall()
+            return render_template('adminpanel/tagsAdmin.html', tags=tags)
+    except Exception as e:
+        flash(f"Error loading tags: {e}", "danger")
+        return redirect(url_for('home.index'))
+    finally:
+        if conn:
+            conn.close()
+
+# Route for adding a new tag
+@users.route("/admin/tags/add", methods=["POST"])
+@role_required([4, 5])
+def add_tag():
+    tag_name = request.form.get('tag', '').strip()
+    
+    if tag_name:
+        conn = get_db_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("INSERT INTO tags (tag) VALUES (%s)", (tag_name,))
+                conn.commit()
+                flash("Tag created successfully!", "success")
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            flash(f"Error creating tag: {e}", "error")
+        finally:
+            if conn:
+                conn.close()
+    else:
+        flash("Tag name cannot be empty.", "error")
+        
+    return redirect(url_for('users.tagsAdmin'))
+
+# Route for deleting tag
+@users.route("/admin/tags/<int:tag_id>/delete", methods=["POST"])
+@role_required([4, 5])
+def delete_tag(tag_id):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("DELETE FROM tags WHERE tag_id = %s", (tag_id,))
+            conn.commit()
+            flash("Tag deleted successfully!", "success")
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        flash(f"Error deleting tag: {e}", "error")
+    finally:
+        if conn:
+            conn.close()
+    return redirect(url_for('users.tagsAdmin'))
 
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
@@ -157,7 +217,11 @@ def admin_users():
             cursor.execute("USE flourish_bc")
             cursor.execute("SELECT * FROM users")
             users = cursor.fetchall()
-        return render_template("adminpanel/userAdmin.html", users=users)
+            
+            cursor.execute("SELECT * FROM tags")
+            all_tags = cursor.fetchall()
+            
+        return render_template("adminpanel/userAdmin.html", users=users, tags=all_tags)
     finally:
         conn.close()
 

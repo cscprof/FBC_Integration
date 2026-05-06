@@ -27,68 +27,235 @@
         <h1>Add New Event</h1>
         <div class="underline-event"></div>
 
+        <!-- Add Event Template -->
+
+        <!-- The form is divided into sections that are related for better usability -->
         <form method="POST" class="event-form">
 
-            <input type="text" name="name" placeholder="Event Name" required>
+            <div class="form-section">
+                <h3>Event Details</h3>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Event Name</label>
+                    <input type="text" class="entry-box" name="name" placeholder="Event Name" required>
+                </div>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Event URL</label>
+                    <input class="entry-box" type="url" name="url" placeholder="https://..." required>
+                </div>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Description</label>
+                    <textarea name="description" class="entry-box" placeholder="Add Description" rows="4" style="resize: vertical; box-sizing: border-box;" required></textarea>
+                </div>
+            </div>
 
-            <textarea name="description" placeholder="Event Description" required></textarea>
+            <div class="form-section">
+                <h3>Tags and School</h3>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Content Type</label>
+                    <select class="entry-box" name="tag" required>
+                        <option value="">Select a Content Type</option>
+                        {% for tag in tags %}
+                          <option value="{{ tag.content_type_id }}">{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Schools</label>
+                    <select class="entry-box" name="schools" multiple>
+                        {% for school in school_tags %}
+                        <option value="{{ school.school_tag_id }}">{{ school.school_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <small style="opacity: 0.7; margin-top: 5px; display: inline-block;">Hold Ctrl/Cmd to select multiple.</small>
+                </div>
 
-            <input class="entry-box" type="url" name="url" placeholder="Event URL" required>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Add Tag</label>
+                    <div class="tag-search-container" style="position: relative;">
+                        <input class="entry-box" type="text" id="tagSearch" placeholder="Search tags..." autocomplete="off">
+                        <div id="tagDropdown" class="tag-dropdown" style="display: none; position: absolute; background: white; border: 1px solid #ccc; width: 100%; max-height: 150px; overflow-y: auto; z-index: 10; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            {% for tag in school_tags %}
+                            <div class="tag-option" data-tag-id="{{ tag.school_tag_id }}" data-tag-name="{{ tag.school_name|lower }}" style="padding: 10px; cursor: pointer; color: black; border-bottom: 1px solid #eee;">
+                                {{ tag.school_name }}
+                            </div>
+                            {% endfor %}
+                            <div id="noTagsMessage" style="display: none; padding: 10px; color: grey;">No tags found</div>
+                        </div>
+                    </div>
+                    <div id="selectedTagsContainer" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                    <div id="hiddenTagsInputs"></div>
+                </div>
+            </div>
 
-            <label class="event-label">Content Type</label>
-            <select class="entry-box" name="tag" required>
-                <option value="">Select a Content Type</option>
-                {% for tag in tags %}
-                <option value="{{ tag.content_type_id }}">{{ tag.name }}</option>
-                {% endfor %}
-            </select>
+            <div class="form-section">
+                <h3>Event Date & Time</h3>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Starting Date & Time</label>
+                    <input class="entry-box" type="datetime-local" name="starting_date" required>
+                </div>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Ending Date & Time</label>
+                    <input class="entry-box" type="datetime-local" name="ending_date" required>
+                </div>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Registration Deadline (Optional)</label>
+                    <input class="entry-box" type="datetime-local" name="deadline">
+                </div>
+            </div>
 
-            <label class="event-label">Schools</label>
-            <select class="entry-box" name="schools" multiple>
-                {% for school in school_tags %}
-                <option value="{{ school.school_tag_id }}">{{ school.school_name }}</option>
-                {% endfor %}
-            </select>
-            <small>Hold Ctrl (or Cmd on Mac) to select multiple schools.</small>
+            <div class="form-section">
+                <h3>Location Address</h3>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Address Line 1</label>
+                    <input class="entry-box" type="text" name="event_address1" placeholder="123 Main St">
+                </div>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Address Line 2</label>
+                    <input class="entry-box" type="text" name="event_address2" placeholder="Suite/Apt">
+                </div>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">City</label>
+                    <input class="entry-box" type="text" name="event_city" placeholder="City">
+                </div>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">State</label>
+                    <input class="entry-box" type="text" name="event_state" placeholder="State">
+                </div>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Postal Code</label>
+                    <input class="entry-box" type="text" name="event_postal_code" placeholder="Zip">
+                </div>
+            </div>
 
-            <label class="event-label">Contact Name</label>
-            <input class="entry-box" type="text" name="contact_name" placeholder="Contact Name">
+            <div class="form-section">
+                <h3>Event Contact</h3>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Full Name</label>
+                    <input class="entry-box" type="text" name="contact_name" placeholder="John Doe">
+                </div>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Phone</label>
+                    <input class="entry-box" type="tel" name="contact_phone" placeholder="xxx-xxx-xxxx">
+                </div>
+                <div class="form-col" style="margin-bottom: 15px;">
+                    <label class="event-label">Email</label>
+                    <input class="entry-box" type="email" name="contact_email" placeholder="contact@example.com">
+                </div>
+            </div>
 
-            <label class="event-label">Contact Phone</label>
-            <input class="entry-box" type="tel" name="contact_phone" placeholder="Contact Phone">
-
-            <label class="event-label">Contact Email</label>
-            <input class="entry-box" type="email" name="contact_email" placeholder="Contact Email">
-
-            <label class="event-label">Address Line 1</label>
-            <input class="entry-box" type="text" name="event_address1" placeholder="Address Line 1">
-
-            <label class="event-label">Address Line 2</label>
-            <input class="entry-box" type="text" name="event_address2" placeholder="Address Line 2">
-
-            <label class="event-label">City</label>
-            <input class="entry-box" type="text" name="event_city" placeholder="City">
-
-            <label class="event-label">State</label>
-            <input class="entry-box" type="text" name="event_state" placeholder="State">
-
-            <label class="event-label">Postal Code</label>
-            <input class="entry-box" type="text" name="event_postal_code" placeholder="Postal Code">
-
-            <label class="event-label">Starting Date & Time</label>
-            <input class="entry-box" type="datetime-local" name="starting_date" required>
-
-            <label class="event-label">Ending Date & Time</label>
-            <input class="entry-box" type="datetime-local" name="ending_date" required>
-
-            <label class="event-label">Registration Deadline (Optional)</label>
-            <input class="entry-box" type="datetime-local" name="deadline">
-
-            <button class="button-submit" type="submit">Submit</button>
+            <div style="text-align: right;">
+                <button class="button-submit" type="submit" style="width: auto; padding: 12px 30px; font-size: 1.1rem; border-radius: 8px;">Create Event</button>
+            </div>
         </form>
 
     </div>
 
 </div>
+
+<!-- Tag Selection JS -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tagSearch = document.getElementById('tagSearch');
+        const tagDropdown = document.getElementById('tagDropdown');
+        const tagOptions = document.querySelectorAll('.tag-option');
+        const noTagsMessage = document.getElementById('noTagsMessage');
+        const selectedTagsContainer = document.getElementById('selectedTagsContainer');
+        const hiddenTagsInputs = document.getElementById('hiddenTagsInputs');
+
+        const selectedTags = new Set();
+
+        tagSearch.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            let hasVisible = false;
+
+            if (query.trim() === '') {
+                tagDropdown.style.display = 'none';
+                return;
+            }
+
+            tagDropdown.style.display = 'block';
+
+            tagOptions.forEach(function(option) {
+                const name = option.getAttribute('data-tag-name');
+                const id = option.getAttribute('data-tag-id');
+                if (name.includes(query) && !selectedTags.has(id)) {
+                    option.style.display = 'block';
+                    hasVisible = true;
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+
+            if (hasVisible) {
+                noTagsMessage.style.display = 'none';
+            } else {
+                noTagsMessage.style.display = 'block';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!tagSearch.contains(e.target) && !tagDropdown.contains(e.target)) {
+                tagDropdown.style.display = 'none';
+            }
+        });
+
+        tagSearch.addEventListener('focus', function() {
+            if (this.value.trim() !== '') {
+                const evt = new Event('input');
+                this.dispatchEvent(evt);
+            }
+        });
+
+        tagOptions.forEach(function(option) {
+            option.addEventListener('click', function() {
+                const id = this.getAttribute('data-tag-id');
+                const name = this.innerText;
+
+                if (!selectedTags.has(id)) {
+                    selectedTags.add(id);
+                    addTag(id, name);
+                }
+
+                tagSearch.value = '';
+                tagDropdown.style.display = 'none';
+            });
+        });
+
+        function addTag(id, name) {
+            const tagEl = document.createElement('div');
+            tagEl.style.backgroundColor = '#007bff';
+            tagEl.style.color = 'white';
+            tagEl.style.padding = '5px 10px';
+            tagEl.style.borderRadius = '15px';
+            tagEl.style.display = 'flex';
+            tagEl.style.alignItems = 'center';
+            tagEl.style.gap = '5px';
+            
+            const text = document.createElement('span');
+            text.innerText = name;
+            tagEl.appendChild(text);
+
+            const removeBtn = document.createElement('span');
+            removeBtn.innerHTML = '&times;';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.style.fontWeight = 'bold';
+            removeBtn.addEventListener('click', function() {
+                selectedTags.delete(id);
+                tagEl.remove();
+                document.getElementById('hidden_tag_' + id).remove();
+            });
+            tagEl.appendChild(removeBtn);
+
+            selectedTagsContainer.appendChild(tagEl);
+
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'event_tags';
+            hiddenInput.value = id;
+            hiddenInput.id = 'hidden_tag_' + id;
+            hiddenTagsInputs.appendChild(hiddenInput);
+        }
+    });
+</script>
 
 {% endblock %}

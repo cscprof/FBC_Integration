@@ -136,6 +136,7 @@ def addEvent():
         url = request.form.get('url', '').strip()
         content_type_id = request.form.get('tag', '').strip()
         schools = request.form.getlist('schools')
+        event_tags = request.form.getlist('event_tags')
         starting_date_raw = request.form.get('starting_date', '').strip()
         ending_date_raw = request.form.get('ending_date', '').strip()
         deadline_raw = request.form.get('deadline', '').strip()
@@ -193,9 +194,11 @@ def addEvent():
                 ))
                 event_id = cursor.lastrowid
                 
-                # Insert school tags
-                for school_id in schools:
-                    cursor.execute("INSERT INTO event_tags (event_id, tag_id) VALUES (%s, %s)", (event_id, school_id))
+                # Insert school and event tags
+                all_tags = set(schools + event_tags)
+                for tag_id in all_tags:
+                    if tag_id:
+                        cursor.execute("INSERT INTO event_tags (event_id, tag_id) VALUES (%s, %s)", (event_id, tag_id))
             conn.commit()
 
         except DatabaseError as e:
@@ -248,19 +251,25 @@ def update_event(event_id, action):
 @role_required([4, 5])
 def adminView():
     conn = get_db_connection()
-    with conn.cursor() as cursor:
-        cursor.execute("""
-            SELECT e.event_id, e.name, e.status, e.description, e.start_date, e.end_date, e.url,
-                   e.registration_deadline, e.user_id,
-                   e.contact_name, e.contact_phone, e.contact_email,
-                   e.event_address1, e.event_address2, e.event_city, e.event_state, e.event_postal_code,
-                   u.username, u.first_name, u.last_name
-            FROM events e
-            LEFT JOIN users u ON e.user_id = u.user_id
-            ORDER BY CASE WHEN e.status = 'pending' THEN 0 ELSE 1 END, e.start_date ASC
-        """)
-        rows = cursor.fetchall()
-    conn.close()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                SELECT e.event_id, e.name, e.status, e.description, e.start_date, e.end_date, e.url,
+                       e.registration_deadline, e.user_id,
+                       e.contact_name, e.contact_phone, e.contact_email,
+                       e.event_address1, e.event_address2, e.event_city, e.event_state, e.event_postal_code,
+                       u.username, u.first_name, u.last_name
+                FROM events e
+                LEFT JOIN users u ON e.user_id = u.user_id
+                ORDER BY CASE WHEN e.status = 'pending' THEN 0 ELSE 1 END, e.start_date ASC
+            """)
+            rows = cursor.fetchall()
+            
+    except Exception as e:
+        rows = []
+        print(f"Error fetching data: {e}")
+    finally:
+        conn.close()
 
     events = []
     for row in rows:

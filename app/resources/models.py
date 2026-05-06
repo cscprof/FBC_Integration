@@ -15,6 +15,7 @@ class content_types(db.Model):
 class tags(db.Model):
     tag_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
     tag: so.Mapped[str] = so.mapped_column(sa.String(64), nullable=False)
+    description:so.Mapped[str] = so.mapped_column(sa.String(64), nullable=False)
 
 class roles(db.Model):
     role_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
@@ -80,6 +81,7 @@ class resources(db.Model):
     contact_phone: so.Mapped[str] = so.mapped_column(sa.String(32), nullable=True)
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(users.user_id), index=True, nullable=False)
     resource_category_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(resource_category.resource_category_id), index=True, nullable=False)
+    resource_tags: so.Mapped[str] = so.mapped_column(sa.String(255), nullable=True)
 
 class resource_tags(db.Model):
     resource_tag_id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
