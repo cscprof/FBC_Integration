@@ -10,7 +10,9 @@ from werkzeug.utils import secure_filename
 # Hashing (create app/users/Hashing.py if missing)
 from .Hashing import hash_plaintext, hash_check_matches
 from . import users
-from .emailVerification import send_verification_email, confirm_token
+# For email module
+from .Emails import *
+from itsdangerous import SignatureExpired, BadSignature
 # For creating a user account
 from flask_login import login_user, login_required, logout_user, current_user
 from loginManager import role_required
@@ -67,11 +69,8 @@ def add_user():
                 ))
                 conn.commit()
                 flash("User created!", "success")
-        # error handling for an already used username
-        except pymysql.err.IntegrityError:
-            flash('Username taken!')
-        
-        # error handling for a daatabase error
+                
+        # error handling for a database error
         except DatabaseError as e:
             print(f"DB Error: {e}")
             flash(f"Error: {e}", "error")
@@ -145,7 +144,6 @@ def auth_login():
             # return redirect(url_for('profile.profile', username=username))
         flash("Invalid Login. Username or Password is Incorrect. Please Try Again!")
         return redirect(url_for('users.login_page'))
-
 
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
@@ -401,7 +399,7 @@ def verifyEmail():
     
 @users.route("/confirm/<token>")
 def confirm_email(token):
-    email = confirm_token(token)
+    email = verify_confirm_token(token)
     if not email:
         flash("The confirmation link is invalid or expired.", "danger")
         return redirect(url_for("verifyEmail"))
@@ -450,3 +448,118 @@ def confirm_email(token):
 @users.route("/email/success")
 def email_confirmed():
     return render_template("/email/verificationSuccessful.html")
+
+
+#Reset Password Page
+@users.route("/login/forgot-password")
+def forgot_password():
+    return render_template('/login/forgot-password.html')
+
+@users.route("/login/forgot-password-email", methods=['POST'])
+def forgot_password_email():
+    email = request.form.get('email')
+    email_found = False
+    conn = None
+    try:
+        conn = get_db_connection()
+        with conn.cursor() as cursor:
+            # Verify the user exists with email
+            cursor.execute("SELECT user_id FROM users WHERE email = %s", (email,))
+            user = cursor.fetchone()
+            
+            if user:
+                email_found = True
+    finally:
+        conn.close
+
+    if (email_found == True): 
+        send_password_reset_email(email)
+        flash('Check your email for reset instructions.', 'info')
+    else:
+        flash(f"No user with email {email} found.", "danger")
+
+        
+    return redirect(url_for('users.forgot_password'))
+
+@users.route("/login/forgot-password-username", methods=['POST'])
+def forgot_password_username():
+    username = request.form.get('username')
+    email = None
+    conn = None
+    
+    try:
+        conn = get_db_connection()
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("SELECT email FROM users WHERE username = %s", (username,))
+            user = cursor.fetchone()
+            
+            if user:
+                email = user['email']  # FIXED: Dict access, not user[0]
+            else:
+                flash(f"No user with username '{username}' found.", "danger")
+                
+    except Exception as e:
+        flash(f"Database error: {str(e)}", "danger")
+    finally:
+        if conn:
+            conn.close()
+
+    # Send email if user found
+    if email:
+        send_password_reset_email(email)
+        flash("Check your email for reset instructions.", "info")
+    else:
+        flash(f"No user with username '{username}' found.", "danger")
+
+    return redirect(url_for('users.forgot_password'))
+
+@users.route("/login/reset-password/<token>", methods=['GET', 'POST'])
+def reset_password(token):
+    email = None  # Initialize
+    
+    # Validate token FIRST
+    try:
+        email = password_reset_confirm_token(token)
+    except (SignatureExpired, BadSignature):
+        flash("Invalid or expired reset link.", "danger")
+        return redirect(url_for('users.forgot_password'))
+
+    # Validate password input
+    new_password = request.form.get('new_password')
+    if not new_password or len(new_password) < 6:
+        flash("Password must be at least 6 characters.", "danger")
+        return render_template('login/password-reset.html', token=token, email=email)
+
+    conn = None
+    try:
+        conn = get_db_connection()
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
+            user = cursor.fetchone()
+            
+            if not user:
+                flash(f"No user found with email '{email}'.", "danger")
+                return redirect(url_for('users.forgot_password'))
+
+            new_hash = hash_plaintext(new_password)
+            cursor.execute("UPDATE users SET password=%s WHERE email=%s", (new_hash, email))
+            conn.commit()
+            
+            flash("Password changed successfully!", "success")
+            return redirect("/login")
+            
+    except DatabaseError as e:
+        flash(f"Database error: {str(e)}", "danger")
+        if conn:
+            conn.rollback()
+        return redirect(url_for('users.forgot_password'))  # FIXED: Add return
+        
+    except Exception as e:
+        flash(f"Error updating password: {str(e)}", "danger")
+        return redirect(url_for('users.forgot_password'))  # FIXED: Add return
+        
+    finally:
+        if conn:
+            conn.close()
+    
+    return redirect(url_for('users.forgot_password'))
