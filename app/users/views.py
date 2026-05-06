@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 from .Hashing import hash_plaintext, hash_check_matches
 from . import users
 # For email module
-from .Emails import *
+from .emailVerification import *
 from itsdangerous import SignatureExpired, BadSignature
 # For creating a user account
 from flask_login import login_user, login_required, logout_user, current_user
