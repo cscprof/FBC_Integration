@@ -3,7 +3,7 @@ MySQL Backup
 Database: flourish_bc
 Backup Time: 2026-04-09 11:38:32
 */
-
+USE flourish_bc;
 SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `flourish_bc`.`alembic_version`;
 DROP TABLE IF EXISTS `flourish_bc`.`content_types`;
@@ -40,9 +40,9 @@ CREATE TABLE `event_tags` (
 CREATE TABLE `events` (
   `event_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `content_type` int DEFAULT NULL,
+  `description` varchar(5000) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
+  `content_type` int DEFAULT NULL,
   `posting_date` datetime DEFAULT NULL,
   `start_date` datetime NOT NULL,
   `end_date` datetime DEFAULT NULL,
@@ -62,7 +62,8 @@ CREATE TABLE `events` (
 CREATE TABLE `partners` (
   `partner_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
+  `description` varchar(5000) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
   `phone` varchar(32) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
   `contact_name` varchar(128) DEFAULT NULL,
@@ -71,6 +72,7 @@ CREATE TABLE `partners` (
   `city` varchar(128) DEFAULT NULL,
   `state` varchar(32) DEFAULT NULL,
   `zip` varchar(16) DEFAULT NULL,
+  `profile_picture` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`partner_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `resource_category` (
@@ -98,10 +100,13 @@ CREATE TABLE `resources` (
   `contact_phone` varchar(32) DEFAULT NULL,
   `user_id` int NOT NULL,
   `resource_category_id` int NOT NULL,
+  `partner_id` int DEFAULT NULL,
   PRIMARY KEY (`resource_id`),
   KEY `content_types_fk` (`content_type_id`),
   KEY `resource_category_fk` (`resource_category_id`),
+  KEY `partners_fk` (`partner_id`),
   CONSTRAINT `content_types_fk` FOREIGN KEY (`content_type_id`) REFERENCES `content_types` (`content_type_id`),
+  CONSTRAINT `partners_fk` FOREIGN KEY (`partner_id`) REFERENCES `partners` (`partner_id`),
   CONSTRAINT `resource_category_fk` FOREIGN KEY (`resource_category_id`) REFERENCES `resource_category` (`resource_category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `roles` (
@@ -169,7 +174,7 @@ COMMIT;
 BEGIN;
 LOCK TABLES `flourish_bc`.`partners` WRITE;
 DELETE FROM `flourish_bc`.`partners`;
-INSERT INTO `flourish_bc`.`partners` (`partner_id`,`name`,`description`,`phone`,`email`,`contact_name`,`address1`,`address2`,`city`,`state`,`zip`) VALUES (1, 'Geneva College', 'Liberal arts college located in Beaver Falls', '7246466717', 'admisions@geneva.eduu', 'Kathleen Grehl', '3200 College Ave', NULL, 'Beaver Falls', 'PA', '15010');
+INSERT INTO `flourish_bc`.`partners` (`partner_id`,`name`,`description`,`url`, `phone`,`email`,`contact_name`,`address1`,`address2`,`city`,`state`,`zip`) VALUES (1, 'Geneva College', 'Liberal arts college located in Beaver Falls', 'https://geneva.edu', '7246466717', 'admisions@geneva.eduu', 'Kathleen Grehl', '3200 College Ave', NULL, 'Beaver Falls', 'PA', '15010');
 UNLOCK TABLES;
 COMMIT;
 BEGIN;

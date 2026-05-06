@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block title %}Flourish Beaver County - Partners Admin{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="title has-text-centered">Partner Administration</h1>
+        <p class="has-text-centered is-size-6 mb-5" style="color: #666; margin-top: 10px;">
+            Manage partner records, keep contact information current, and remove outdated organizations.
+        </p>
+
+        <div class="uploadbutton">
+            <button onclick="document.getElementById('uploadModal').style.display='block'" class="uploadresourcebtn">
+                Add Partner
+            </button>
+        </div>
+
+        <div class="resources">
+            <div class="searchfilter">
+                <div class="searchcontainer">
+                    <form class="searchform" onsubmit="return false;">
+                        <input type="text" placeholder="Search by partner, contact, or address..." class="searchinput" id="adminPartnerSearchInput">
+                    </form>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table is-fullwidth is-striped admin-resource-table">
+                    <thead>
+                        <tr>
+                            <th>Partner</th>
+                            <th>Contact</th>
+                            <th>Address</th>
+                            <th>Website</th>
+                            <th class="has-text-centered">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminPartnerRows">
+                        {% for partner in partners %}
+                        <tr data-search="{{ partner.name }} {{ partner.description or '' }} {{ partner.contact_name or '' }} {{ partner.phone or '' }} {{ partner.email or '' }} {{ partner.address1 or '' }} {{ partner.address2 or '' }} {{ partner.city or '' }} {{ partner.state or '' }} {{ partner.zip or '' }}">
+                            <td>
+                                <strong>{{ partner.name }}</strong>
+                                {% if partner.description %}
+                                <div style="color:#666;">{{ partner.description }}</div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if partner.contact_name %}<div>{{ partner.contact_name }}</div>{% endif %}
+                                {% if partner.email %}<div>{{ partner.email }}</div>{% endif %}
+                                {% if partner.phone %}<div>{{ partner.phone }}</div>{% endif %}
+                                {% if not partner.contact_name and not partner.email and not partner.phone %}
+                                <span style="color:#777;">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if partner.address1 %}<div>{{ partner.address1 }}</div>{% endif %}
+                                {% if partner.address2 %}<div>{{ partner.address2 }}</div>{% endif %}
+                                {% if partner.city or partner.state or partner.zip %}
+                                <div>{{ partner.city or '' }} {{ partner.state or '' }} {{ partner.zip or '' }}</div>
+                                {% endif %}
+                                {% if not partner.address1 and not partner.address2 and not partner.city and not partner.state and not partner.zip %}
+                                <span style="color:#777;">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if partner.url %}
+                                <a href="{{ partner.url }}" target="_blank" rel="noopener noreferrer" class="resourcelink">
+                                    Open Link
+                                </a>
+                                {% else %}
+                                <span style="color:#777;">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="has-text-centered">
+                                <button
+                                    class="button is-small edit-partner-btn-inline"
+                                    data-partner-id="{{ partner.partner_id }}"
+                                    data-name="{{ partner.name|e }}"
+                                    data-description="{{ partner.description or ''|e }}"
+                                    data-url="{{ partner.url or ''|e }}"
+                                    data-contact-name="{{ partner.contact_name or ''|e }}"
+                                    data-phone="{{ partner.phone or ''|e }}"
+                                    data-email="{{ partner.email or ''|e }}"
+                                    data-address1="{{ partner.address1 or ''|e }}"
+                                    data-address2="{{ partner.address2 or ''|e }}"
+                                    data-city="{{ partner.city or ''|e }}"
+                                    data-state="{{ partner.state or ''|e }}"
+                                    data-zip="{{ partner.zip or ''|e }}"
+                                >
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="has-text-centered" style="color:#666;">No partners found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="uploadModal">
+    <div class="modalcontent">
+        <div class="modalheader">
+            <h2 class="modaltitle">Add Partner</h2>
+        </div>
+
+        <form action="{{ url_for('resources.upload_partner') }}" method="POST" class="modalform">
+            <input type="text" name="name" placeholder="Partner Name *" required>
+            <input type="text" name="description" placeholder="Description (Optional)">
+            <input type="text" name="url" placeholder="Website URL (Optional)">
+            <input type="text" name="contact_name" placeholder="Contact Name (Optional)">
+            <input type="text" name="email" placeholder="Contact Email (Optional)">
+            <input type="text" name="phone" placeholder="Contact Phone (Optional)">
+            <input type="text" name="address1" placeholder="Address Line 1 (Optional)">
+            <input type="text" name="address2" placeholder="Address Line 2 (Optional)">
+            <input type="text" name="city" placeholder="City (Optional)">
+            <input type="text" name="state" placeholder="State (Optional)">
+            <input type="text" name="zip" placeholder="ZIP (Optional)">
+
+            <div class="modalformactions">
+                <button type="button" onclick="document.getElementById('uploadModal').style.display='none'" class="modalbtncancel">Cancel</button>
+                <button type="submit" class="modalbtnsubmit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modalcontent">
+        <div class="modalheader">
+            <h2 class="modaltitle">Edit Partner</h2>
+            <button onclick="closeEditModal()" class="modalclose">&times;</button>
+        </div>
+
+        <form action="{{ url_for('resources.edit_partner', partner_id=0) }}" method="POST" class="modalform" id="editForm">
+            <input type="hidden" id="editPartnerId" name="partner_id">
+            <label for="editName" class="modallabel">Partner Name *</label>
+            <input type="text" id="editName" name="name" placeholder="Partner Name *" required>
+
+            <label for="editDescription" class="modallabel">Description (Optional)</label>
+            <input type="text" id="editDescription" name="description" placeholder="Description (Optional)">
+
+            <label for="editUrl" class="modallabel">Website URL (Optional)</label>
+            <input type="text" id="editUrl" name="url" placeholder="Website URL (Optional)">
+
+            <label for="editContactName" class="modallabel">Contact Name (Optional)</label>
+            <input type="text" id="editContactName" name="contact_name" placeholder="Contact Name (Optional)">
+
+            <label for="editEmail" class="modallabel">Contact Email (Optional)</label>
+            <input type="text" id="editEmail" name="email" placeholder="Contact Email (Optional)">
+
+            <label for="editPhone" class="modallabel">Contact Phone (Optional)</label>
+            <input type="text" id="editPhone" name="phone" placeholder="Contact Phone (Optional)">
+
+            <label for="editAddress1" class="modallabel">Address Line 1 (Optional)</label>
+            <input type="text" id="editAddress1" name="address1" placeholder="Address Line 1 (Optional)">
+
+            <label for="editAddress2" class="modallabel">Address Line 2 (Optional)</label>
+            <input type="text" id="editAddress2" name="address2" placeholder="Address Line 2 (Optional)">
+
+            <label for="editCity" class="modallabel">City (Optional)</label>
+            <input type="text" id="editCity" name="city" placeholder="City (Optional)">
+
+            <label for="editState" class="modallabel">State (Optional)</label>
+            <input type="text" id="editState" name="state" placeholder="State (Optional)">
+
+            <label for="editZip" class="modallabel">ZIP (Optional)</label>
+            <input type="text" id="editZip" name="zip" placeholder="ZIP (Optional)">
+
+            <div class="modalformactions">
+                <button type="button" onclick="closeEditModal()" class="modalbtncancel">Cancel</button>
+                <button type="button" onclick="deletePartner()" class="modalbtndelete">Delete</button>
+                <button type="submit" class="modalbtnsubmit">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function deletePartner() {
+        const partnerId = document.getElementById('editPartnerId').value;
+        if (confirm('Are you sure you want to delete this partner?')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ url_for("resources.delete_partner", partner_id=0) }}'.replace('0', partnerId);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+
+    function openEditModal(button) {
+        document.getElementById('editPartnerId').value = button.getAttribute('data-partner-id');
+        document.getElementById('editName').value = button.getAttribute('data-name') || '';
+        document.getElementById('editDescription').value = button.getAttribute('data-description') || '';
+        document.getElementById('editUrl').value = button.getAttribute('data-url') || '';
+        document.getElementById('editContactName').value = button.getAttribute('data-contact-name') || '';
+        document.getElementById('editPhone').value = button.getAttribute('data-phone') || '';
+        document.getElementById('editEmail').value = button.getAttribute('data-email') || '';
+        document.getElementById('editAddress1').value = button.getAttribute('data-address1') || '';
+        document.getElementById('editAddress2').value = button.getAttribute('data-address2') || '';
+        document.getElementById('editCity').value = button.getAttribute('data-city') || '';
+        document.getElementById('editState').value = button.getAttribute('data-state') || '';
+        document.getElementById('editZip').value = button.getAttribute('data-zip') || '';
+        document.getElementById('editModal').style.display = 'block';
+    }
+
+    function filterAdminRows() {
+        const searchValue = document.getElementById('adminPartnerSearchInput').value.toLowerCase();
+        const rows = document.querySelectorAll('#adminPartnerRows tr[data-search]');
+
+        rows.forEach((row) => {
+            const rowSearchText = row.getAttribute('data-search').toLowerCase();
+            row.style.display = rowSearchText.includes(searchValue) ? '' : 'none';
+        });
+    }
+
+    document.getElementById('editForm').addEventListener('submit', function () {
+        const partnerId = document.getElementById('editPartnerId').value;
+        this.action = '{{ url_for("resources.edit_partner", partner_id=0) }}'.replace('0', partnerId);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.edit-partner-btn-inline').forEach((button) => {
+            button.addEventListener('click', function () {
+                openEditModal(this);
+            });
+        });
+
+        document.getElementById('adminPartnerSearchInput').addEventListener('keyup', filterAdminRows);
+
+        window.onclick = function (event) {
+            const editModal = document.getElementById('editModal');
+            const uploadModal = document.getElementById('uploadModal');
+            if (event.target === editModal) {
+                editModal.style.display = 'none';
+            }
+            if (event.target === uploadModal) {
+                uploadModal.style.display = 'none';
+            }
+        };
+    });
+</script>
+{% endblock %}

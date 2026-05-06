@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Flourish Beaver County - Partners{% endblock %}
+
+{% block content %}
+
+<section class="section">
+    <div class="container">
+        <h1 class="title has-text-centered">Partners</h1>
+        <p class="has-text-centered is-size-5 mb-5" style="color: #666; margin-top: 10px;">
+            Those who help our community thrive!
+        </p>
+
+        <div class="resources">
+            <div class="searchfilter">
+                <div class="searchcontainer">
+                    <form class="searchform" onsubmit="return false;">
+                        <input type="text" placeholder="Search partners..." class="searchinput" id="partnerSearchInput">
+                    </form>
+                </div>
+            </div>
+
+            <div class="examplegrid" id="resourcesgrid">
+                {% for partner in partners %}
+                <div class="resource-card-wrapper" data-search="{{ partner.name }} {{ partner.description or '' }} {{ partner.contact_name or '' }} {{ partner.phone or '' }} {{ partner.email or '' }} {{ partner.address1 or '' }} {{ partner.address2 or '' }} {{ partner.city or '' }} {{ partner.state or '' }} {{ partner.zip or '' }}">
+                    {% if partner.url %}
+                    <a href="{{ partner.url }}" class="resource-card-link" target="_blank" rel="noopener noreferrer">
+                    {% else %}
+                    <a href="#" class="resource-card-link" onclick="event.preventDefault();">
+                    {% endif %}
+                        <div class="exampleboxes">
+                            <h3>{{ partner.name }}</h3>
+
+                            {% if partner.description %}
+                            <br>
+                            <h4>{{ partner.description }}</h4>
+                            {% endif %}
+                            {% if partner.contact_name %}
+                            <h6>{{ partner.contact_name }}</h6>
+                            {% endif %}
+                            {% if partner.phone %}
+                            <h6>{{ partner.phone }}</h6>
+                            {% endif %}
+                            {% if partner.email %}
+                            <h6>{{ partner.email }}</h6>
+                            {% endif %}
+                            {% if partner.address1 or partner.address2 or partner.city or partner.state or partner.zip %}
+                            <br>
+                            {% if partner.address1 %}<h6>{{ partner.address1 }}</h6>{% endif %}
+                            {% if partner.address2 %}<h6>{{ partner.address2 }}</h6>{% endif %}
+                            <h6>{{ partner.city or '' }} {{ partner.state or '' }} {{ partner.zip or '' }}</h6>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+                {% else %}
+                <div class="has-text-centered" style="color:#666;">No partners found.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const partnerSearchInput = document.getElementById('partnerSearchInput');
+        const partnerCards = document.querySelectorAll('.resource-card-wrapper');
+
+        function filterPartners() {
+            const searchValue = partnerSearchInput.value.toLowerCase();
+            partnerCards.forEach((card) => {
+                const cardText = card.getAttribute('data-search').toLowerCase();
+                card.style.display = cardText.includes(searchValue) ? 'block' : 'none';
+            });
+        }
+
+        partnerSearchInput.addEventListener('keyup', filterPartners);
+    });
+</script>
+{% endblock %}
