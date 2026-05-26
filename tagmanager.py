@@ -1,8 +1,8 @@
 
 from flask import render_template, request, redirect, url_for
 from sqlalchemy import select
-from db import db
-from app.resources.models import resources, events, tags, users
+from database import db_class
+# from app.resources.models import resources, events, tags, users
 
 
 def get_tags(element_id, element_type):

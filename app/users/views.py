@@ -2,7 +2,7 @@ import os
 import uuid
 from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
-from db import get_db_connection
+from database import get_db_connection
 from pymysql import DatabaseError
 from pymysql.cursors import DictCursor
 from werkzeug.utils import secure_filename

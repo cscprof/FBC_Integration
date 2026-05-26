@@ -31,9 +31,9 @@
                     <select class="categoryselect">
                         <option value="all">All Categories</option>
                         <option value="college">College</option>
-                        <option value="scholarships">Scholarships</option>
+                        <option value="scholarship">Scholarships</option>
                         <option value="mental">Mental Health</option>
-                        <option value="jobs">Jobs</option>
+                        <option value="job">Jobs</option>
                         <option value="activities">Activities</option>
                         <option value="other">Other</option>
                     </select>
@@ -43,7 +43,7 @@
             <div class="examplegrid" id="resourcesgrid">
 
                 <!-- College -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=college" class="resource-card-link">
+                <a href="{{ url_for('resources.search') }}?category=1" class="resource-card-link">
                     <div class="exampleboxes" data-category="college">
                         <h3>College</h3>
                         <p>Explore colleges and higher education opportunities.</p>
@@ -57,8 +57,8 @@
                 </a>
 
                 <!-- Scholarships -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=scholarships" class="resource-card-link">
-                    <div class="exampleboxes" data-category="scholarships">
+                <a href="{{ url_for('resources.search') }}?category=2" class="resource-card-link">
+                    <div class="exampleboxes" data-category="scholarship">
                         <h3>Scholarships</h3>
                         <p>Find scholarships and financial aid opportunities.</p>
                         <ul>
@@ -71,7 +71,7 @@
                 </a>
 
                 <!-- Mental Health -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=mental" class="resource-card-link">
+                <a href="{{ url_for('resources.search') }}?category=3" class="resource-card-link">
                     <div class="exampleboxes" data-category="mental">
                         <h3>Mental Health</h3>
                         <p>Free and confidential support for stress, anxiety, and other challenges.</p>
@@ -85,7 +85,7 @@
                 </a>
 
                 <!-- Jobs -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=jobs" class="resource-card-link">
+                <a href="{{ url_for('resources.search') }}?category=4" class="resource-card-link">
                     <div class="exampleboxes" data-category="jobs">
                         <h3>Jobs</h3>
                         <p>Find part-time jobs, summer work, and internships in Beaver County.</p>
@@ -99,7 +99,7 @@
                 </a>
 
                 <!-- Activities -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=activities" class="resource-card-link">
+                <a href="{{ url_for('resources.search') }}?category=5" class="resource-card-link">
                     <div class="exampleboxes" data-category="activities">
                         <h3>Activities</h3>
                         <p>Join clubs, sports, and activities to meet new people and explore interests.</p>
@@ -113,7 +113,7 @@
                 </a>
 
                 <!-- Other -->
-                <a href="{{ url_for('resources.resourcesearch') }}?category=other" class="resource-card-link">
+                <a href="{{ url_for('resources.search') }}?category=6" class="resource-card-link">
                     <div class="exampleboxes" data-category="other">
                         <h3>Other</h3>
                         <p>Additional resources to support your growth and success.</p>
