@@ -10,7 +10,9 @@ from loginManager import role_required
 @resources_blueprint.route("/resources")
 @resources_blueprint.route("/resource-directory")
 def resource_directory():
-    # Get resource categories        
+    ''' 
+        Get resource categories 
+    '''
    
     categories_list = db.get_resource_categories()
     return render_template("resources/resourceDirectory.html", categories=categories_list)
@@ -18,24 +20,26 @@ def resource_directory():
 
 @resources_blueprint.route("/resources/search")
 def search():
-    # Search for resources based on category 
-
+    '''
+        Search for resources based on category 
+    '''
+   
     categories_list = db.get_resource_categories()
     tag_list = db.get_tag_list()
 
     # Get input parameter
-    category_id = request.args.get('category', default=0, type=int)
+    category_id = request.args.get('category', default=0, type=int)    
 
     # If no category provided or category out of range, return to resources directory    
     if category_id == 0 or category_id > db.get_num_categories():
         render_template("resources/resourceDirectory.html", categories=categories_list)
 
-    resources = db.get_resources(category_id)      
+    resources = db.get_resources(category_id) 
 
     print("========================================")
     # print(categories_list)
     # print(tag_list)
-    # print(resources)
+    print(resources)
 
     return render_template('resources/resourcesearch.html', resources=resources, categories=categories_list)
 
@@ -45,8 +49,10 @@ def resources_admin():
     
     categories_list = db.get_resource_categories()
     resources = db.get_resources()   
+    tags_list = db.get_tags()
     
-    return render_template("resources/admin.html", resources=resources, categories=categories_list)
+    return render_template("resources/admin.html", resources=resources, categories=categories_list, tag_list=tags_list)
+
 
 #HEY CHANGES WE NEED TO MAKE NEXT
 ##Making sure it only exists as admin
@@ -57,47 +63,70 @@ def resources_admin():
 @resources_blueprint.route("/resources/upload", methods=["POST"])
 @role_required([4, 5])
 def upload_resource():
-    # Get the form data that the user submitted
-    title = request.form.get('title', '').strip()
-    url = request.form.get('url', '').strip()
-    resource_category_id = request.form.get('resource_category_id', '').strip()
-    name = request.form.get('name', '').strip()
-    email = request.form.get('email', '').strip()
-    phone = request.form.get('phone', '').strip()
-    resource_tags = request.form.get('all the input', '').strip()
     
+    data = {}
+
+    # Get the required form data that the user submitted
+    data['title'] = request.form.get('title', '').strip()
+    data['url'] = request.form.get('url', '').strip()
+    data['resource_category_id'] = request.form.get('resource_category_id', '').strip()
+
     # Make sure all required fields were filled out
-    if not title or not url or not resource_category_id:
+    if not data['title'] or not data['url'] or not data['resource_category_id']:
         return redirect(url_for('resources.resources_admin'))
     
+    # Get the rest of the form data
+    data['description'] = request.form.get('description', '').strip()
+    data['contact_name'] = request.form.get('name', '').strip()
+    data['contact_email'] = request.form.get('email', '').strip()
+    data['contact_phone'] = request.form.get('phone', '').strip()
+
+    # tags is an array of 0 or more tags
+    data['selected_tags'] = request.form.getlist('tags-list[]')
+
+    # Placeholders
+    data['user_id'] = 1 # Kathleen
+    data['content_type_id'] = -1
+
+
+    print(data)
+
     try:
-        #Guys this might be useful later so I'll leave it here but I'm changing the value to none
-        #Idek what a content type is I don't think it's been implemented by anyone yet
-        content_type = None
+       
+        resource_id = db.add_resource(data)
+
+        if resource_id > 0 and data['selected_tags']:
+            print("List has stuff")
+            db.add_tags(data)
+        else:
+            print("No stuff in list")
+
+
+        # # Create the new resource with all the information
+        # new_resource = resources(
+        #     description=description,
+        #     title= title,
+        #     url=url,
+        #     content_type_id=content_type,
+        #     resource_category_id=int(resource_category_id),
+        #     user_id=current_user.id,
+        #     contact_name=name,
+        #     contact_email=email,
+        #     contact_phone=phone,
+        #     resource_tags=resource_tags,
+        # )
         
-        # Create the new resource with all the information
-        new_resource = resources(
-            description=title,
-            url=url,
-            content_type_id=content_type,
-            resource_category_id=int(resource_category_id),
-            user_id=current_user.id,
-            contact_name=name,
-            contact_email=email,
-            contact_phone=phone,
-            resource_tags=resource_tags,
-        )
-        
-        # Save it to the database
-        db.session.add(new_resource)
-        db.session.commit()
+        # # Save it to the database
+        # db.session.add(new_resource)
+        # db.session.commit()
         
         # Show the user their newly uploaded resource
         return redirect(url_for('resources.resources_admin'))
         
     except Exception as e:
+        pass
         # If something went wrong, undo any changes and go back
-        db.session.rollback()
+        # db.session.rollback()
         return redirect(url_for('resources.resources_admin'))
 
 

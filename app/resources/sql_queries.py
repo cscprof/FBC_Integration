@@ -27,7 +27,7 @@ def get_resources(category_id=0):
             ,r.contact_name
             ,r.contact_email
             ,r.contact_phone
-            ,t.tag
+            ,t.tag_name
         from
             resources r
             inner join resource_category rc on (r.resource_category_id = rc.resource_category_id)
@@ -43,6 +43,24 @@ def get_resources(category_id=0):
 
     # Get all resource categories
     return rows
+
+def get_tags():
+    
+    db = db_class()
+
+    sql = """
+        select
+            t.tag_id
+            ,t.tag_name
+        from
+            tags t
+        """
+
+    rows = db.query(sql)
+
+    # Get all resource categories
+    return rows
+
 
 
 def get_num_categories():
@@ -68,6 +86,13 @@ def get_tag_list():
     return rows
 
 
+def add_resource(data):
+    # Add new resource
+    pass
 
+
+def add_tags(data, resource_id):
+    # Add tags to a resource
+    pass
 
 
