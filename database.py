@@ -33,7 +33,7 @@ class db_class():
         )
 
 
-    def query(self, sql):
+    def query(self, sql, one_record=False):
 
         # Connect to database
         conn = self.connect()
@@ -41,9 +41,37 @@ class db_class():
         # Execute query
         with conn.cursor() as cursor:
             cursor.execute(sql)
-            rows = cursor.fetchall()
+
+            if one_record == True:
+                # Get first/only result
+                rows = cursor.fetchone() 
+            else: 
+                # Get all results
+                rows = cursor.fetchall()
 
         # Close the connection
         conn.close()
 
         return rows
+    
+
+    def insert(self, sql):
+        # Add a record to the database
+
+        print(sql)
+
+        # Connect to database
+        conn = self.connect()
+
+        # Execute query
+        with conn.cursor() as cursor:
+            cursor.execute(sql)
+            new_id = cursor.lastrowid            
+
+        # Commit change and get insert id
+        conn.commit()
+
+        # Close the connection
+        conn.close()
+
+        return new_id

@@ -36,10 +36,10 @@ def search():
 
     resources = db.get_resources(category_id) 
 
-    print("========================================")
+    # print("========================================")
     # print(categories_list)
     # print(tag_list)
-    print(resources)
+    # print(resources)
 
     return render_template('resources/resourcesearch.html', resources=resources, categories=categories_list)
 
@@ -60,6 +60,8 @@ def resources_admin():
 ##Whatever content type is should probably be figured out
 ###Should capture current user id instead of just "1"
 ###-Owen B.
+
+
 @resources_blueprint.route("/resources/upload", methods=["POST"])
 @role_required([4, 5])
 def upload_resource():
@@ -77,16 +79,15 @@ def upload_resource():
     
     # Get the rest of the form data
     data['description'] = request.form.get('description', '').strip()
-    data['contact_name'] = request.form.get('name', '').strip()
-    data['contact_email'] = request.form.get('email', '').strip()
-    data['contact_phone'] = request.form.get('phone', '').strip()
+    data['contact_name'] = request.form.get('contact_name', '').strip()
+    data['contact_email'] = request.form.get('contact_email', '').strip()
+    data['contact_phone'] = request.form.get('contact_phone', '').strip()
 
     # tags is an array of 0 or more tags
     data['selected_tags'] = request.form.getlist('tags-list[]')
 
     # Placeholders
     data['user_id'] = 1 # Kathleen
-    data['content_type_id'] = -1
 
 
     print(data)
@@ -101,24 +102,6 @@ def upload_resource():
         else:
             print("No stuff in list")
 
-
-        # # Create the new resource with all the information
-        # new_resource = resources(
-        #     description=description,
-        #     title= title,
-        #     url=url,
-        #     content_type_id=content_type,
-        #     resource_category_id=int(resource_category_id),
-        #     user_id=current_user.id,
-        #     contact_name=name,
-        #     contact_email=email,
-        #     contact_phone=phone,
-        #     resource_tags=resource_tags,
-        # )
-        
-        # # Save it to the database
-        # db.session.add(new_resource)
-        # db.session.commit()
         
         # Show the user their newly uploaded resource
         return redirect(url_for('resources.resources_admin'))
