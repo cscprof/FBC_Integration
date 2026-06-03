@@ -87,7 +87,7 @@ def upload_resource():
     data['selected_tags'] = request.form.getlist('tags-list[]')
 
     # Placeholders
-    data['user_id'] = 1 # Kathleen
+    data['user_id'] = current_user.id     #1 # Kathleen
 
 
     print(data)

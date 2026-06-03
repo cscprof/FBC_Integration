@@ -34,10 +34,10 @@ def fetch_approved_events_json():
         conn = get_db_connection()
         with conn.cursor() as cursor:
             cursor.execute("""
-                SELECT t.tag
+                SELECT t.tag_name
                 FROM event_tags et
                 JOIN tags t ON et.tag_id = t.tag_id
-                WHERE et.event_id = %s
+                WHERE t.tag_type='school' AND et.event_id = %s
             """, (row['event_id'],))
             school_rows = cursor.fetchall()
         conn.close()
@@ -109,23 +109,25 @@ def fetch_approved_events_python():
 def addEvent():
     conn = get_db_connection()
     try:
+        # Get Content Types and School Tags
         with conn.cursor() as cursor:
-            content_types = [
-                ('Worship', 'Worship events'),
-                ('Retreat', 'Retreat events'),
-                ('Training', 'Training events'),
-                ('Service', 'Service events'),
-                ('Meeting', 'Meeting events')
-            ]
-            for name, desc in content_types:
-                cursor.execute('SELECT 1 FROM content_types WHERE name = %s', (name,))
-                if not cursor.fetchone():
-                    cursor.execute('INSERT INTO content_types (name, description) VALUES (%s, %s)', (name, desc))
-            conn.commit()
+            # content_types = [
+            #     ('Worship', 'Worship events'),
+            #     ('Retreat', 'Retreat events'),
+            #     ('Training', 'Training events'),
+            #     ('Service', 'Service events'),
+            #     ('Meeting', 'Meeting events')
+            # ]
+            # for name, desc in content_types:
+            #     cursor.execute('SELECT 1 FROM content_types WHERE name = %s', (name,))
+            #     if not cursor.fetchone():
+            #         cursor.execute('INSERT INTO content_types (name, description) VALUES (%s, %s)', (name, desc))
+            # conn.commit()
             
             cursor.execute("SELECT MIN(content_type_id) as content_type_id, name FROM content_types GROUP BY name")
             tags = cursor.fetchall()
-            cursor.execute("SELECT tag_id as school_tag_id, tag as school_name FROM tags")
+
+            cursor.execute("SELECT tag_id as school_tag_id, tag_name as school_name FROM tags WHERE tag_type='school'")
             school_tags = cursor.fetchall()
     finally:
         conn.close()
@@ -222,8 +224,8 @@ def calendar():
     conn = get_db_connection()
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT tag FROM tags ORDER BY tag")
-            schools = [row['tag'] for row in cursor.fetchall()]
+            cursor.execute("SELECT tag_name FROM tags WHERE tag_type='school' ORDER BY tag_name")
+            schools = [row['tag_name'] for row in cursor.fetchall()]
     finally:
         conn.close()
     return render_template('events/calendar.html', schools=schools)

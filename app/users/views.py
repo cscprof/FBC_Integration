@@ -23,9 +23,11 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Signup
+
 @users.route("/add_user", methods=["GET", "POST"])
 def add_user():
+    #Create New User
+
     if request.method == "POST":
         # get the entered values from the signup page
         role_id = request.form.get('userRole', '').strip()
@@ -34,16 +36,20 @@ def add_user():
         middle_name = request.form.get('middle_name', '').strip()
         email = request.form.get('email', '').strip()
         graduation_year_raw = request.form.get('graduation_year', '').strip()
+        
         # checks if the entered grad year is valid
-        if not graduation_year_raw: graduation_year = None 
+        if not graduation_year_raw: 
+            graduation_year = None 
         else:
             try: 
                 graduation_year = int(graduation_year_raw)
             except ValueError:
                 flash("Graduation year must be an integer.")
                 return render_template('signup/signup.html', form=request.form)
+            
         password = request.form.get('password', '').strip()
         passwordConfirmation = request.form.get('passwordConfirmation', '').strip()
+        
         username = request.form.get('username', '').strip().lower()
 
         # checks if entered password is the same if both fields
@@ -83,6 +89,7 @@ def add_user():
                 conn.close()
         return redirect(url_for('users.login_page'))
 
+
 @users.route('/signup')
 def signup_page():
     return render_template("/signup/signup.html")
@@ -92,6 +99,7 @@ def signup_page():
 def login_page():
     return render_template("login/login.html")
 
+
 @users.route("/logout")
 @login_required
 def logout():
@@ -99,7 +107,8 @@ def logout():
     flash('You have been logged out.')
     return redirect("/")
 
-@users.route("/auth_login", methods=["GET", "POST"])
+
+@users.route("/auth_login", methods=["POST"])
 def auth_login():
     if request.method == "POST":
         username = request.form.get('username', '').strip()
@@ -145,6 +154,7 @@ def auth_login():
             # return redirect(url_for('profile.profile', username=username))
         flash("Invalid Login. Username or Password is Incorrect. Please Try Again!")
         return redirect(url_for('users.login_page'))
+
 
 # Add tag route only available for admins
 @users.route('/admin/tags')
