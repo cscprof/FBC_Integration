@@ -1,5 +1,5 @@
 from argon2 import PasswordHasher, extract_parameters
-from argon2.exceptions import VerifyMismatchError
+from argon2.exceptions import InvalidHashError, VerifyMismatchError
 
 """
 Argon2 hash functions.
@@ -28,7 +28,7 @@ def hash_check_matches(plaintext_password, stored_hash):
         is_verified = hasher.verify(stored_hash, plaintext_password)
         return is_verified
 
-    except VerifyMismatchError:
+    except (InvalidHashError, VerifyMismatchError):
         #password did not match, alert user somehow
         return False
         
