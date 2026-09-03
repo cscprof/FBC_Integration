@@ -2,11 +2,27 @@
 
 {% block title %}Admin{% endblock %}
 
+
+{% block head %}
+<style>
+.add-event a {
+    background-color: #aaeb54;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="events-container">
     <h1 class="title">Admin Dashboard</h1>
 
-    <div class="section">
+    <div class="section">        
+         {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
+            <div class="add-event">
+                <a href="/add-event" class="button">Add Event</a>
+            </div>
+        {% endif %}
         <div class="header">Manage Events</div>
         <div class="header-2">Approved Events</div>
         <div class="list">
@@ -169,49 +185,9 @@
                 <div class="resource">No events found in the database.</div>
             {% endif %}
         </div>
-    </div>
 
-    <div class="section">
-        <details class="past-events-collapse">
-            <summary>Past Events</summary>
-            <div class="list">
-                {% if past_events %}
-                    {% for event in past_events %}
-                    <div class="resource">
-                        <div>
-                            <span class="event-link" 
-                                  data-name="{{ event['name'] }}" 
-                                  data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') }}"
-                                  data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') }}"
-                                  data-description="{{ event['description'] }}"
-                                  data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
-                                  data-url="{{ event['url'] or '' }}"
-                                  data-status="{{ event['status'] if event['status'] else 'pending' }}"
-                                  data-contact-name="{{ event['contact_name'] or '' }}"
-                                  data-contact-phone="{{ event['contact_phone'] or '' }}"
-                                  data-contact-email="{{ event['contact_email'] or '' }}"
-                                  data-address1="{{ event['event_address1'] or '' }}"
-                                  data-address2="{{ event['event_address2'] or '' }}"
-                                  data-city="{{ event['event_city'] or '' }}"
-                                  data-state="{{ event['event_state'] or '' }}"
-                                  data-postal="{{ event['event_postal_code'] or '' }}">
-                                {{ event['name'] }}
-                            </span><br>
-                            <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
-                            <p>{{ event['description'] }}</p>
-                            <small>Submitted by: {{ event['submitted_by'] }}</small>
-                            <div class="status">
-                                Status: {{ event['status'] if event['status'] else 'pending' }}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="resource">No past events</div>
-                {% endif %}
-            </div>
-        </details>
     </div>
+        
 </div>
 
 <div id="overlay"></div>
