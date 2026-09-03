@@ -1,3 +1,4 @@
+import pymysql
 import os
 import uuid
 from functools import wraps
