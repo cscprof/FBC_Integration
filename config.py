@@ -62,7 +62,7 @@ class GenevaConfig(Config):
 
 config = {
     'base': BaseConfig,
-    'production': ProductionConfig,
+    'docker': ProductionConfig,
     'geneva': GenevaConfig,
     'default': BaseConfig
 }

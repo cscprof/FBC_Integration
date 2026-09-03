@@ -2,11 +2,27 @@
 
 {% block title %}Admin{% endblock %}
 
+
+{% block head %}
+<style>
+.add-event a {
+    background-color: #aaeb54;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="events-container">
     <h1 class="title">Admin Dashboard</h1>
 
-    <div class="section">
+    <div class="section">        
+         {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
+            <div class="add-event">
+                <a href="/add-event" class="button">Add Event</a>
+            </div>
+        {% endif %}
         <div class="header">Manage Events</div>
         <div class="mb-3 mt-3">
             <label for="contentTypeFilter">Content Type:</label>
@@ -195,7 +211,9 @@
                 <div class="resource">No events found in the database.</div>
             {% endif %}
         </div>
+
     </div>
+        
 </div>
 
 <div id="overlay"></div>

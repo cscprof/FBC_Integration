@@ -42,7 +42,7 @@
                             <th>Title</th>
                             <th>Category</th>
                             <th>Contact</th>
-                            <th>Add Link</th>
+                            <th>Link</th>
                             <th class="has-text-centered">Actions</th>
                         </tr>
                     </thead>
@@ -94,37 +94,37 @@
     </div>
 </section>
 
+
 <div id="uploadModal">
     <div class="modalcontent">
         <div class="modalheader">
-            <h2 class="modaltitle">Add Resource</h2>
+            <h2 class="modaltitle">Add Resource</h2>                        
         </div>
 
         <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
-            <input type="text" name="title" placeholder="Title *" required>
+            <input type="text" name="title" placeholder="Resource Name *" required>
+            <input type="text" name="description" placeholder="Description (Optional)">
             <input type="text" name="url" placeholder="Add Link *" required>
-            <input type="text" name="name" placeholder="Contact Name (Optional)">
-            <input type="text" name="email" placeholder="Contact Email (Optional)">
-            <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
+            <input type="text" name="contact_name" placeholder="Contact Name (Optional)">
+            <input type="text" name="contact_email" placeholder="Contact Email (Optional)">
+            <input type="text" name="contact_phone" placeholder="Contact Phone Number (Optional)">
             <select name="resource_category_id" required>
                 <option value="">Category *</option>
-                {% if categories %}
-                    {% for cat in categories %}
-                        <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
-                    {% endfor %}
-                {% else %}
-                    <option value="1">College</option>
-                    <option value="2">Mental</option>
-                    <option value="3">Jobs</option>
-                    <option value="4">Tutoring</option>
-                    <option value="5">Activities</option>
-                    <option value="6">Career</option>
-                {% endif %}
+                {% for cat in categories %}
+                    <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
+                {% endfor %}
             </select>
 
+            <label for="tags-list">Choose applicable tag(s):</label>
+            <select id="tags-list" name="tags-list[]" optional multiple size="4">                
+                {% for tag in tag_list %}
+                    <option value="{{ tag.tag_id }}">{{ tag.tag_name|title }}</option>
+                {% endfor %}                
+            </select>
+           
             <div class="modalformactions">
                 <button type="button" onclick="document.getElementById('uploadModal').style.display='none'" class="modalbtncancel">Cancel</button>
-                <button type="submit" class="modalbtnsubmit">Save</button>
+                <button type="submit" class="modalbtnsubmit">Submit</button>
             </div>
         </form>
     </div>
@@ -182,6 +182,7 @@
 </div>
 
 <script>
+
     function deleteResource() {
         const resourceId = document.getElementById('editResourceId').value;
         if (confirm('Are you sure you want to delete this resource?')) {
@@ -247,6 +248,8 @@
                 uploadModal.style.display = 'none';
             }
         };
-    });
+    });    
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 {% endblock %}

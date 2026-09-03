@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import abort
 from flask_login import LoginManager, current_user
-from db import get_db_connection
+from database import get_db_connection
 from app.Models.Account import Account
 
 login_manager = LoginManager()
@@ -13,7 +13,7 @@ login_manager.needs_refresh_message = 'Session expired. Please reauthenticate.'
 login_manager.needs_refresh_message_category = 'warning'
 
 
-# Creates a user account from the mathcing database entry for the entered user_id
+# Creates a user account from the matching database entry for the entered user_id
 @login_manager.user_loader
 def load_user(user_id):
     conn = get_db_connection()
@@ -35,7 +35,7 @@ def load_user(user_id):
             nameLast=row['last_name'].capitalize() if row['last_name'] else '',
             nameMiddle=row['middle_name'].capitalize() if row['middle_name'] else None,
             gradYear=row['graduation_year'],
-            emailIsVerified=row.get('email_is_verified', 0),
+            emailIsVerified=row.get('email_is_verified', False),
             profilePicture=row.get('profile_picture', None),
         )
     return None
