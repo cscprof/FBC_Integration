@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Tags{% endblock %}
+
+{% block content %}
+<div class="container section">
+    <h1 class="title has-text-centered" style="margin-top: 1rem; margin-bottom: 2rem;">Tags Dashboard</h1>
+    
+    <div class="box">
+        <h2 class="subtitle">Create New Tag</h2>
+        <form action="{{ url_for('users.add_tag') }}" method="POST" class="field has-addons" style="max-width: 400px; margin-bottom: 2rem;">
+            <div class="control is-expanded">
+                <input class="input" type="text" id="tag" name="tag" placeholder="New Tag Name" required>
+            </div>
+            <div class="control">
+                <button type="submit" class="button" style="background-color: #2e44cc; color: white;">Add Tag</button>
+            </div>
+        </form>
+
+        <h2 class="subtitle">Existing Tags</h2>
+        {% if tags %}
+            <div class="table-responsive">
+                <table class="table is-striped is-fullwidth is-hoverable mt-3 admin-resource-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">ID</th>
+                            <th>Tag Name</th>
+                            <th style="width: 15%; text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for tag in tags %}
+                    <tr>
+                        <td style="vertical-align: middle;">{{ tag.tag_id }}</td>
+                        <td style="vertical-align: middle;"><strong>{{ tag.tag }}</strong></td>
+                        <td class="has-text-centered">
+                            <form action="{{ url_for('users.delete_tag', tag_id=tag.tag_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tag?');">
+                                <button type="submit" class="button is-danger is-small">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        {% else %}
+            <div class="notification is-info is-light">No tags found.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

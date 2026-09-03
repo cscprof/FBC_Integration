@@ -11,40 +11,34 @@
             Everything you need to succeed - from college prep to mental health support
         </p>
 
-        {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
-        <div class="uploadbutton">
-            <button onclick="document.getElementById('uploadModal').style.display='flex'" class="uploadresourcebtn">
-                Upload Resource
-            </button>
-        </div>
-        {% endif %}
-
         <div class="resources">
             <div class="searchfilter">
                 <div class="searchcontainer">
                     <form class="searchform">
-                        <input type="text" placeholder="Search resources..." class="searchinput" name="search">
-                        
+                        <input type="text" placeholder="Search resources..." class="searchinput" name="search">                        
                     </form>
                 </div>
 
                 <div class="categorydropdown">
                     <select class="categoryselect">
-                        <option value="all">All Categories</option>
-                        <option value="college">College</option>
-                        <option value="mental">Mental Health</option>
-                        <option value="jobs">Jobs</option>
-                        <option value="tutoring">Tutoring</option>
-                        <option value="activities">Activities</option>
-                        <option value="career">Career</option>
+                        <option value="0">All Categories</option>
+                        <option value="1">College</option>
+                        <option value="2">Scholarships</option>
+                        <option value="3">Mental Health</option>
+                        <option value="4">Jobs</option>
+                        <option value="5">Activities</option>
+                        <option value="6">Other</option>
                     </select>
                 </div>
             </div>
 
             <div class="examplegrid" id="resourcesgrid">
                 {% for resource in resources %}
+
+                <!-- <p>{{ resource }}</p> -->
                 <div class="resource-card-wrapper"
                      data-category="{{ resource.resource_category_name }}"
+                     data-category-id="{{ resource.resource_category_id }}"
                      data-title="{{ resource.description|e }}"
                      data-url="{{ resource.url|e }}"
                      data-category-name="{{ resource.resource_category_name|e }}"
@@ -68,7 +62,8 @@
                             data-category-id="{{ resource.resource_category_id }}"
                             data-name="{{ resource.contact_name or ''|e }}"
                             data-email="{{ resource.contact_email or ''|e }}"
-                            data-phone="{{ resource.contact_phone or ''|e }}">
+                            data-phone="{{ resource.contact_phone or ''|e }}"
+                            data-tags="{{ resource.reourcce_tags or ''|e }}">
                         Edit
                     </button>
                     {% endif %}
@@ -82,42 +77,6 @@
         
     </div>
 </section>
-
-<div id="uploadModal">
-    <div class="modalcontent">
-        <div class="modalheader">
-            <h2 class="modaltitle">Upload Resource</h2>
-        </div>
-
-        <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
-            <input type="text" name="title" placeholder="Title *" required>
-            <input type="text" name="url" placeholder="URL *" required>
-            <input type="text" name="name" placeholder="Contact Name (Optional)">
-            <input type="text" name="email" placeholder="Contact Email (Optional)">
-            <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
-            <select name="resource_category_id" required>
-                <option value="">Category *</option>
-                {% if categories %}
-                    {% for cat in categories %}
-                        <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
-                    {% endfor %}
-                {% else %}
-                    <option value="1">College</option>
-                    <option value="2">Mental</option>
-                    <option value="3">Jobs</option>
-                    <option value="4">Tutoring</option>
-                    <option value="5">Activities</option>
-                    <option value="6">Career</option>
-                {% endif %}
-            </select>
-
-            <div class="modalformactions">
-                <button type="button" onclick="document.getElementById('uploadModal').style.display='none'" class="modalbtncancel">Cancel</button>
-                <button type="submit" class="modalbtnsubmit">Submit</button>
-            </div>
-        </form>
-    </div>
-</div>
 
 <div id="editModal" class="modal">
     <div class="modalcontent">
@@ -147,18 +106,9 @@
             <label for="editCategory" class="modallabel">Category *</label>
             <select id="editCategory" name="resource_category_id" required>
                 <option value="">Category *</option>
-                {% if categories %}
-                    {% for cat in categories %}
-                        <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
-                    {% endfor %}
-                {% else %}
-                    <option value="1">College</option>
-                    <option value="2">Mental</option>
-                    <option value="3">Jobs</option>
-                    <option value="4">Tutoring</option>
-                    <option value="5">Activities</option>
-                    <option value="6">Career</option>
-                {% endif %}
+                {% for cat in categories %}
+                    <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
+                {% endfor %}}
             </select>
             
             <div class="modalformactions">
@@ -180,13 +130,13 @@
         <div class="resource-info-body">
             <div class="resource-info-section">
                 <div class="resource-info-row">
-                    <div class="resource-info-label">Category</div>
+                    <div class="resource-info-section-title">Category:</div>
                     <div class="resource-info-value" id="resourceInfoCategory">-</div>
                 </div>
             </div>
 
             <div class="resource-info-section">
-                <div class="resource-info-section-title">Contact</div>
+                <div class="resource-info-section-title">Contact:</div>
                 <div class="resource-info-contact">
                     <div class="resource-info-contact-line" id="resourceInfoName"></div>
                     <div class="resource-info-contact-line" id="resourceInfoEmail"></div>
@@ -272,7 +222,8 @@
         categorySelect.value = categoryParam;
     }
 
-    function filterResources() {
+    function filterResources() {        
+
         const searchValue = searchInput.value.toLowerCase();
         const selectedCategory = categorySelect.value;
 
@@ -281,10 +232,8 @@
             const textContent = box.innerText.toLowerCase();
 
             const matchesSearch = textContent.includes(searchValue);
-            const matchesCategory =
-                selectedCategory === "all" || boxCategory === selectedCategory;
-
-            if (matchesSearch && matchesCategory) {
+         
+            if (matchesSearch) {
                 box.style.display = "block";
             } else {
                 box.style.display = "none";
@@ -342,13 +291,18 @@
         }
     }
 
+    // Filter resources on page after every letter added / removed
     searchInput.addEventListener("keyup", filterResources);
-    categorySelect.addEventListener("change", filterResources);
+    
+    // When the category dropdown changes, go to new pge
+    categorySelect.addEventListener("change", (event) => {
 
-    if (categoryParam) {
-        filterResources();
-    }
+        var selectedUrl = "/resources/search?category=" + event.target.value
+        window.location.href = selectedUrl;
+    });
+        
 });
 </script>
 
 {% endblock %}
+

@@ -3,7 +3,7 @@ import os
 import uuid
 from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
-from db import get_db_connection
+from database import get_db_connection
 from pymysql import DatabaseError
 from pymysql.cursors import DictCursor
 from werkzeug.utils import secure_filename
@@ -24,9 +24,11 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Signup
+
 @users.route("/add_user", methods=["GET", "POST"])
 def add_user():
+    #Create New User
+
     if request.method == "POST":
         # get the entered values from the signup page
         role_id = request.form.get('userRole', '').strip()
@@ -35,16 +37,20 @@ def add_user():
         middle_name = request.form.get('middle_name', '').strip()
         email = request.form.get('email', '').strip()
         graduation_year_raw = request.form.get('graduation_year', '').strip()
+        
         # checks if the entered grad year is valid
-        if not graduation_year_raw: graduation_year = None 
+        if not graduation_year_raw: 
+            graduation_year = None 
         else:
             try: 
                 graduation_year = int(graduation_year_raw)
             except ValueError:
                 flash("Graduation year must be an integer.")
                 return render_template('signup/signup.html', form=request.form)
+            
         password = request.form.get('password', '').strip()
         passwordConfirmation = request.form.get('passwordConfirmation', '').strip()
+        
         username = request.form.get('username', '').strip().lower()
 
         # checks if entered password is the same if both fields
@@ -84,6 +90,7 @@ def add_user():
                 conn.close()
         return redirect(url_for('users.login_page'))
 
+
 @users.route('/signup')
 def signup_page():
     return render_template("/signup/signup.html")
@@ -93,6 +100,7 @@ def signup_page():
 def login_page():
     return render_template("login/login.html")
 
+
 @users.route("/logout")
 @login_required
 def logout():
@@ -100,7 +108,8 @@ def logout():
     flash('You have been logged out.')
     return redirect("/")
 
-@users.route("/auth_login", methods=["GET", "POST"])
+
+@users.route("/auth_login", methods=["POST"])
 def auth_login():
     if request.method == "POST":
         username = request.form.get('username', '').strip()
@@ -129,9 +138,9 @@ def auth_login():
                         nameFirst=row['first_name'],
                         nameLast=row['last_name'],  
                         nameMiddle=row['middle_name'],
-                        gradYear=row['graduation_year'],
-                        emailIsVerified=row['email_is_verified'],
-                        profilePicture=row['profile_picture'],
+                        gradYear=row.get('graduation_year'),
+                        emailIsVerified=row.get('email_is_verified', False),
+                        profilePicture=row.get('profile_picture', None),
                     )
                     login_user(user, remember=False)    #Makes session cookies reset whenever you leave the page, and stops them from tracking session age. 
                                                         #Server will track session age
@@ -148,6 +157,67 @@ def auth_login():
         return redirect(url_for('users.login_page'))
 
 
+# Add tag route only available for admins
+@users.route('/admin/tags')
+@role_required([4, 5])
+def tagsAdmin():
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("SELECT * FROM tags")
+            tags = cursor.fetchall()
+            return render_template('adminpanel/tagsAdmin.html', tags=tags)
+    except Exception as e:
+        flash(f"Error loading tags: {e}", "danger")
+        return redirect(url_for('home.index'))
+    finally:
+        if conn:
+            conn.close()
+
+# Route for adding a new tag
+@users.route("/admin/tags/add", methods=["POST"])
+@role_required([4, 5])
+def add_tag():
+    tag_name = request.form.get('tag', '').strip()
+    
+    if tag_name:
+        conn = get_db_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("INSERT INTO tags (tag) VALUES (%s)", (tag_name,))
+                conn.commit()
+                flash("Tag created successfully!", "success")
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            flash(f"Error creating tag: {e}", "error")
+        finally:
+            if conn:
+                conn.close()
+    else:
+        flash("Tag name cannot be empty.", "error")
+        
+    return redirect(url_for('users.tagsAdmin'))
+
+# Route for deleting tag
+@users.route("/admin/tags/<int:tag_id>/delete", methods=["POST"])
+@role_required([4, 5])
+def delete_tag(tag_id):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("DELETE FROM tags WHERE tag_id = %s", (tag_id,))
+            conn.commit()
+            flash("Tag deleted successfully!", "success")
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        flash(f"Error deleting tag: {e}", "error")
+    finally:
+        if conn:
+            conn.close()
+    return redirect(url_for('users.tagsAdmin'))
+
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
 @role_required([4, 5])
@@ -158,7 +228,11 @@ def admin_users():
             cursor.execute("USE flourish_bc")
             cursor.execute("SELECT * FROM users")
             users = cursor.fetchall()
-        return render_template("adminpanel/userAdmin.html", users=users)
+            
+            cursor.execute("SELECT * FROM tags")
+            all_tags = cursor.fetchall()
+            
+        return render_template("adminpanel/userAdmin.html", users=users, tags=all_tags)
     finally:
         conn.close()
 
