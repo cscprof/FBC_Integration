@@ -9,20 +9,46 @@
 <div class="events-container">
     <div class="section">
         <div class="header">Upcoming Events</div>
+
+        <!-- FILTER BAR -->
+        <div class="mb-3 mt-3">
+            <label for="contentTypeFilter">Content Type:</label>
+            <select id="contentTypeFilter" class="form-select d-inline-block w-auto">
+                <option value="">All</option>
+                <option value="Worship">Worship</option>
+                <option value="Retreat">Retreat</option>
+                <option value="Training">Training</option>
+                <option value="Service">Service</option>
+                <option value="Meeting">Meeting</option>
+            </select>
+
+            <label for="schoolFilter" class="ms-3">School:</label>
+            <select id="schoolFilter" class="form-select d-inline-block w-auto">
+                <option value="">All</option>
+                {% for school in schools %}
+                <option value="{{ school }}">{{ school }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
         <div class="list">
             {% if upcoming_events %}
                 {% for event in upcoming_events %}
-                <div class="resource">
+                <div class="resource event-item"
+                     data-type="{{ event.tag }}"
+                     data-schools='{{ event.schools | tojson }}'>
                     <div>
                         <a href="/calendar?event={{ event.title | urlencode }}" class="event-link" style="text-decoration: none; color: inherit;">
                             <span>{{ event.title }}</span>
                         </a><br>
                         <small>{{ event.start.strftime('%b %d, %Y %I:%M %p') }} – {{ event.end.strftime('%b %d, %Y %I:%M %p') }}</small><br>
                         <p>{{ event.description }}</p>
+
                         {% set addr_parts = [event.event_address1, event.event_address2, event.event_city, event.event_state, event.event_postal_code] | select | list %}
                         {% if addr_parts %}
                         <small><strong>Address:</strong> {{ addr_parts | join(', ') }}</small><br>
                         {% endif %}
+
                         {% if event.contact_name or event.contact_phone or event.contact_email %}
                         <small><strong>Contact:</strong>
                             {{ event.contact_name or '' }}
@@ -46,7 +72,9 @@
             <div class="list">
                 {% if past_events %}
                     {% for event in past_events %}
-                    <div class="resource">
+                    <div class="resource event-item"
+                         data-type="{{ event.tag }}"
+                         data-schools='{{ event.schools | tojson }}'>
                         <div>
                             <a href="/calendar?event={{ event.title | urlencode }}" class="event-link" style="text-decoration: none; color: inherit;">
                                 <span>{{ event.title }}</span>
@@ -64,5 +92,32 @@
         </details>
     </div>
 </div>
+
+<!-- FILTER SCRIPT -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const typeFilter = document.getElementById('contentTypeFilter');
+    const schoolFilter = document.getElementById('schoolFilter');
+    const eventItems = document.querySelectorAll('.event-item');
+
+    function applyFilters() {
+        const selectedType = typeFilter.value;
+        const selectedSchool = schoolFilter.value;
+
+        eventItems.forEach(item => {
+            const itemType = item.dataset.type || "";
+            const itemSchools = item.dataset.schools ? JSON.parse(item.dataset.schools) : [];
+
+            const typeMatch = !selectedType || itemType === selectedType;
+            const schoolMatch = !selectedSchool || itemSchools.includes(selectedSchool);
+
+            item.style.display = (typeMatch && schoolMatch) ? '' : 'none';
+        });
+    }
+
+    typeFilter.addEventListener('change', applyFilters);
+    schoolFilter.addEventListener('change', applyFilters);
+});
+</script>
 
 {% endblock %}
