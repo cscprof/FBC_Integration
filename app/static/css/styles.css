@@ -17,6 +17,26 @@
     text-decoration: none;
 }
 
+.navbar-item.is-active {
+    color: #8ac926;
+    font-weight: 600;
+    border-bottom: 2px solid #8ac926;
+    background-color: transparent !important;
+}
+
+.navbar-item.is-active:hover,
+.navbar-item.is-active:focus {
+    background-color: transparent !important;
+}
+
+.navbar-start > .navbar-item:hover,
+.navbar-start > .navbar-item:focus,
+.navbar-start > .navbar-item:focus-visible {
+    color: #8ac926;
+    border-bottom: 2px solid #8ac926;
+    background-color: transparent !important;
+}
+
 .navbar-link, .button {
     text-decoration: none;
 }
