@@ -1,0 +1,215 @@
+/*
+MySQL Backup
+Database: flourish_bc
+Backup Time: 2026-09-08 14:23:40
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+DROP TABLE IF EXISTS `flourish_bc`.`alembic_version`;
+DROP TABLE IF EXISTS `flourish_bc`.`content_types`;
+DROP TABLE IF EXISTS `flourish_bc`.`event_tags`;
+DROP TABLE IF EXISTS `flourish_bc`.`events`;
+DROP TABLE IF EXISTS `flourish_bc`.`partners`;
+DROP TABLE IF EXISTS `flourish_bc`.`resource_category`;
+DROP TABLE IF EXISTS `flourish_bc`.`resource_tags`;
+DROP TABLE IF EXISTS `flourish_bc`.`resources`;
+DROP TABLE IF EXISTS `flourish_bc`.`roles`;
+DROP TABLE IF EXISTS `flourish_bc`.`saved_resources`;
+DROP TABLE IF EXISTS `flourish_bc`.`tags`;
+DROP TABLE IF EXISTS `flourish_bc`.`users`;
+CREATE TABLE `alembic_version` (
+  `version_num` varchar(32) NOT NULL,
+  PRIMARY KEY (`version_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `content_types` (
+  `content_type_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`content_type_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `event_tags` (
+  `event_tag_id` int NOT NULL AUTO_INCREMENT,
+  `event_id` int NOT NULL,
+  `tag_id` int NOT NULL,
+  PRIMARY KEY (`event_tag_id`),
+  KEY `event_tags_tags_fk` (`tag_id`),
+  KEY `event_tags_event_fk` (`event_id`),
+  CONSTRAINT `event_tags_event_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`),
+  CONSTRAINT `event_tags_tags_fk` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`tag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `events` (
+  `event_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `description` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `content_type` int DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `posting_date` datetime DEFAULT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `registration_deadline` datetime DEFAULT NULL,
+  `user_id` int NOT NULL,
+  `status` enum('pending','approved','cancelled') NOT NULL DEFAULT 'pending',
+  `contact_name` varchar(128) DEFAULT NULL,
+  `contact_phone` varchar(32) DEFAULT NULL,
+  `contact_email` varchar(128) DEFAULT NULL,
+  `event_address1` varchar(255) DEFAULT NULL,
+  `event_address2` varchar(255) DEFAULT NULL,
+  `event_city` varchar(64) DEFAULT NULL,
+  `event_state` varchar(64) DEFAULT NULL,
+  `event_postal_code` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`event_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `partners` (
+  `partner_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `phone` varchar(32) DEFAULT NULL,
+  `email` varchar(128) DEFAULT NULL,
+  `contact_name` varchar(128) DEFAULT NULL,
+  `address1` varchar(128) DEFAULT NULL,
+  `address2` varchar(128) DEFAULT NULL,
+  `city` varchar(128) DEFAULT NULL,
+  `state` varchar(32) DEFAULT NULL,
+  `zip` varchar(16) DEFAULT NULL,
+  PRIMARY KEY (`partner_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `resource_category` (
+  `resource_category_id` int NOT NULL AUTO_INCREMENT,
+  `resource_category_name` varchar(32) NOT NULL,
+  PRIMARY KEY (`resource_category_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `resource_tags` (
+  `resource_tag_id` int NOT NULL AUTO_INCREMENT,
+  `resource_id` int NOT NULL,
+  `tag_id` int NOT NULL,
+  PRIMARY KEY (`resource_tag_id`),
+  KEY `resource_tag_resources_fk` (`resource_id`),
+  KEY `resource_tag_tags_fk` (`tag_id`),
+  CONSTRAINT `resource_tag_resources_fk` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`resource_id`),
+  CONSTRAINT `resource_tag_tags_fk` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`tag_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `resources` (
+  `resource_id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(128) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `contact_name` varchar(255) DEFAULT NULL,
+  `contact_email` varchar(128) DEFAULT NULL,
+  `contact_phone` varchar(32) DEFAULT NULL,
+  `user_id` int NOT NULL,
+  `resource_category_id` int NOT NULL,
+  PRIMARY KEY (`resource_id`),
+  KEY `resource_category_fk` (`resource_category_id`),
+  CONSTRAINT `resource_category_fk` FOREIGN KEY (`resource_category_id`) REFERENCES `resource_category` (`resource_category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `roles` (
+  `role_id` int NOT NULL AUTO_INCREMENT,
+  `role` enum('Student','Parent','Guardian','Admin','Partner') NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `saved_resources` (
+  `saved_resource_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `resource_id` int DEFAULT NULL,
+  PRIMARY KEY (`saved_resource_id`),
+  KEY `users__saved_resources_fk` (`user_id`),
+  KEY `resourse_saved_resource_id` (`resource_id`),
+  CONSTRAINT `resourse_saved_resource_id` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`resource_id`) ON DELETE RESTRICT,
+  CONSTRAINT `users__saved_resources_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `tags` (
+  `tag_id` int NOT NULL AUTO_INCREMENT,
+  `tag_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `tag_type` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`tag_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `users` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(64) NOT NULL,
+  `last_name` varchar(64) NOT NULL,
+  `middle_name` varchar(64) DEFAULT NULL,
+  `username` varchar(64) NOT NULL,
+  `password` varchar(128) DEFAULT NULL,
+  `email` varchar(128) DEFAULT NULL,
+  `graduation_year` int DEFAULT NULL,
+  `role_id` int NOT NULL,
+  `partner_id` int DEFAULT NULL,
+  `email_is_verified` tinyint(1) DEFAULT '0',
+  `profile_picture` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  KEY `users_roles_fk` (`role_id`),
+  KEY `partners_roles_fk` (`partner_id`),
+  CONSTRAINT `partners_roles_fk` FOREIGN KEY (`partner_id`) REFERENCES `partners` (`partner_id`),
+  CONSTRAINT `users_roles_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+BEGIN;
+LOCK TABLES `flourish_bc`.`alembic_version` WRITE;
+DELETE FROM `flourish_bc`.`alembic_version`;
+INSERT INTO `flourish_bc`.`alembic_version` (`version_num`) VALUES ('2da33ec21a26');
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`content_types` WRITE;
+DELETE FROM `flourish_bc`.`content_types`;
+INSERT INTO `flourish_bc`.`content_types` (`content_type_id`,`name`,`description`) VALUES (1, 'Prospective Students', 'Admission events for prospective students'),(2, 'Admitted Students', 'Admissions events for accepted students'),(3, 'Orientation', 'Orientation events for admitted students'),(4, 'Financial Planning', 'Paying for post-secondary eduction events'),(5, 'Academic Prep', 'Events to help you prepare academically'),(6, 'Mental Health', 'Events concerned with mental health of students'),(7, 'Family Transition', 'Events helping families transition to college life');
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`event_tags` WRITE;
+DELETE FROM `flourish_bc`.`event_tags`;
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`events` WRITE;
+DELETE FROM `flourish_bc`.`events`;
+INSERT INTO `flourish_bc`.`events` (`event_id`,`name`,`description`,`content_type`,`url`,`posting_date`,`start_date`,`end_date`,`registration_deadline`,`user_id`,`status`,`contact_name`,`contact_phone`,`contact_email`,`event_address1`,`event_address2`,`event_city`,`event_state`,`event_postal_code`) VALUES (1, 'Fridays @Geneva', 'campus visit for high school students', NULL, 'https://apply.geneva.edu/portal/campus_visit_events', '2026-01-15 00:00:00', '2026-01-23 09:30:00', '2025-01-23 13:30:00', '2026-01-22 00:00:00', 3, 'approved', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),(2, 'Spring Open House', 'Hear from campus leadership, meet faculty and students, tour campus and residence halls. Learn all about about life as a Golden Tornado, from academics and athletics to career outcomes, financial aid, and the student experience.', NULL, 'https://apply.geneva.edu/register/?id=dbc9904c-066e-43d3-834e-dc00a62f9ffa', '2026-01-10 08:30:00', '2026-03-20 08:30:00', '2026-03-20 14:00:00', '2026-03-18 00:00:00', 3, 'approved', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),(3, 'Summer Orientation', 'Summer Orientation is designed for students who have deposited and plan to attend Geneva College. Parents are also encouraged to participate as they have an important role in helping students transition to college.', 3, 'https://www.geneva.edu/student-life/engagement/first-year-experience/summer-orientation', '2026-06-03 12:26:32', '2026-06-12 07:30:00', '2026-06-12 17:30:00', NULL, 3, 'approved', 'Becca', '7248466717', 'smadeira@geneva.edu', '3200 College Avenue', NULL, 'Beaver Falls', 'PA', '15010'),(4, 'Summer Orientation', 'Summer Orientation is designed for students who have deposited and plan to attend Geneva College. Parents are also encouraged to participate as they have an important role in helping students transition to college. This event is intended to give students deeper insight into student life, as they meet faculty in their major and connect with future classmates. Parents will have the opportunity to attend sessions with faculty, participate in a Q&A sessions, learn more about the Student Financial Services Office procedures and connect with other parents.', 3, 'https://www.geneva.edu/student-life/engagement/first-year-experience/summer-orientation', '2026-06-03 12:33:03', '2026-06-15 08:30:00', '2026-06-15 17:30:00', NULL, 4, 'approved', 'Rebecca', '7248476717', 'smadeira@geneva.edu', '3200 College Avenue', NULL, 'Beaver Falls', 'PA', '15010');
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`partners` WRITE;
+DELETE FROM `flourish_bc`.`partners`;
+INSERT INTO `flourish_bc`.`partners` (`partner_id`,`name`,`description`,`phone`,`email`,`contact_name`,`address1`,`address2`,`city`,`state`,`zip`) VALUES (1, 'Geneva College', 'Liberal arts college located in Beaver Falls', '7246466717', 'admisions@geneva.eduu', 'Kathleen Grehl', '3200 College Ave', NULL, 'Beaver Falls', 'PA', '15010'),(2, 'Test Partner', 'A imaginary partner to test with', '7241234567', 'testing@partners.com', 'Suzie Jones', '123 Main Street', NULL, 'Beaver', 'PA', '15009');
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`resource_category` WRITE;
+DELETE FROM `flourish_bc`.`resource_category`;
+INSERT INTO `flourish_bc`.`resource_category` (`resource_category_id`,`resource_category_name`) VALUES (1, 'college'),(2, 'scholarships'),(3, 'mental'),(4, 'jobs'),(5, 'activities'),(6, 'other');
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`resource_tags` WRITE;
+DELETE FROM `flourish_bc`.`resource_tags`;
+INSERT INTO `flourish_bc`.`resource_tags` (`resource_tag_id`,`resource_id`,`tag_id`) VALUES (28, 15, 1),(29, 16, 2),(30, 17, 2),(31, 18, 2),(32, 19, 2),(33, 20, 3),(34, 21, 3),(35, 22, 4),(36, 23, 4),(37, 24, 4),(38, 25, 4),(39, 26, 4),(40, 27, 5),(41, 28, 5),(42, 29, 5),(43, 30, 6),(44, 31, 6),(45, 32, 6),(46, 33, 6),(47, 34, 7),(48, 35, 7),(49, 36, 8),(50, 37, 8),(51, 38, 8),(52, 39, 9),(53, 40, 9),(54, 41, 9),(59, 59, 2),(60, 59, 4),(61, 59, 7),(62, 60, 1),(63, 60, 2);
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`resources` WRITE;
+DELETE FROM `flourish_bc`.`resources`;
+INSERT INTO `flourish_bc`.`resources` (`resource_id`,`title`,`description`,`url`,`contact_name`,`contact_email`,`contact_phone`,`user_id`,`resource_category_id`) VALUES (1, NULL, 'Geneva College', 'https://www.geneva.edu/', NULL, NULL, NULL, 4, 1),(2, NULL, 'Geneva College Counseling Service', 'https://www.geneva.edu/student-life/wellness/counseling/', 'Amy Solman', 'alsolman@geneva.edu', '724-847-4082', 4, 3),(3, NULL, 'Suicide Hotline', 'https://988lifeline.org/', NULL, NULL, '988', 4, 3),(4, NULL, 'College Applications (CommonApp)', 'https://www.commonapp.org/', NULL, NULL, NULL, 4, 1),(5, NULL, 'NCAA Athletic Eligibility', 'https://web3.ncaa.org/ecwr3/', NULL, NULL, NULL, 4, 1),(6, NULL, 'Linkedin', 'https://www.linkedin.com/', NULL, NULL, NULL, 4, 4),(7, NULL, 'Handshake for Students', 'https://joinhandshake.com/', NULL, NULL, NULL, 4, 4),(8, NULL, 'SuperProf Tutoring', 'https://www.superprof.com/', NULL, NULL, NULL, 4, 5),(9, NULL, 'Free Application For Federal Student Aid (FAFSA)', 'https://studentaid.gov/h/apply-for-aid/fafsa', NULL, NULL, NULL, 4, 1),(10, NULL, 'Tutor.com', 'https://www.tutor.com/', NULL, NULL, NULL, 4, 5),(11, NULL, 'Geneva Campus Visit Events', 'https://apply.geneva.edu/portal/campus_visit_events', NULL, NULL, NULL, 4, 5),(12, NULL, 'Scholarships.com', 'https://www.scholarships.com/', NULL, NULL, NULL, 4, 2),(13, NULL, 'Geneva College Center for Calling & Career', 'https://www.geneva.edu/calling-career/', NULL, NULL, '724.847.6572', 4, 4),(15, NULL, 'Beaver Area High School College in High School', 'https://www.basd.k12.pa.us/CHSCoursesCollegeinHS.aspx', NULL, NULL, NULL, 4, 1),(16, NULL, 'Beaver Falls High School Scholarships', 'https://www.tigerweb.org/departments/high-school-guidance-department/college-scholarships-available', NULL, NULL, NULL, 4, 2),(17, NULL, 'Beaver Falls High School College Information', 'https://www.tigerweb.org/homepage-links/college-information', NULL, NULL, NULL, 4, 1),(18, NULL, 'Beaver Falls High School Stiver Virtual College Exploration', 'https://www.tigerweb.org/our-schools/beaver-falls-high-school/strive-virtual-college-exploration', NULL, NULL, NULL, 4, 1),(19, NULL, 'Beaver Falls High School Athletic Eligibility', 'https://www.tigerweb.org/departments/high-school-guidance-department/athletic-eligibility', NULL, NULL, NULL, 4, 1),(20, NULL, 'Western Beaver High School Scholarships', 'https://www.westernbeaver.org/o/high-school/page/scholarships', NULL, NULL, NULL, 4, 2),(21, NULL, 'Western Beaver High School Dual Enrollment', 'https://www.westernbeaver.org/o/high-school/page/dual-enrollment', NULL, NULL, NULL, 4, 1),(22, NULL, 'BlackHawk High School Guidance Department', 'https://www.bsd.k12.pa.us/GuidanceDepartment.aspx', NULL, NULL, '(724) 846-9600', 4, 3),(23, NULL, 'BlackHawk High School College and Career Testing', 'https://www.bsd.k12.pa.us/CollegeandCareerTesting.aspx', NULL, NULL, NULL, 3, 1),(24, NULL, 'BlackHawk High School Scholarship Opportunities', 'https://www.bsd.k12.pa.us/ScholarshipOpportunities.aspx', NULL, NULL, NULL, 3, 2),(25, NULL, 'BlackHawk High School Financial Aid', 'https://www.bsd.k12.pa.us/FinancialAid1.aspx', NULL, NULL, NULL, 3, 1),(26, NULL, 'BlackHawk High School Transcript Requests', 'https://www.bsd.k12.pa.us/TranscriptRequests.aspx', NULL, NULL, NULL, 4, 1),(27, NULL, 'Rochester High School College in High School', 'https://www.rasd.org/our-district/middle-high/guidance-office/college-in-high-school', NULL, NULL, NULL, 4, 1),(28, NULL, 'Rochester High School College Information', 'https://www.rasd.org/our-district/middle-high/guidance-office/college-information-for-students', NULL, NULL, NULL, 4, 1),(29, NULL, 'Rochester High School College Fair', 'https://www.rasd.org/toreview/2022-summer-choral-and-instrumental-academy/college-fair', NULL, NULL, NULL, 4, 1),(30, NULL, 'Freedom Area Senior High School College in High School', 'https://www.freedomareaschools.org/CollegeinHighSchoolCiHSPrograms.aspx', NULL, NULL, NULL, 4, 1),(31, NULL, 'Freedom Area Senior High School College Plannning', 'https://www.freedomareaschools.org/CollegePlanning.aspx', NULL, NULL, NULL, 4, 1),(32, NULL, 'Freedom Area Senior High School Transcripts', 'https://www.freedomareaschools.org/HowtoAccessCollegeTranscripts.aspx', NULL, NULL, NULL, 4, 1),(33, NULL, 'Freedom Area Senior High School NCAA', 'https://www.freedomareaschools.org/NCAA.aspx', NULL, NULL, NULL, 4, 1),(34, NULL, 'Central Valley High School Guidance', 'https://www.centralvalleysd.org/MSGuidance.aspx', 'Ms. April Marocco', NULL, '724-775-5600 x 13088', 4, 3),(35, NULL, 'Central Valley High School Pennsylvania Department of Education Standards', 'https://www.centralvalleysd.org/PDESTANDARDS.aspx', NULL, NULL, NULL, 4, 1),(36, NULL, 'Beaver Local High School Guidance Office', 'https://blhs.beaver.k12.oh.us/quick-links/guidance-office', NULL, NULL, '330-386-8700', 4, 3),(37, NULL, 'Beaver Local High School Senior Info/Fact Sheet', 'https://docs.google.com/document/d/1a9n3curKzGdQvydKdYngM1wvZiwtEPzCUt7smNL4WQk/edit?tab=t.0', NULL, NULL, NULL, 4, 1),(38, NULL, 'Beaver Local High School Transcript Request Form', 'https://docs.google.com/document/d/1A_lYYSiaIY4vqjdIJL2GJW-B6yA_ca4kxkG-t0Ovv0g/edit?tab=t.0', NULL, NULL, NULL, 4, 1),(39, NULL, 'Aliquippa Junior/Senior High School College Information', 'https://www.quipsd.org/College.aspx', NULL, NULL, NULL, 4, 1),(40, NULL, 'Aliquippa Junior/Senior High School Talent Search Program', 'https://www.quipsd.org/TalentSearchProgram.aspx', NULL, NULL, NULL, 4, 1),(41, NULL, 'Aliquippa Junior/Senior High School Scholarships Financial Aid', 'https://www.quipsd.org/ScholarshipsFinancialAid.aspx', NULL, NULL, NULL, 4, 2),(59, 'Tags 3', 'Tag testing', 'https://cscprof.com/testing/123', 'Scott', NULL, NULL, 4, 6),(60, 'login', 'login testing', 'https://www.geneva.edu', NULL, NULL, NULL, 3, 6);
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`roles` WRITE;
+DELETE FROM `flourish_bc`.`roles`;
+INSERT INTO `flourish_bc`.`roles` (`role_id`,`role`,`description`) VALUES (1, 'Student', 'A student'),(2, 'Parent', 'A parent'),(3, 'Guardian', 'A guardian'),(4, 'Partner', 'A third-party user'),(5, 'Admin', 'Administrator');
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`saved_resources` WRITE;
+DELETE FROM `flourish_bc`.`saved_resources`;
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`tags` WRITE;
+DELETE FROM `flourish_bc`.`tags`;
+INSERT INTO `flourish_bc`.`tags` (`tag_id`,`tag_name`,`tag_type`) VALUES (1, 'Beaver Area High School', 'school'),(2, 'Beaver Falls High School', 'school'),(3, 'Western Beaver High School', 'school'),(4, 'BlackHawk High School', 'school'),(5, 'Rochester', 'school'),(6, 'Freedom Area', 'school'),(7, 'Central Vally High School', 'school'),(8, 'Beaver Local High School', 'school'),(9, 'Aliquippa High School', 'school'),(10, 'Financial Aid', NULL),(11, 'Athletics', NULL),(12, 'Athletic Scholarship', NULL),(13, 'New Brighton High School', 'school');
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `flourish_bc`.`users` WRITE;
+DELETE FROM `flourish_bc`.`users`;
+INSERT INTO `flourish_bc`.`users` (`user_id`,`first_name`,`last_name`,`middle_name`,`username`,`password`,`email`,`graduation_year`,`role_id`,`partner_id`,`email_is_verified`,`profile_picture`) VALUES (3, 'Scott', 'Madeira', '', 'scottmadeira', '$argon2id$v=19$m=65536,t=3,p=4$A0Dc91nMJKgQh3bUGdQhlA$99nD4gM7Ewp/QYCY/2RdtdDdjoHm9ommsIruKKr0ld0', 'smadeira@geneva.edu', 1987, 5, NULL, 0, NULL),(4, 'Jenny', 'Colage', '', 'jenny', '$argon2id$v=19$m=65536,t=3,p=4$jFFIzqYWhZutC6zzrIfN8Q$4IcL4FnG9dsjpbqraZirIqBTAGQKUJR/hKslHgYfIqs', 'jenny@geneva.edu', NULL, 4, NULL, 0, NULL),(5, 'FBC', 'Admin', '', 'fbcadmin', '$argon2id$v=19$m=65536,t=3,p=4$nR4SlhzVA0CrWFJsdxxJcw$S2Vc7bIVRMhoSWsiZOK5KPtxrvtn1wTpVhWsQ9v3FCg', 'fbcadmin@flourishbeavercounty.org', NULL, 5, NULL, 0, NULL),(6, 'FBC', 'Partner', '', 'fbcpartner', '$argon2id$v=19$m=65536,t=3,p=4$lp21Hmq9jqlm1YQgbFV7UQ$KgSo+7Ryc9pf9qxB8LS6vFCejEgdNKuwj5GlIT4xVWw', 'fbdpartner@flourishbeavercounty.org', NULL, 4, NULL, 0, NULL),(7, 'Jennifer', 'Marino', '', 'ceo@flourishbeavercounty.org', '$argon2id$v=19$m=65536,t=3,p=4$djtUM9f2hIetGPOtzzokzA$Fdfws/W+Azdo/VApAihVcNoXTX8z1Gi50z8g7kM3wFI', 'ceo@flourishbeavercounty.org', 2028, 1, NULL, 0, NULL);
+UNLOCK TABLES;
+COMMIT;
