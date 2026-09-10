@@ -83,7 +83,7 @@ def fetch_approved_events_python():
         events = []
         for row in rows:
             cursor.execute("""
-                SELECT t.tag
+                SELECT t.tag_name
                 FROM event_tags et
                 JOIN tags t ON et.tag_id = t.tag_id
                 WHERE et.event_id = %s
@@ -291,12 +291,12 @@ def adminView():
         events = []
         for row in rows:
             cursor.execute("""
-                SELECT t.tag
+                SELECT t.tag_namename
                 FROM event_tags et
                 JOIN tags t ON et.tag_id = t.tag_id
                 WHERE et.event_id = %s
             """, (row['event_id'],))
-            event_schools = [s['tag'] for s in cursor.fetchall()]
+            event_schools = [s['tag_name'] for s in cursor.fetchall()]
 
             # build a readable submitter name
             if row.get('first_name') or row.get('last_name'):
@@ -545,8 +545,8 @@ def events():
         conn = get_db_connection()
         try:
             with conn.cursor() as cursor:
-                cursor.execute("SELECT tag FROM tags ORDER BY tag")
-                schools = [row['tag'] for row in cursor.fetchall()]
+                cursor.execute("SELECT tag_name FROM tags where tag_type='school' ORDER BY tag_name")
+                schools = [row['tag_name'] for row in cursor.fetchall()]
         finally:
             conn.close()
 
