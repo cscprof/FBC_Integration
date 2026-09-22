@@ -39,12 +39,12 @@
         </div>
       {% endif %}
 
-      <a class="navbar-item" href="/events"> Events List </a>
+      <a class="navbar-item {% if request.path.startswith('/events') %}is-active{% endif %}" href="/events"> Events List </a>
 
 
-      <a class="navbar-item" href="/calendar"> Calendar </a>
+      <a class="navbar-item {% if request.path.startswith('/calendar') %}is-active{% endif %}" href="/calendar"> Calendar </a>
 
-      <a class="navbar-item" href="/resources"> Resource Directory </a>
+      <a class="navbar-item {% if request.path.startswith('/resources') %}is-active{% endif %}" href="/resources"> Resource Directory </a>
 
       <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
         <a class="navbar-link"> More </a>
