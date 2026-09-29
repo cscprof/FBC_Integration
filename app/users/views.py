@@ -7,14 +7,14 @@ from pymysql import DatabaseError
 from pymysql.cursors import DictCursor
 from werkzeug.utils import secure_filename
 
-# Hashing (create app/users/Hashing.py if missing)
-from .Hashing import hash_plaintext, hash_check_matches
 from . import users
-from .emailVerification import send_verification_email, confirm_token
-# For creating a user account
+# Authentication and role checking
 from flask_login import login_user, login_required, logout_user, current_user
-from loginManager import role_required
-from app.Models.Account import Account
+from app.roles.loginManager import role_required
+from app.roles.roles import MANAGER_ROLES
+from app.roles.passwords import hash_plaintext, hash_check_matches
+from app.roles.authentication import authenticate_user
+from app.roles.emailVerification import send_verification_email, confirm_token
 
 # allowed files types for user pfps
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
@@ -113,43 +113,15 @@ def auth_login():
     if request.method == "POST":
         username = request.form.get('username', '').strip()
         password_given = request.form.get('password', '').strip()
-        is_auth = False
-        row = None
-        conn = None
         try:
-            conn = get_db_connection()
-            with conn.cursor(DictCursor) as cursor:
-                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
-                row = cursor.fetchone()
-                if row and hash_check_matches(password_given, row["password"]):
-                    is_auth = True
-
-                    # Create user from the Account class
-                    # This user can then be used by the login manager anywhere in this program 
-                    # Accessed by current_user.role for setting role permissions
-                    user = Account(
-                        username=row['username'],
-                        email=row['email'],
-                        passwdHash=row['password'],
-                        roleID=row['role_id'],
-                        partnerID=row['partner_id'],
-                        userID=row['user_id'],
-                        nameFirst=row['first_name'],
-                        nameLast=row['last_name'],  
-                        nameMiddle=row['middle_name'],
-                        gradYear=row.get('graduation_year'),
-                        emailIsVerified=row.get('email_is_verified', False),
-                        profilePicture=row.get('profile_picture', None),
-                    )
-                    login_user(user, remember=False)    #Makes session cookies reset whenever you leave the page, and stops them from tracking session age. 
-                                                        #Server will track session age
+            # Returns an Account (usable anywhere through current_user) if the credentials are valid
+            user = authenticate_user(username, password_given)
         except DatabaseError as e:
             flash(f"DB Error: {e}", "error")
             return render_template('login/login.html', form=request.form)
-        finally:
-            if conn:
-                conn.close()
-        if is_auth:
+        if user:
+            login_user(user, remember=False)    #Makes session cookies reset whenever you leave the page, and stops them from tracking session age. 
+                                                #Server will track session age
             return redirect(url_for('home.home_page'))
             # return redirect(url_for('profile.profile', username=username))
         flash("Invalid Login. Username or Password is Incorrect. Please Try Again!")
@@ -158,7 +130,7 @@ def auth_login():
 
 # Add tag route only available for admins
 @users.route('/admin/tags')
-@role_required([4, 5])
+@role_required(MANAGER_ROLES)
 def tagsAdmin():
     conn = get_db_connection()
     try:
@@ -175,7 +147,7 @@ def tagsAdmin():
 
 # Route for adding a new tag
 @users.route("/admin/tags/add", methods=["POST"])
-@role_required([4, 5])
+@role_required(MANAGER_ROLES)
 def add_tag():
     tag_name = request.form.get('tag', '').strip()
     
@@ -200,7 +172,7 @@ def add_tag():
 
 # Route for deleting tag
 @users.route("/admin/tags/<int:tag_id>/delete", methods=["POST"])
-@role_required([4, 5])
+@role_required(MANAGER_ROLES)
 def delete_tag(tag_id):
     conn = get_db_connection()
     try:
@@ -219,7 +191,7 @@ def delete_tag(tag_id):
 
 # new route requested by navbar: serve the more polished userAdmin.html page
 @users.route("/admin/users")
-@role_required([4, 5])
+@role_required(MANAGER_ROLES)
 def admin_users():
     conn = get_db_connection()
     try:
@@ -478,7 +450,7 @@ def confirm_email(token):
     email = confirm_token(token)
     if not email:
         flash("The confirmation link is invalid or expired.", "danger")
-        return redirect(url_for("verifyEmail"))
+        return redirect(url_for("users.verifyEmail"))
     
     conn = None
     try:
@@ -490,7 +462,7 @@ def confirm_email(token):
             
             if not user:
                 flash("User not found.", "danger")
-                return redirect(url_for("verifyEmail"))
+                return redirect(url_for("users.verifyEmail"))
                         
             user_id = user['user_id']
 

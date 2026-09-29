@@ -3,7 +3,6 @@
 {% block title %}Calendar{% endblock %}
 
 {% block head %}
-<link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/lux/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
 
 <style>
@@ -242,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </select>
   </div>
 
-  {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
+  {% if is_manager(current_user) %}
   <a href="/add-event" class="button">
     Add Event
   </a>

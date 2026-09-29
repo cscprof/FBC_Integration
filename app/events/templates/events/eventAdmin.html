@@ -18,7 +18,7 @@
     <h1 class="title">Admin Dashboard</h1>
 
     <div class="section">        
-         {% if current_user.is_authenticated and current_user.role == 4 or current_user.role == 5 %}
+         {% if is_manager(current_user) %}
             <div class="add-event">
                 <a href="/add-event" class="button">Add Event</a>
             </div>
