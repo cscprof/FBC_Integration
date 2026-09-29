@@ -42,7 +42,7 @@ def fetch_approved_events_json():
             school_rows = cursor.fetchall()
         conn.close()
         
-        schools = [s['tag'] for s in school_rows]
+        schools = [s['tag_name'] for s in school_rows]
         
         events.append({
             "title": row['name'],
@@ -83,12 +83,12 @@ def fetch_approved_events_python():
         events = []
         for row in rows:
             cursor.execute("""
-                SELECT t.tag
+                SELECT t.tag_name
                 FROM event_tags et
                 JOIN tags t ON et.tag_id = t.tag_id
                 WHERE et.event_id = %s
             """, (row['event_id'],))
-            schools = [s['tag'] for s in cursor.fetchall()]
+            schools = [s['tag_name'] for s in cursor.fetchall()]
 
             events.append({
                 "title": row['name'],
@@ -285,18 +285,18 @@ def adminView():
     finally:
         conn.close()
 
-        cursor.execute("SELECT tag FROM tags ORDER BY tag")
-        schools = [row['tag'] for row in cursor.fetchall()]
+        cursor.execute("SELECT tag_name FROM tags ORDER BY tag_name")
+        schools = [row['tag_name'] for row in cursor.fetchall()]
 
         events = []
         for row in rows:
             cursor.execute("""
-                SELECT t.tag
+                SELECT t.tag_name
                 FROM event_tags et
                 JOIN tags t ON et.tag_id = t.tag_id
                 WHERE et.event_id = %s
             """, (row['event_id'],))
-            event_schools = [s['tag'] for s in cursor.fetchall()]
+            event_schools = [s['tag_name'] for s in cursor.fetchall()]
 
             # build a readable submitter name
             if row.get('first_name') or row.get('last_name'):
@@ -441,7 +441,7 @@ def edit_event(event_id):
         tags = cursor.fetchall()
 
         # all schools
-        cursor.execute("SELECT tag_id as school_tag_id, tag as school_name FROM tags ORDER BY tag")
+        cursor.execute("SELECT tag_id as school_tag_id, tag_name as school_name FROM tags ORDER BY tag_name")
         school_tags = cursor.fetchall()
 
         # selected schools
@@ -545,8 +545,8 @@ def events():
         conn = get_db_connection()
         try:
             with conn.cursor() as cursor:
-                cursor.execute("SELECT tag FROM tags ORDER BY tag")
-                schools = [row['tag'] for row in cursor.fetchall()]
+                cursor.execute("SELECT tag_name FROM tags ORDER BY tag_name")
+                schools = [row['tag_name'] for row in cursor.fetchall()]
         finally:
             conn.close()
 
