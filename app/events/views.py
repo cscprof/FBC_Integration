@@ -285,7 +285,7 @@ def adminView():
     finally:
         conn.close()
 
-        cursor.execute("SELECT tag_name FROM tags ORDER BY tag_name")
+        cursor.execute("SELECT tag_name FROM tags WHERE tag_type='school' ORDER BY tag_name")
         schools = [row['tag_name'] for row in cursor.fetchall()]
 
         events = []
