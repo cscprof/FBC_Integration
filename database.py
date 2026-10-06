@@ -1,5 +1,5 @@
 # from dotenv import load_dotenv
-#import os
+# import os
 import pymysql
 from flask import current_app
 # from flask_sqlalchemy import SQLAlchemy
@@ -9,7 +9,6 @@ from flask import current_app
 
 # GSM Temporary until all DB is converted
 def get_db_connection():
-
         return pymysql.connect(
             host=current_app.config['MYSQL_HOST'],
             user=current_app.config['MYSQL_USER'],

@@ -45,6 +45,9 @@ def create_app(config_name):
     from .users import users as users_blueprint
     app.register_blueprint(users_blueprint)
 
+    from .tags import tags as tags_blueprint
+    app.register_blueprint(tags_blueprint)
+
     #for email verification
     mail.init_app(app)
     

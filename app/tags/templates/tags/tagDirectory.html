@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Flourish Beaver County - Tag List{% endblock %}
+
+{% block content %}
+
+<section class="section">
+    <div class="container">
+        <h1 class="title has-text-centered">Tags List</h1>
+        <p class="has-text-centered is-size-5 mb-5" style="color: #666; margin-top: 10px;">
+            All your tags, all in one place!
+        </p>
+        <table style="margin: auto; color: #111111">
+            <thead style="background-color: #4CAF50">
+                <tr>
+                    <td style="border: 1px solid #222222; padding: 5px">Tag ID</td>
+                    <td style="border: 1px solid #222222; padding: 5px">Tag Name</td>
+                    <td style="border: 1px solid #222222; padding: 5px">Tag Type</td>
+                </tr>
+            </thead>
+            {% for row in tags%}
+            <tr>
+                <td style="border: 1px solid #222222; background-color: #8ac926; padding: 5px">{{row.tag_id}}</td>
+                <td style="border: 1px solid #222222; padding: 5px">{{row.tag_name}}</td>
+                <td style="border: 1px solid #222222; padding: 5px">{{row.tag_type}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</section>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+const searchInput = document.querySelector(".searchinput");
+const categorySelect = document.querySelector(".categoryselect");
+const resourceBoxes = document.querySelectorAll(".exampleboxes");
+
+function filterResources() {
+const searchValue = searchInput.value.toLowerCase();
+const selectedCategory = categorySelect.value;
+
+resourceBoxes.forEach(box => {
+const boxCategory = box.getAttribute("data-category");
+const textContent = box.innerText.toLowerCase();
+
+const matchesSearch = textContent.includes(searchValue);
+const matchesCategory =
+selectedCategory === "all" || boxCategory === selectedCategory;
+
+if (matchesSearch && matchesCategory) {
+box.style.display = "block";
+} else {
+box.style.display = "none";
+}
+});
+}
+
+searchInput.addEventListener("keyup", filterResources);
+categorySelect.addEventListener("change", filterResources);
+});
+</script>
+
+<!-- <div id="uploadModal">
+    <div class="modalcontent">
+        <div class="modalheader">
+            <h2 class="modaltitle">Upload Resource</h2>
+        </div>
+        
+        <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
+            <input type="text" name="title" placeholder="Title *" required>
+            <input type="text" name="url" placeholder="URL *" required>
+            <input type="text" name="name" placeholder="Contact Name (Optional)">
+            <input type="text" name="email" placeholder="Contact Email (Optional)">
+            <input type="text" name="phone" placeholder="Contact Phone Number (Optional)">
+
+            <select name="resource_category_id" required>
+                <option value="">Category *</option>
+                {% if categories %}
+                    {% for cat in categories %}
+                        <option value="{{ cat.resource_category_id }}">{{ cat.resource_category_name|title }}</option>
+                    {% endfor %}
+                {% else %}
+                    <option value="1">College</option>
+                    <option value="2">Scholarships</option>
+                    <option value="3">Mental Health</option>
+                    <option value="4">Jobs</option>
+                    <option value="5">Activities</option>
+                    <option value="6">Other</option>
+                {% endif %}
+            </select>
+            
+            <div class="modalformactions">
+                <button type="button" onclick="document.getElementById('uploadModal').style.display='none'" class="modalbtncancel">Cancel</button>
+                <button type="submit" class="modalbtnsubmit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div> -->
+
+
+{% endblock %}

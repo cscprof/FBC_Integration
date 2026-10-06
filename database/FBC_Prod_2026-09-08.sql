@@ -5,7 +5,7 @@ Backup Time: 2026-09-08 14:23:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
-DROP TABLE IF EXISTS `flourish_bc`.`alembic_version`;
+DROP TABLE IF EXISTS 'flourish_bc'.'alembic_version';
 DROP TABLE IF EXISTS `flourish_bc`.`content_types`;
 DROP TABLE IF EXISTS `flourish_bc`.`event_tags`;
 DROP TABLE IF EXISTS `flourish_bc`.`events`;
