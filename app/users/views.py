@@ -208,6 +208,7 @@ def admin_users():
         conn.close()
 
 @users.route("/admin/user/<int:user_id>/edit", methods=["GET", "POST"])  # FIXED route
+@role_required(MANAGER_ROLES)
 def edit_user(user_id):
     conn = get_db_connection()
     # gets dats from data pass and passes it to edit_profile.html
@@ -280,6 +281,7 @@ def profile():
     return render_template("profile/profile.html", user=output)
 
 @users.route("/profile/<username>/edit", methods=["GET", "POST"])
+@role_required(MANAGER_ROLES)
 def edit_profile(username):
 
     conn = get_db_connection()
