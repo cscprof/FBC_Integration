@@ -102,3 +102,4 @@ venv.bak/
 
 # PyPI configuration file
 .pypirc
+interpreter

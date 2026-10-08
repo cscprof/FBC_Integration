@@ -3,15 +3,20 @@
 {% block title %}FBC Student Hub{% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="/static/css/carousel.css">
-    <h1 class="title has-text-centered">Flourish Beaver County Student Hub</h1>
+  <link rel="stylesheet" href="/static/css/carousel.css">
 
-    <ul class="carousel">
-        <li><img src="https://flourishbeavercounty.org/wp-content/uploads/2025/08/right-1024x663.png" alt="Slide 1"></li>
-        <li><img src="https://flourishbeavercounty.org/wp-content/uploads/2025/08/left-1024x706.png" alt="Slide 2"></li>
-        <li><img src="https://flourishbeavercounty.org/wp-content/uploads/2025/08/HQ2A7776-scaled-1-1024x683.jpg" alt="Slide 3"></li>
-    </ul>
-    <!--credit: https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Overflow/Carousels-->
+    <div class="car">
+        <div class="img-wrap">
+            <img src="https://flourishbeavercounty.org/wp-content/uploads/2025/08/right-1024x663.png" alt="Image 1">
+            <img src="https://flourishbeavercounty.org/wp-content/uploads/2025/08/left-1024x706.png" alt="Image 2">
+            <img src="https://flourishbeavercounty.org/wp-content/uploads/2025/08/HQ2A7776-scaled-1-1024x683.jpg" alt="Image 3">
+        </div>
+
+        <button class="btn prev">‹</button>
+        <button class="btn next">›</button>
+    </div>
+
+
     <div class="homepage-wrapper">
         <div class="homepage-info">
             <h3>About the Student Hub</h3>
@@ -25,4 +30,33 @@
         </div>
     </div>
 
+    <script>
+        const prev = document.querySelector('.prev');
+        const next = document.querySelector('.next');
+        const wrap = document.querySelector('.img-wrap');
+        const imgs = document.querySelectorAll('.img-wrap img');
+        let idx = 0;
+        function showImg() {
+            if (idx >= imgs.length) idx = 0;
+            if (idx < 0) idx = imgs.length - 1;
+            wrap.style.transform = `translateX(-${idx * 100}%)`;
+        }
+        next.addEventListener('click', () =>
+        {
+            idx++;
+            showImg();
+        });
+        prev.addEventListener('click', () =>
+        {
+            idx--;
+            showImg();
+        });
+        setInterval(() =>
+        {
+            idx++;
+            showImg();
+        },
+        4500);
+        showImg();
+    </script>
 {% endblock %}
