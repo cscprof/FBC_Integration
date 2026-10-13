@@ -45,7 +45,7 @@ def search():
     return render_template('resources/resourcesearch.html', resources=resources, categories=categories_list)
 
 @resources_blueprint.route("/admin/resources")
-@role_required(ADMIN)
+@role_required(MANAGER_ROLES)
 def resources_admin():
     
     categories_list = db.get_resource_categories()
@@ -153,7 +153,7 @@ def edit_resource(resource_id: int):
 
 
 @resources_blueprint.route("/resources/<int:resource_id>/delete", methods=["POST"])
-@role_required(ADMIN)
+@role_required(MANAGER_ROLES)
 def delete_resource(resource_id: int):
     """Delete a resource by ID and return to the search page."""
     try:

@@ -281,7 +281,6 @@ def profile():
     return render_template("profile/profile.html", user=output)
 
 @users.route("/profile/<username>/edit", methods=["GET", "POST"])
-@role_required(MANAGER_ROLES)
 def edit_profile(username):
 
     conn = get_db_connection()
