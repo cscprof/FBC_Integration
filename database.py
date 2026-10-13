@@ -2,10 +2,7 @@
 #import os
 import pymysql
 from flask import current_app
-# from flask_sqlalchemy import SQLAlchemy
 
-
-# db = SQLAlchemy()
 
 # GSM Temporary until all DB is converted
 def get_db_connection():

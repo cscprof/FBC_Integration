@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash, session
 from flask_login import current_user
-#from flask_sqlalchemy import SQLAlchemy
 # from app.db import get_db_connection
 from database import get_db_connection
 from datetime import datetime
