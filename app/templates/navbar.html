@@ -24,8 +24,8 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
 
-       <!-- Show Admin dropdown only if user is authenticated and is an admin(4) or partner(5) -->
-      {% if current_user.is_authenticated and (current_user.role == 4 or current_user.role == 5) %}
+       <!-- Show Admin dropdown only if user is authenticated and is a partner(4) or admin(5), see app/roles/roles.py -->
+      {% if is_manager(current_user) %}
         <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
           <a class="navbar-link">
             Admin
@@ -39,12 +39,11 @@
         </div>
       {% endif %}
 
-      <a class="navbar-item" href="/events"> Events List </a>
+      <a class="navbar-item {% if request.path.startswith('/events') %}is-active{% endif %}" href="/events"> Events List </a>
 
+      <a class="navbar-item {% if request.path.startswith('/calendar') %}is-active{% endif %}" href="/calendar"> Calendar </a>
 
-      <a class="navbar-item" href="/calendar"> Calendar </a>
-
-      <a class="navbar-item" href="/resources"> Resource Directory </a>
+      <a class="navbar-item {% if request.path.startswith('/resources') %}is-active{% endif %}" href="/resources"> Resource Directory </a>
 
       <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
         <a class="navbar-link"> More </a>
