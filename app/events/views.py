@@ -264,6 +264,8 @@ def update_event(event_id, action):
 @events.route('/admin/events')
 @role_required([4, 5])
 def adminView():
+    events = []
+    schools = []
     conn = get_db_connection()
     try:
         with conn.cursor() as cursor:
@@ -278,25 +280,19 @@ def adminView():
                 ORDER BY CASE WHEN e.status = 'pending' THEN 0 ELSE 1 END, e.start_date ASC
             """)
             rows = cursor.fetchall()
-            
-    except Exception as e:
-        rows = []
-        print(f"Error fetching data: {e}")
-    finally:
-        conn.close()
 
-        cursor.execute("SELECT tag FROM tags ORDER BY tag")
-        schools = [row['tag'] for row in cursor.fetchall()]
+        cursor.execute("SELECT tag_name FROM tags ORDER BY tag_id")
+        schools = [row['tag_name'] for row in cursor.fetchall()]
 
         events = []
         for row in rows:
             cursor.execute("""
-                SELECT t.tag_namename
+                SELECT t.tag_id
                 FROM event_tags et
                 JOIN tags t ON et.tag_id = t.tag_id
                 WHERE et.event_id = %s
             """, (row['event_id'],))
-            event_schools = [s['tag_name'] for s in cursor.fetchall()]
+            event_schools = [s['tag_id'] for s in cursor.fetchall()]
 
             # build a readable submitter name
             if row.get('first_name') or row.get('last_name'):
@@ -326,7 +322,11 @@ def adminView():
                 "event_state": row.get("event_state"),
                 "event_postal_code": row.get("event_postal_code"),
             })
-    conn.close()
+    except Exception as e:
+        rows = []
+        print(f"Error fetching data: {e}")
+    finally:
+        conn.close()
 
     return render_template('events/eventAdmin.html', events=events, schools=schools)
 
