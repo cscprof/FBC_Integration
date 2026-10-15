@@ -19,6 +19,7 @@ from config import config
 
 # Create Flask extensions
 # mysql = MySQL()
+
 from flask_mail import Mail
 mail = Mail()
 
