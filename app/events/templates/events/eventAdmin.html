@@ -212,6 +212,30 @@
             {% endif %}
         </div>
 
+        <details class="header-2">
+            <summary>Past Events</summary>
+            <div class="list">
+                {% if past_events %}
+                    {% for event in past_events %}
+                        <div class="resource event-item"
+                            data-type="{{ event.tag }}"
+                            data-schools='{{ event.schools | tojson }}'>
+                            <div>
+                                <a href="/calendar?event={{ event.title | urlencode }}" class="event-link" style="text-decoration: none; color: inherit;">
+                                    <span>{{ event.title }}</span>
+                                </a><br>
+                                <small>{{ event.start.strftime('%b %d, %Y %I:%M %p') }} – {{ event.end.strftime('%b %d, %Y %I:%M %p') }}</small><br>
+                                <p>{{ event.description }}</p>
+                            </div>
+                            <a href="{{ event.url or '#' }}" target="_blank" class="arrow">➜</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="resource">No past events</div>
+                {% endif %}
+            </div>
+        </details>
+
     </div>
         
 </div>
@@ -229,6 +253,7 @@
     <p><strong>Contact:</strong> <span id="popupEventContact"></span></p>
     <p><strong>Status:</strong> <span id="popupEventStatus"></span></p>
 </div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

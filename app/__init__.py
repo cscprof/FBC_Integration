@@ -16,9 +16,9 @@ from flask import Flask
 from config import config
 
 
-
 # Create Flask extensions
 # mysql = MySQL()
+
 from flask_mail import Mail
 mail = Mail()
 
@@ -39,7 +39,7 @@ def create_app(config_name):
     # Load the resources page section
     from .resources import resources as resources_blueprint
     app.register_blueprint(resources_blueprint)
-
+    
     # Load the user management section
     from .users import users as users_blueprint
     app.register_blueprint(users_blueprint)
