@@ -7,5 +7,6 @@ Authentication and role checking for the application.
     passwords.py          - Argon2 password hashing and verification(From security team last semster)
     emailVerification.py  - email verification tokens and emails(Also from security team last semster)
 """
+
 from .roles import STUDENT, PARENT, GUARDIAN, PARTNER, ADMIN, MANAGER_ROLES, has_role, is_manager
 from .loginManager import login_manager, role_required

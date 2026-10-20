@@ -12,7 +12,6 @@ login_manager.refresh_view = 'users.login_page'  # Name of your reauth route
 login_manager.needs_refresh_message = 'Session expired. Please reauthenticate.'
 login_manager.needs_refresh_message_category = 'warning'
 
-
 # Creates a user account from the matching database entry for the entered user_id
 @login_manager.user_loader
 def load_user(user_id):
@@ -37,6 +36,7 @@ def role_required(role_id):
         code here
     )
     """
+    
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):

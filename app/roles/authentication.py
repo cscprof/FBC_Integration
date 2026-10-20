@@ -12,6 +12,7 @@ def account_from_row(row):
     Creates an Account from a `users` table row.
     This is the single place an Account is built from the database, used both at login and by the login manager.
     """
+
     return Account(
         username=row['username'].capitalize() if row['username'] else '',
         email=row['email'],
@@ -27,7 +28,6 @@ def account_from_row(row):
         profilePicture=row.get('profile_picture', None),
     )
 
-
 def get_account_by_id(user_id):
     """Returns the Account for `user_id`, or None if no such user exists."""
     conn = get_db_connection()
@@ -38,7 +38,6 @@ def get_account_by_id(user_id):
     finally:
         conn.close()
     return account_from_row(row) if row else None
-
 
 def authenticate_user(username, password):
     """
@@ -56,7 +55,6 @@ def authenticate_user(username, password):
     if row and hash_check_matches(password, row["password"]):
         return account_from_row(row)
     return None
-
 
 def current_user_id(default=None):
     """

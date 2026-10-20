@@ -18,7 +18,6 @@ ADMIN = 5
 # Roles allowed to manage site content (events, resources, tags, users)
 MANAGER_ROLES = [PARTNER, ADMIN]
 
-
 def has_role(user, roles):
     """
     Returns True if `user` is logged in and their role is in `roles`.
@@ -26,7 +25,6 @@ def has_role(user, roles):
     """
     allowed_roles = roles if isinstance(roles, (list, tuple, set)) else [roles]
     return bool(getattr(user, "is_authenticated", False)) and getattr(user, "role", None) in allowed_roles
-
 
 def is_manager(user):
     """Returns True if `user` is a Partner or Admin."""
