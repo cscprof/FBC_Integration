@@ -1,12 +1,14 @@
 from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash
-#from flask_sqlalchemy import SQLAlchemy
 # from app.db import get_db_connection
 from database import get_db_connection
 from datetime import datetime
 from pymysql import DatabaseError
-from app.roles.loginManager import role_required
-from app.roles.roles import MANAGER_ROLES
-from app.roles.authentication import current_user_id
+# i have no clue why this was in roles earlier.
+# i feel like users should hold all the auth related
+# things so i swapped it here. just better organization yk
+from app.users.loginManager import role_required
+from app.users.roles import MANAGER_ROLES
+from app.users.authentication import current_user_id
 
 from . import events
 

@@ -15,7 +15,7 @@ redundant checks to ensure inputs match db:
 
     if not isinstance(roleID, int):
         raise TypeError(f"roleID must be int, roleID is {type(roleID)}")
-    elif roleID not in range(1, 6): #can be 1-5, see app/roles/roles.py
+    elif roleID not in range(1, 6): #can be 1-5, see app/users/roles.py
         raise ValueError(f"roleID must be in range(1, 6).\n-------possible values-------\n1:\t\tstudent\n2:\t\tparent\n3:\t\tguardian\n4:\t\tpartner\n5:\t\tadmin")
 
     if not isinstance(partnerID, int):

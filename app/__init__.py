@@ -14,7 +14,7 @@ prior to pushing the new code to GitHub.
 from flask import Flask
 
 from config import config
-# from database import db #Added by resource team for SQLAlchemy integration
+
 
 
 # Create Flask extensions
@@ -37,7 +37,6 @@ def create_app(config_name):
     app.register_blueprint(events_blueprint)
 
     # Load the resources page section
-    # db.init_app(app) #Added for SQLAlchemy integration
     from .resources import resources as resources_blueprint
     app.register_blueprint(resources_blueprint)
 
@@ -47,25 +46,6 @@ def create_app(config_name):
 
     #for email verification
     mail.init_app(app)
-    
-    # Load login manager
-    from app.roles.loginManager import login_manager
-    login_manager.init_app(app)
-
-    # Make role checks available in every template, e.g. {% if is_manager(current_user) %}
-    from app.roles import roles
-    @app.context_processor
-    def inject_role_helpers():
-        return dict(
-            has_role=roles.has_role,
-            is_manager=roles.is_manager,
-            STUDENT=roles.STUDENT,
-            PARENT=roles.PARENT,
-            GUARDIAN=roles.GUARDIAN,
-            PARTNER=roles.PARTNER,
-            ADMIN=roles.ADMIN,
-            MANAGER_ROLES=roles.MANAGER_ROLES,
-        )
     
     return app
 
