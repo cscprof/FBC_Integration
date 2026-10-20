@@ -47,24 +47,5 @@ def create_app(config_name):
     #for email verification
     mail.init_app(app)
     
-    # Load login manager
-    from app.roles.loginManager import login_manager
-    login_manager.init_app(app)
-
-    # Make role checks available in every template, e.g. {% if is_manager(current_user) %}
-    from app.roles import roles
-    @app.context_processor
-    def inject_role_helpers():
-        return dict(
-            has_role=roles.has_role,
-            is_manager=roles.is_manager,
-            STUDENT=roles.STUDENT,
-            PARENT=roles.PARENT,
-            GUARDIAN=roles.GUARDIAN,
-            PARTNER=roles.PARTNER,
-            ADMIN=roles.ADMIN,
-            MANAGER_ROLES=roles.MANAGER_ROLES,
-        )
-    
     return app
 

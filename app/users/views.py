@@ -10,11 +10,11 @@ from werkzeug.utils import secure_filename
 from . import users
 # Authentication and role checking
 from flask_login import login_user, login_required, logout_user, current_user
-from app.roles.loginManager import role_required
-from app.roles.roles import MANAGER_ROLES
-from app.roles.passwords import hash_plaintext, hash_check_matches
-from app.roles.authentication import authenticate_user
-from app.roles.emailVerification import send_verification_email, confirm_token
+from .loginManager import role_required
+from .roles import MANAGER_ROLES
+from .passwords import hash_plaintext, hash_check_matches
+from .authentication import authenticate_user
+from .emailVerification import send_verification_email, confirm_token
 
 # allowed files types for user pfps
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}

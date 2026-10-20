@@ -22,7 +22,7 @@ def load_user(user_id):
 def role_required(role_id):
     """
     This is a 'Decorator Factory' which rejects a client from accessing a page unless their role_id matches the required role_id(s)
-    Role ids are defined in app/roles/roles.py (STUDENT, PARENT, GUARDIAN, PARTNER, ADMIN, MANAGER_ROLES)
+    Role ids are defined in app/users/roles.py (STUDENT, PARENT, GUARDIAN, PARTNER, ADMIN, MANAGER_ROLES)
     Example use (single role): 
     @app.route(/route)
     @role_required(ADMIN)
