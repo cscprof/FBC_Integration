@@ -1,6 +1,4 @@
 from typing import Optional
-import sqlalchemy as sa
-import sqlalchemy.orm as so
 from database import db_class
 from datetime import datetime, timezone
 
