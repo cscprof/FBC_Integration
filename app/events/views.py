@@ -1,10 +1,14 @@
-from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash, session
-from flask_login import current_user
+from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash
 # from app.db import get_db_connection
 from database import get_db_connection
 from datetime import datetime
 from pymysql import DatabaseError
-from loginManager import role_required
+# i have no clue why this was in roles earlier.
+# i feel like users should hold all the auth related
+# things so i swapped it here. just better organization yk
+from app.users.loginManager import role_required
+from app.users.roles import MANAGER_ROLES
+from app.users.authentication import current_user_id
 
 from . import events
 
@@ -41,7 +45,7 @@ def fetch_approved_events_json():
             school_rows = cursor.fetchall()
         conn.close()
         
-        schools = [s['tag'] for s in school_rows]
+        schools = [s['tag_name'] for s in school_rows]
         
         events.append({
             "title": row['name'],
@@ -87,7 +91,7 @@ def fetch_approved_events_python():
                 JOIN tags t ON et.tag_id = t.tag_id
                 WHERE et.event_id = %s
             """, (row['event_id'],))
-            schools = [s['tag'] for s in cursor.fetchall()]
+            schools = [s['tag_name'] for s in cursor.fetchall()]
 
             events.append({
                 "title": row['name'],
@@ -116,7 +120,7 @@ def fetch_approved_events_python():
 #  ADD EVENT
 # ---------------------------------------------------------
 @events.route('/add-event', methods=["GET", "POST"])
-@role_required([4, 5])
+@role_required(MANAGER_ROLES)
 def addEvent():
     conn = get_db_connection()
     try:
@@ -182,10 +186,7 @@ def addEvent():
             return render_template('events/addEvent.html', form=request.form, tags=tags, school_tags=school_tags)
 
         # prefer authenticated user's id; fall back to session value or default user 1
-        if getattr(current_user, 'is_authenticated', False):
-            user_id = current_user.id
-        else:
-            user_id = session.get('user_id', 1)
+        user_id = current_user_id(default=1)
 
         conn = None
         try:
@@ -243,7 +244,7 @@ def calendar():
 
 
 @events.route('/update_event/<int:event_id>/<string:action>')
-@role_required([4, 5])
+@role_required(MANAGER_ROLES)
 def update_event(event_id, action):
     if action not in ["approved", "cancelled"]:
         return redirect(url_for('events.adminView'))
@@ -261,7 +262,7 @@ def update_event(event_id, action):
 
 
 @events.route('/admin/events')
-@role_required([4, 5])
+@role_required(MANAGER_ROLES)
 def adminView():
     events = []
     schools = []
@@ -332,7 +333,7 @@ def adminView():
 
 
 @events.route('/edit_event/<int:event_id>', methods=['GET', 'POST'])
-@role_required([4, 5])
+@role_required(MANAGER_ROLES)
 def edit_event(event_id):
 
     if request.method == 'POST':
@@ -440,7 +441,7 @@ def edit_event(event_id):
         tags = cursor.fetchall()
 
         # all schools
-        cursor.execute("SELECT tag_id as school_tag_id, tag as school_name FROM tags ORDER BY tag")
+        cursor.execute("SELECT tag_id as school_tag_id, tag_name as school_name FROM tags ORDER BY tag_name")
         school_tags = cursor.fetchall()
 
         # selected schools
@@ -481,7 +482,7 @@ def edit_event(event_id):
     )
 
 @events.route('/delete_event/<int:event_id>', methods=['POST'])
-@role_required([4, 5])
+@role_required(MANAGER_ROLES)
 def delete_event(event_id):
     conn = get_db_connection()
     try:

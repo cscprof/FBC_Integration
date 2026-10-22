@@ -47,9 +47,5 @@ def create_app(config_name):
     #for email verification
     mail.init_app(app)
     
-    # Load login manager
-    from loginManager import login_manager
-    login_manager.init_app(app)
-    
     return app
 
