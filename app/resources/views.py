@@ -2,7 +2,6 @@
 from . import resources as resources_blueprint
 from flask import render_template, request, redirect, url_for
 from flask_login import current_user
-from tagmanager import get_tags, give_tag
 from . import sql_queries  as db
 from app.users.loginManager import role_required
 from app.users.roles import ADMIN, MANAGER_ROLES

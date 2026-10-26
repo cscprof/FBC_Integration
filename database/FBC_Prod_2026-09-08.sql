@@ -7,7 +7,6 @@ Backup Time: 2026-09-08 14:23:40
 SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `flourish_bc`.`alembic_version`;
 DROP TABLE IF EXISTS `flourish_bc`.`content_types`;
-DROP TABLE IF EXISTS `flourish_bc`.`event_tags`;
 DROP TABLE IF EXISTS `flourish_bc`.`events`;
 DROP TABLE IF EXISTS `flourish_bc`.`partners`;
 DROP TABLE IF EXISTS `flourish_bc`.`resource_category`;
@@ -27,16 +26,6 @@ CREATE TABLE `content_types` (
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`content_type_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `event_tags` (
-  `event_tag_id` int NOT NULL AUTO_INCREMENT,
-  `event_id` int NOT NULL,
-  `tag_id` int NOT NULL,
-  PRIMARY KEY (`event_tag_id`),
-  KEY `event_tags_tags_fk` (`tag_id`),
-  KEY `event_tags_event_fk` (`event_id`),
-  CONSTRAINT `event_tags_event_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`),
-  CONSTRAINT `event_tags_tags_fk` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`tag_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `events` (
   `event_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
@@ -153,11 +142,6 @@ BEGIN;
 LOCK TABLES `flourish_bc`.`content_types` WRITE;
 DELETE FROM `flourish_bc`.`content_types`;
 INSERT INTO `flourish_bc`.`content_types` (`content_type_id`,`name`,`description`) VALUES (1, 'Prospective Students', 'Admission events for prospective students'),(2, 'Admitted Students', 'Admissions events for accepted students'),(3, 'Orientation', 'Orientation events for admitted students'),(4, 'Financial Planning', 'Paying for post-secondary eduction events'),(5, 'Academic Prep', 'Events to help you prepare academically'),(6, 'Mental Health', 'Events concerned with mental health of students'),(7, 'Family Transition', 'Events helping families transition to college life');
-UNLOCK TABLES;
-COMMIT;
-BEGIN;
-LOCK TABLES `flourish_bc`.`event_tags` WRITE;
-DELETE FROM `flourish_bc`.`event_tags`;
 UNLOCK TABLES;
 COMMIT;
 BEGIN;

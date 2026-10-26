@@ -59,15 +59,6 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="form-col" style="margin-bottom: 15px;">
-                    <label class="event-label">Schools</label>
-                    <select class="entry-box" name="schools" multiple>
-                        {% for school in school_tags %}
-                        <option value="{{ school.school_tag_id }}">{{ school.school_name }}</option>
-                        {% endfor %}
-                    </select>
-                    <small style="opacity: 0.7; margin-top: 5px; display: inline-block;">Hold Ctrl/Cmd to select multiple.</small>
-                </div>
 
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Add Tag</label>
