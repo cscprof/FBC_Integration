@@ -167,10 +167,15 @@ def add_tags(tag_list, resource_id):
     db = db_class()
 
     if tag_list:
-        # Build full SQL statement
+        # Use parameterized queries to prevent SQL injection
         for tag in tag_list:
-            sql = f"INSERT INTO resource_tags ( resource_id, tag_id ) VALUES ( {resource_id }, {int(tag)} )"
-            resource_tag_id = db.insert(sql)
+            try:
+                r_id = int(resource_id)
+                t_id = int(tag)
+            except (ValueError, TypeError):
+                continue
+            sql = "INSERT INTO resource_tags ( resource_id, tag_id ) VALUES ( %s, %s )"
+            resource_tag_id = db.insert(sql, (r_id, t_id))
 
             print(f"{resource_tag_id}: {sql}")
 
