@@ -35,7 +35,7 @@
         {% endfor %}
       </select>
 
-      <label class="event-label">Schools</label>
+      <label class="event-label">Tags</label>
       <select class="entry-box" name="schools" multiple>
         {% for school in school_tags %}
           <option value="{{ school.school_tag_id }}"
@@ -45,7 +45,7 @@
         {% endfor %}
       </select>
 
-      <small>Hold Ctrl (or Cmd on Mac) to select multiple schools.</small>
+      <small>Hold Ctrl (or Cmd on Mac) to select multiple tags.</small>
 
       <label class="event-label">Contact Name</label>
       <input class="entry-box" type="text" name="contact_name" placeholder="Contact Name" value="{{ event.contact_name }}">

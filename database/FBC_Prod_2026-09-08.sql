@@ -7,6 +7,7 @@ Backup Time: 2026-09-08 14:23:40
 SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `flourish_bc`.`alembic_version`;
 DROP TABLE IF EXISTS `flourish_bc`.`content_types`;
+DROP TABLE IF EXISTS `flourish_bc`.`event_tags`;
 DROP TABLE IF EXISTS `flourish_bc`.`events`;
 DROP TABLE IF EXISTS `flourish_bc`.`partners`;
 DROP TABLE IF EXISTS `flourish_bc`.`resource_category`;
@@ -26,6 +27,16 @@ CREATE TABLE `content_types` (
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`content_type_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `event_tags` (
+  `event_tag_id` int NOT NULL AUTO_INCREMENT,
+  `event_id` int NOT NULL,
+  `tag_id` int NOT NULL,
+  PRIMARY KEY (`event_tag_id`),
+  KEY `event_tags_tags_fk` (`tag_id`),
+  KEY `event_tags_event_fk` (`event_id`),
+  CONSTRAINT `event_tags_event_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`) ON DELETE CASCADE,
+  CONSTRAINT `event_tags_tags_fk` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`tag_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `events` (
   `event_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
