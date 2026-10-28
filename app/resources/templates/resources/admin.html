@@ -6,9 +6,6 @@
 <section class="section">
     <div class="container">
         <h1 class="title has-text-centered">Resource Administration</h1>
-        <p class="has-text-centered is-size-6 mb-5" style="color: #666; margin-top: 10px;">
-            Manage uploaded resources, update details, and remove outdated links.
-        </p>
 
         <div class="uploadbutton">
             <button onclick="document.getElementById('uploadModal').style.display='flex'" class="uploadresourcebtn">
@@ -42,7 +39,6 @@
                             <th>Title</th>
                             <th>Category</th>
                             <th>Contact</th>
-                            <th>Link</th>
                             <th class="has-text-centered">Actions</th>
                         </tr>
                     </thead>
@@ -52,7 +48,15 @@
                             data-category="{{ resource.resource_category_name }}"
                             data-search="{{ resource.description }} {{ resource.url }} {{ resource.contact_name or '' }} {{ resource.contact_email or '' }} {{ resource.contact_phone or '' }}"
                         >
-                            <td>{{ resource.description }}</td>
+                            <td>
+                                {% if resource.url %}
+                                <a href="{{ resource.url }}" target="_blank" rel="noopener noreferrer" class="resourcelink">
+                                    {{ resource.description }}
+                                </a>
+                                {% else %}
+                                    {{ resource.description }}
+                                {% endif %}
+                            </td>
                             <td>{{ resource.resource_category_name|title }}</td>
                             <td>
                                 {% if resource.contact_name %}<div>{{ resource.contact_name }}</div>{% endif %}
@@ -61,11 +65,6 @@
                                 {% if not resource.contact_name and not resource.contact_email and not resource.contact_phone %}
                                 <span style="color:#777;">-</span>
                                 {% endif %}
-                            </td>
-                            <td>
-                                <a href="{{ resource.url }}" target="_blank" rel="noopener noreferrer" class="resourcelink">
-                                    Open Link
-                                </a>
                             </td>
                             <td class="has-text-centered">
                                 <button
@@ -84,7 +83,7 @@
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="5" class="has-text-centered" style="color:#666;">No resources found.</td>
+                            <td colspan="4" class="has-text-centered" style="color:#666;">No resources found.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

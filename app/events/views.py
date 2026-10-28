@@ -266,6 +266,7 @@ def update_event(event_id, action):
 def adminView():
     events = []
     schools = []
+    content_types = []
     conn = get_db_connection()
     try:
         with conn.cursor() as cursor:
@@ -285,6 +286,9 @@ def adminView():
 
             cursor.execute("SELECT tag_name FROM tags ORDER BY tag_name")
             schools = [row['tag_name'] for row in cursor.fetchall()]
+
+            cursor.execute("SELECT content_type_id, name FROM content_types ORDER BY name")
+            content_types = cursor.fetchall()
 
             events = []
             for row in rows:
@@ -327,11 +331,44 @@ def adminView():
     except Exception as e:
         events = []
         schools = []
+        content_types = []
         print(f"Error fetching data: {e}")
     finally:
         conn.close()
 
-    return render_template('events/eventAdmin.html', events=events, schools=schools)
+    now = datetime.now()
+    pending_events = []
+    approved_events = []
+    cancelled_events = []
+    past_events = []
+
+    for ev in events:
+        status = ev.get('status')
+        is_past = False
+        if ev.get('end') and ev['end'] < now:
+            is_past = True
+        elif not ev.get('end') and ev.get('start') and ev['start'] < now:
+            is_past = True
+
+        if status == 'pending' or not status:
+            pending_events.append(ev)
+        elif status == 'cancelled':
+            cancelled_events.append(ev)
+        elif is_past:
+            past_events.append(ev)
+        else:
+            approved_events.append(ev)
+
+    return render_template(
+        'events/eventAdmin.html',
+        events=events,
+        pending_events=pending_events,
+        approved_events=approved_events,
+        cancelled_events=cancelled_events,
+        past_events=past_events,
+        schools=schools,
+        content_types=content_types
+    )
 
 
 
