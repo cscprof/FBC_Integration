@@ -2,7 +2,6 @@
 from . import resources as resources_blueprint
 from flask import render_template, request, redirect, url_for
 from flask_login import current_user
-from tagmanager import get_tags, give_tag
 from . import sql_queries  as db
 from app.users.loginManager import role_required
 from app.users.roles import ADMIN, MANAGER_ROLES
@@ -94,16 +93,7 @@ def upload_resource():
     print(data)
 
     try:
-       
         resource_id = db.add_resource(data)
-
-        if resource_id > 0 and data['selected_tags']:
-            print("List has stuff")
-            db.add_tags(data)
-        else:
-            print("No stuff in list")
-
-        
         # Show the user their newly uploaded resource
         return redirect(url_for('resources.resources_admin'))
         

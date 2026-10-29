@@ -2,6 +2,10 @@
 
 {% block title %}Edit Profile{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_profile.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="edit-user-blob">
     <h1>Edit User: {{ user.username }}</h1>
@@ -28,10 +32,10 @@
             {% if user.profile_picture %}
                 <img src="{{ url_for('static', filename=user.profile_picture) }}"
                     alt="Current profile picture"
-                    style="width:80px; height:80px; border-radius:50%; object-fit:cover; vertical-align:middle; margin-right:8px;">
-                <span style="font-size:13px; color:#777;">(Upload a new image to replace)</span>
+                    class="edit-profile-avatar">
+                <span class="edit-profile-hint">(Upload a new image to replace)</span>
             {% else %}
-                <span style="font-size:13px; color:#777;">No photo set</span>
+                <span class="edit-profile-hint">No photo set</span>
             {% endif %}
             <input type="file" name="profile_picture" accept="image/png, image/jpeg, image/gif, image/webp">
         <button class="edituser-button-submit" type="submit">Save Changes</button>

@@ -2,35 +2,26 @@
 
 {% block title %}Event Submitted{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/confirmEvent.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="add-event-container">
-  <div class="add-event-blob" style="max-width:600px;">
-    <h1 style="color:white; margin-bottom:10px;">Thank you — your event request was submitted!</h1>
+  <div class="add-event-blob confirm-event-blob">
+    <h1 class="confirm-event-heading">Thank you — your event request was submitted!</h1>
     <div class="underline-event"></div>
 
-    <p style="color:white; margin-top:0.5rem;">Our team will review your submission. You'll be redirected to the calendar shortly.</p>
+    <p class="confirm-event-message">Our team will review your submission. You'll be redirected to the calendar shortly.</p>
 
-    <p id="countdown" style="color:white; margin-top:1rem;">Redirecting in <span id="secs">5</span> seconds...</p>
+    <p id="countdown" data-redirect-url="{{ url_for('events.calendar') }}">Redirecting in <span id="secs">5</span> seconds...</p>
 
-    <div style="margin-top:20px;">
+    <div class="confirm-event-action">
       <a class="hub-button" href="{{ url_for('events.calendar') }}">Return to calendar now</a>
     </div>
   </div>
 </div>
 
-<script>
-(function(){
-  var seconds = 5;
-  var el = document.getElementById('secs');
-  var timer = setInterval(function(){
-    seconds -= 1;
-    if(el) el.textContent = seconds;
-    if(seconds <= 0){
-      clearInterval(timer);
-      window.location = "{{ url_for('events.calendar') }}";
-    }
-  }, 1000);
-})();
-</script>
+<script src="{{ url_for('static', filename='js/confirmEvent.js') }}"></script>
 
 {% endblock %}

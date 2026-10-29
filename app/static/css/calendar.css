@@ -212,6 +212,8 @@ body {
   padding: 20px;
   z-index: 1000;
   max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,1);
 }
@@ -229,4 +231,61 @@ body {
   width:100%; height:100%;
   background: rgba(0,0,0,0.3);
   z-index: 999;
+}
+
+#calendar {
+  max-width: 900px;
+  margin: 50px auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 15px rgb(122, 224, 81);
+}
+
+.fc-toolbar-title {
+  color: #2a4468;
+  font-weight: 800;
+}
+
+.fc-button-primary {
+  background-color: #3a6ea5 !important;
+  border-color: #3a6ea5 !important;
+  color: #fff !important;
+}
+
+.fc-button-primary:hover,
+.fc-button-primary:focus {
+  background-color: #315c88 !important;
+  border-color: #315c88 !important;
+}
+
+.fc-day-today {
+  background: #aaeb54 !important;
+}
+
+.fc-daygrid-day:hover {
+  background-color: #e8f1ff !important;
+  cursor: pointer;
+}
+
+.fc-event {
+  background-color: #3a6ea4 !important;
+  border: none !important;
+  color: #fff !important;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-weight: 600;
+}
+
+.fc-daygrid-day-frame {
+  padding: 6px !important;
+}
+
+.link {
+  cursor: pointer;
+}
+
+.add-event a {
+  background-color: #aaeb54;
+  font-weight: bold;
 }

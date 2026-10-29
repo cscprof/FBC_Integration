@@ -7,7 +7,7 @@
 <section class="section">
     <div class="container">
         <h1 class="title has-text-centered">Resource Directory</h1>
-        <p class="has-text-centered is-size-5 mb-5" style="color: #666; margin-top: 10px;">
+        <p class="has-text-centered is-size-5 mb-5 resource-directory-subtitle">
             Everything you need to succeed - from college prep to mental health support
         </p>
 
@@ -122,36 +122,7 @@
     </div>
 </section>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-const searchInput = document.querySelector(".searchinput");
-const categorySelect = document.querySelector(".categoryselect");
-const resourceBoxes = document.querySelectorAll(".exampleboxes");
-
-function filterResources() {
-const searchValue = searchInput.value.toLowerCase();
-const selectedCategory = categorySelect.value;
-
-resourceBoxes.forEach(box => {
-const boxCategory = box.getAttribute("data-category");
-const textContent = box.innerText.toLowerCase();
-
-const matchesSearch = textContent.includes(searchValue);
-const matchesCategory =
-selectedCategory === "all" || boxCategory === selectedCategory;
-
-if (matchesSearch && matchesCategory) {
-box.style.display = "block";
-} else {
-box.style.display = "none";
-}
-});
-}
-
-searchInput.addEventListener("keyup", filterResources);
-categorySelect.addEventListener("change", filterResources);
-});
-</script>
+<script src="{{ url_for('static', filename='js/resourceDirectory.js') }}"></script>
 
 <!-- <div id="uploadModal">
     <div class="modalcontent">
