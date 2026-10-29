@@ -63,7 +63,7 @@
                                 {% if resource.contact_email %}<div>{{ resource.contact_email }}</div>{% endif %}
                                 {% if resource.contact_phone %}<div>{{ resource.contact_phone }}</div>{% endif %}
                                 {% if not resource.contact_name and not resource.contact_email and not resource.contact_phone %}
-                                <span style="color:#777;">-</span>
+                                <span class="no-contact-dash">-</span>
                                 {% endif %}
                             </td>
                             <td class="has-text-centered">
@@ -83,7 +83,7 @@
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="4" class="has-text-centered" style="color:#666;">No resources found.</td>
+                            <td colspan="4" class="has-text-centered no-resources-cell">No resources found.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -136,7 +136,10 @@
             <button onclick="closeEditModal()" class="modalclose">&times;</button>
         </div>
 
-        <form action="{{ url_for('resources.edit_resource', resource_id=0) }}" method="POST" class="modalform" id="editForm">
+        <form action="{{ url_for('resources.edit_resource', resource_id=0) }}"
+              data-edit-url-template="{{ url_for('resources.edit_resource', resource_id=0) }}"
+              data-delete-url-template="{{ url_for('resources.delete_resource', resource_id=0) }}"
+              method="POST" class="modalform" id="editForm">
             <input type="hidden" id="editResourceId" name="resource_id">
 
             <label for="editTitle" class="modallabel">Title *</label>
@@ -180,75 +183,7 @@
     </div>
 </div>
 
-<script>
-
-    function deleteResource() {
-        const resourceId = document.getElementById('editResourceId').value;
-        if (confirm('Are you sure you want to delete this resource?')) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '{{ url_for("resources.delete_resource", resource_id=0) }}'.replace('0', resourceId);
-            document.body.appendChild(form);
-            form.submit();
-        }
-    }
-
-    function closeEditModal() {
-        document.getElementById('editModal').style.display = 'none';
-    }
-
-    document.getElementById('editForm').addEventListener('submit', function () {
-        const resourceId = document.getElementById('editResourceId').value;
-        this.action = '{{ url_for("resources.edit_resource", resource_id=0) }}'.replace('0', resourceId);
-    });
-
-    function openEditModal(button) {
-        document.getElementById('editResourceId').value = button.getAttribute('data-resource-id');
-        document.getElementById('editTitle').value = button.getAttribute('data-title');
-        document.getElementById('editUrl').value = button.getAttribute('data-url');
-        document.getElementById('editCategory').value = button.getAttribute('data-category-id');
-        document.getElementById('editName').value = button.getAttribute('data-name') || '';
-        document.getElementById('editEmail').value = button.getAttribute('data-email') || '';
-        document.getElementById('editPhone').value = button.getAttribute('data-phone') || '';
-        document.getElementById('editModal').style.display = 'flex';
-    }
-
-    function filterAdminRows() {
-        const searchValue = document.getElementById('adminSearchInput').value.toLowerCase();
-        const selectedCategory = document.getElementById('adminCategorySelect').value;
-        const rows = document.querySelectorAll('#adminResourceRows tr[data-category]');
-
-        rows.forEach((row) => {
-            const rowCategory = row.getAttribute('data-category');
-            const rowSearchText = row.getAttribute('data-search').toLowerCase();
-            const matchesSearch = rowSearchText.includes(searchValue);
-            const matchesCategory = selectedCategory === 'all' || rowCategory === selectedCategory;
-            row.style.display = matchesSearch && matchesCategory ? '' : 'none';
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.edit-resource-btn-inline').forEach((button) => {
-            button.addEventListener('click', function () {
-                openEditModal(this);
-            });
-        });
-
-        document.getElementById('adminSearchInput').addEventListener('keyup', filterAdminRows);
-        document.getElementById('adminCategorySelect').addEventListener('change', filterAdminRows);
-
-        window.onclick = function (event) {
-            const editModal = document.getElementById('editModal');
-            const uploadModal = document.getElementById('uploadModal');
-            if (event.target === editModal) {
-                editModal.style.display = 'none';
-            }
-            if (event.target === uploadModal) {
-                uploadModal.style.display = 'none';
-            }
-        };
-    });    
-</script>
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 {% endblock %}

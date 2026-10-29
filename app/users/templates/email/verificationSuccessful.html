@@ -2,9 +2,13 @@
 
 {% block title %}Email Verified{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/verificationSuccessful.css') }}">
+{% endblock %}
+
 {% block content %}
 <body>
-    <div class="container" style="margin-bottom: 160px;">
+    <div class="container verification-success-container">
         <div class="checkmark">✓</div>
         <h1>Success!</h1>
         <p>Your email has been verified.</p>

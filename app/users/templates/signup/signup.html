@@ -39,43 +39,20 @@
 
         <div class="password-box">
             <input placeholder="Password (8 characters minimum)" type="password" name="password" id="password" minlength="8" required>
-            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}" id="eyeicon" alt="hide-password">
+            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}"
+                 data-eye-open="{{ url_for('static', filename='images/eyeopen.png') }}"
+                 data-eye-closed="{{ url_for('static', filename='images/eyeclosed.png') }}"
+                 id="eyeicon" alt="hide-password">
         </div>
-        <script>
-            // "Show password" icon and function
-            let eyeicon = document.getElementById("eyeicon")
-            let password = document.getElementById("password")
-
-            eyeicon.onclick = function(){
-                if (password.type == "password"){
-                    password.type = "text";
-                    eyeicon.src = "{{ url_for('static', filename='images/eyeopen.png') }}";
-                }else{
-                    password.type = "password";
-                    eyeicon.src = "{{ url_for('static', filename='images/eyeclosed.png') }}";
-                }
-            }
-        </script>
 
         <div class="password-box">
             <input placeholder="Confirm Password" type="password" name="passwordConfirmation" id="passwordConfirmation" minlength="8" required>
-            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}" id="eyeicon" alt="hide-password">
+            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}"
+                 data-eye-open="{{ url_for('static', filename='images/eyeopen.png') }}"
+                 data-eye-closed="{{ url_for('static', filename='images/eyeclosed.png') }}"
+                 id="eyeicon" alt="hide-password">
         </div>
-        <script>
-            // Second "show password" icon and function for "confirm password" box (currently broken)
-            let eyeicon = document.getElementById("eyeicon")
-            let passwordConfirmation = document.getElementById("passwordConfirmation")
-
-            eyeicon.onclick = function(){
-                if (password.type == "password"){
-                    password.type = "text";
-                    eyeicon.src = "{{ url_for('static', filename='images/eyeopen.png') }}";
-                }else{
-                    password.type = "password";
-                    eyeicon.src = "{{ url_for('static', filename='images/eyeclosed.png') }}";
-                }
-            }
-        </script>
+        <script src="{{ url_for('static', filename='js/signup.js') }}"></script>
 
         <button class="button-submit" type="submit">Submit</button>
 

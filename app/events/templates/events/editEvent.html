@@ -2,10 +2,14 @@
 
 {% block title %}Edit Event{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/editEvent.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="add-event-container">
-  <div class="add-event-blob" style="max-width:700px;">
-    <h1 style="color:white; margin-bottom:10px;">Edit Event</h1>
+  <div class="add-event-blob edit-event-blob">
+    <h1 class="edit-event-heading">Edit Event</h1>
     <div class="underline-event"></div>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -80,9 +84,9 @@
       <label class="event-label">Registration Deadline (Optional)</label>
       <input class="entry-box" type="datetime-local" name="deadline" value="{{ event.registration_deadline }}">
 
-      <div style="display:flex; gap:10px; margin-top:15px;">
+      <div class="edit-event-actions">
         <button class="button-submit" type="submit">Save Changes</button>
-        <a class="hub-button" href="{{ url_for('events.adminView') }}" style="text-decoration:none;">Cancel</a>
+        <a class="hub-button edit-event-cancel" href="{{ url_for('events.adminView') }}">Cancel</a>
       </div>
     </form>
 

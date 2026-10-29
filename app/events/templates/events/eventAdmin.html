@@ -3,338 +3,7 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block head %}
-<style>
-/* Base container & title */
-.events-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 20px;
-}
-
-.events-container .title {
-    font-family: "Montserrat", sans-serif;
-    font-weight: 800;
-    color: #2e44cc;
-    margin-bottom: 15px;
-}
-
-.events-container .section {
-    width: 100%;
-    max-width: 1200px;
-    padding: 0;
-}
-
-/* Add Event Button - Resource Theme */
-.add-event {
-    margin-bottom: 15px;
-}
-.add-event a.button,
-.add-event a {
-    background-color: #2e44cc !important;
-    color: #ffffff !important;
-    font-weight: 700;
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    text-decoration: none;
-    display: inline-block;
-    transition: background-color 0.2s ease-in-out;
-}
-.add-event a:hover {
-    background-color: #1e34aa !important;
-}
-
-/* Headers - Resource Theme */
-.header {
-    background-color: #2e44cc;
-    color: #ffffff;
-    font-family: "Open Sans", sans-serif;
-    font-weight: 700;
-    padding: 14px 20px;
-    font-size: 1.5rem;
-    border-radius: 6px;
-    margin-bottom: 16px;
-}
-
-.category-section {
-    margin-bottom: 35px;
-}
-
-.header-2 {
-    background-color: #f0f3ff;
-    color: #2e44cc;
-    font-family: "Open Sans", sans-serif;
-    font-weight: 700;
-    padding: 12px 20px;
-    font-size: 1.25rem;
-    border: 1px solid #d9defa;
-    border-left: 5px solid #2e44cc;
-    border-radius: 6px;
-    margin-top: 0;
-    margin-bottom: 14px;
-}
-
-/* Past Events Collapsible Section with Dropdown Arrow */
-details.header-2 {
-    padding: 0;
-    border: 1px solid #d9defa;
-    border-radius: 6px;
-    margin-top: 0;
-    margin-bottom: 0;
-    background-color: #ffffff;
-}
-
-details.header-2 summary {
-    background-color: #f0f3ff;
-    color: #2e44cc;
-    padding: 12px 20px;
-    font-size: 1.25rem;
-    font-weight: 700;
-    cursor: pointer;
-    border-left: 5px solid #2e44cc;
-    border-radius: 5px;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    outline: none;
-    user-select: none;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-details.header-2 summary::-webkit-details-marker {
-    display: none;
-}
-
-details.header-2 summary:hover {
-    background-color: #e6ecff;
-    color: #1e34aa;
-}
-
-.past-arrow {
-    display: inline-block;
-    font-size: 0.8rem;
-    color: #2e44cc;
-    transition: transform 0.2s ease-in-out;
-}
-
-details.header-2[open] .past-arrow {
-    transform: rotate(180deg);
-}
-
-details.header-2 .list {
-    padding: 16px;
-    background-color: #ffffff;
-}
-
-details.header-2 .resource p {
-    font-size: 0.85rem;
-    color: #555;
-}
-
-/* Event List Cards - Resource Theme */
-.list {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-top: 0;
-}
-
-.resource.event-item {
-    background-color: #ffffff;
-    border: 1px solid #d9defa;
-    border-radius: 6px;
-    padding: 16px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    transition: background-color 0.2s, box-shadow 0.2s;
-}
-
-.resource.event-item:hover {
-    background-color: #fbfcff;
-    box-shadow: 0 2px 8px rgba(46, 68, 204, 0.08);
-}
-
-.event-link {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #2e44cc;
-    cursor: pointer;
-    text-decoration: underline;
-    transition: color 0.15s ease-in-out;
-}
-
-.event-link:hover {
-    color: #8ac926;
-}
-
-.resource p {
-    color: #444;
-    margin: 6px 0;
-}
-
-.resource small {
-    color: #666;
-}
-
-.status {
-    font-weight: 700;
-    text-transform: capitalize;
-    margin-top: 6px;
-    font-size: 0.9rem;
-    color: #333;
-}
-
-/* Action Buttons */
-.actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.actions a, .actions form {
-    display: inline;
-}
-
-.btn-approve {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 7px 14px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: background-color 0.2s;
-}
-.btn-approve:hover {
-    background-color: #218838;
-}
-
-.btn-reject {
-    background-color: #cc2e2e;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 7px 14px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: background-color 0.2s;
-}
-.btn-reject:hover {
-    background-color: #a02121;
-}
-
-.btn-edit {
-    background-color: #2e44cc;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 7px 14px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: background-color 0.2s;
-}
-.btn-edit:hover {
-    background-color: #1e34aa;
-}
-
-/* Filter Controls */
-.filter-controls {
-    margin: 0 0 28px 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.filter-controls select {
-    border: 1px solid #d0d4ff;
-    border-radius: 4px;
-    padding: 6px 12px;
-}
-
-/* Popup Modal - Resource Theme */
-#eventPopup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border: 1px solid #d0d4ff;
-    padding: 24px;
-    z-index: 1000;
-    width: 90%;
-    max-width: 520px;
-    max-height: 85vh;
-    overflow-y: auto;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-#eventPopup h3 {
-    color: #2e44cc;
-    font-family: "Montserrat", sans-serif;
-    font-weight: 700;
-    font-size: 1.3rem;
-    margin-top: 0;
-    margin-bottom: 15px;
-    padding-right: 30px;
-}
-
-#eventPopupClose {
-    cursor: pointer;
-    position: absolute;
-    top: 15px;
-    right: 18px;
-    font-size: 26px;
-    font-weight: bold;
-    color: #666;
-    line-height: 1;
-    border: none;
-    background: none;
-}
-#eventPopupClose:hover {
-    color: #2e44cc;
-}
-
-#eventPopup p {
-    margin-bottom: 8px;
-    color: #333;
-    font-size: 0.95rem;
-    line-height: 1.45;
-}
-
-#eventPopup strong {
-    color: #2e44cc;
-}
-
-#eventPopup a.link {
-    color: #2e44cc;
-    font-weight: 700;
-    text-decoration: underline;
-    word-break: break-all;
-}
-#eventPopup a.link:hover {
-    color: #8ac926;
-}
-
-#overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 999;
-}
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/eventAdmin.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -350,7 +19,7 @@ details.header-2 .resource p {
         
         <div class="header">Manage Events</div>
         <div class="filter-controls">
-            <label for="contentTypeFilter" style="font-weight: 600; color: #333;">Content Type:</label>
+            <label for="contentTypeFilter">Content Type:</label>
             <select id="contentTypeFilter" class="form-select d-inline-block w-auto">
                 <option value="">All</option>
                 {% if content_types %}
@@ -411,7 +80,7 @@ details.header-2 .resource p {
                             <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
                                 <button class="btn btn-edit">Edit</button>
                             </a>
-                            <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');" style="display:inline;">
+                            <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');">
                                 <button type="submit" class="btn btn-reject">Delete</button>
                             </form>
                         </div>
@@ -419,7 +88,7 @@ details.header-2 .resource p {
                     {% endif %}
                     {% endfor %}
                 {% else %}
-                    <div class="resource" style="padding: 15px; color: #666;">No events found in the database.</div>
+                    <div class="resource empty-events">No events found in the database.</div>
                 {% endif %}
             </div>
         </div>
@@ -468,7 +137,7 @@ details.header-2 .resource p {
                             <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
                                 <button class="btn btn-edit">Edit</button>
                             </a>
-                            <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');" style="display:inline;">
+                            <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');">
                                 <button type="submit" class="btn btn-reject">Delete</button>
                             </form>
                         </div>
@@ -476,7 +145,7 @@ details.header-2 .resource p {
                     {% endif %}
                     {% endfor %}
                 {% else %}
-                    <div class="resource" style="padding: 15px; color: #666;">No events found in the database.</div>
+                    <div class="resource empty-events">No events found in the database.</div>
                 {% endif %}
             </div>
         </div>
@@ -525,7 +194,7 @@ details.header-2 .resource p {
                             <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
                                 <button class="btn btn-edit">Edit</button>
                             </a>
-                            <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');" style="display:inline;">
+                            <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');">
                                 <button type="submit" class="btn btn-reject">Delete</button>
                             </form>
                         </div>
@@ -533,7 +202,7 @@ details.header-2 .resource p {
                     {% endif %}
                     {% endfor %}
                 {% else %}
-                    <div class="resource" style="padding: 15px; color: #666;">No events found in the database.</div>
+                    <div class="resource empty-events">No events found in the database.</div>
                 {% endif %}
             </div>
         </div>
@@ -569,7 +238,7 @@ details.header-2 .resource p {
                                         {{ event['name'] }}
                                     </span><br>
                                     <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}</small><br>
-                                    <p style="font-size: 0.85rem;">{{ event['description'] or '' }}</p>
+                                    <p>{{ event['description'] or '' }}</p>
                                     <small>Submitted by: {{ event['submitted_by'] }}</small>
                                     <div class="status">
                                         Status: {{ event['status'] if event['status'] else 'approved' }}
@@ -579,14 +248,14 @@ details.header-2 .resource p {
                                     <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
                                         <button class="btn btn-edit">Edit</button>
                                     </a>
-                                    <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');" style="display:inline;">
+                                    <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');">
                                         <button type="submit" class="btn btn-reject">Delete</button>
                                     </form>
                                 </div>
                             </div>
                         {% endfor %}
                     {% else %}
-                        <div class="resource" style="padding: 15px; color: #666;">No past events</div>
+                        <div class="resource empty-events">No past events</div>
                     {% endif %}
                 </div>
             </details>
@@ -610,80 +279,5 @@ details.header-2 .resource p {
     <p><strong>Status:</strong> <span id="popupEventStatus"></span></p>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const typeFilter = document.getElementById('contentTypeFilter');
-    const eventItems = document.querySelectorAll('.event-item');
-    const popup = document.getElementById('eventPopup');
-    const overlay = document.getElementById('overlay');
-    const popupClose = document.getElementById('eventPopupClose');
-    const popupName = document.getElementById('popupEventName');
-    const popupStart = document.getElementById('popupEventStart');
-    const popupEnd = document.getElementById('popupEventEnd');
-    const popupDeadline = document.getElementById('popupEventDeadline');
-    const popupURL = document.getElementById('popupEventURL');
-    const popupDescription = document.getElementById('popupEventDescription');
-    const popupStatus = document.getElementById('popupEventStatus');
-    const popupAddress = document.getElementById('popupEventAddress');
-    const popupContact = document.getElementById('popupEventContact');
-
-    function applyFilters() {
-        const selectedType = typeFilter.value;
-
-        eventItems.forEach(item => {
-            const itemType = item.dataset.type || "";
-            const typeMatch = !selectedType || itemType === selectedType;
-            item.style.display = typeMatch ? '' : 'none';
-        });
-    }
-
-    if (typeFilter) {
-        typeFilter.addEventListener('change', applyFilters);
-    }
-
-    document.querySelectorAll('.event-link').forEach(link => {
-        link.addEventListener('click', function() {
-            const name = this.getAttribute('data-name');
-            const description = this.getAttribute('data-description') || "No description available.";
-            popupStart.textContent = this.dataset.start || 'N/A';
-            popupEnd.textContent = this.dataset.end || 'N/A';
-            popupDeadline.textContent = this.dataset.deadline || 'N/A';
-            popupStatus.textContent = this.dataset.status || 'N/A';
-            popupName.textContent = name;
-            popupDescription.textContent = description;
-            popup.style.display = 'block';
-            overlay.style.display = 'block';
-
-            const url = this.dataset.url;
-            if (url) {
-                popupURL.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="link">${url}</a>`;
-            } else {
-                popupURL.textContent = 'N/A';
-            }
-
-            const addrParts = [this.dataset.address1, this.dataset.address2, this.dataset.city, this.dataset.state, this.dataset.postal].filter(Boolean);
-            popupAddress.textContent = addrParts.length ? addrParts.join(', ') : 'N/A';
-            const contactParts = [this.dataset.contactName, this.dataset.contactPhone, this.dataset.contactEmail].filter(Boolean);
-            popupContact.textContent = contactParts.length ? contactParts.join(' | ') : 'N/A';
-        });
-    });
-
-    popupClose.addEventListener('click', function() {
-        popup.style.display = 'none';
-        overlay.style.display = 'none';
-    });
-
-    overlay.addEventListener('click', function() {
-        popup.style.display = 'none';
-        overlay.style.display = 'none';
-    });
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            popup.style.display = 'none';
-            overlay.style.display = 'none';
-        }
-    });
-});
-</script>
+<script src="{{ url_for('static', filename='js/eventAdmin.js') }}"></script>
 {% endblock %}

@@ -154,6 +154,7 @@ def addEvent():
         content_type_id = request.form.get('tag', '').strip()
         schools = request.form.getlist('schools')
         event_tags = request.form.getlist('event_tags')
+        new_tags = request.form.getlist('new_tags')
         starting_date_raw = request.form.get('starting_date', '').strip()
         ending_date_raw = request.form.get('ending_date', '').strip()
         deadline_raw = request.form.get('deadline', '').strip()
@@ -209,7 +210,36 @@ def addEvent():
                 event_id = cursor.lastrowid
                 
                 # Insert school and event tags
-                all_tags = set(schools + event_tags)
+                all_tags = set()
+                for tag_val in schools + event_tags:
+                    tag_val_str = str(tag_val).strip()
+                    if not tag_val_str:
+                        continue
+                    if tag_val_str.isdigit():
+                        all_tags.add(int(tag_val_str))
+                    else:
+                        new_tags.append(tag_val_str)
+
+                for new_tag_name in new_tags:
+                    clean_name = new_tag_name.strip()
+                    if not clean_name:
+                        continue
+                    # Check if tag already exists in tags table (case-insensitive)
+                    try:
+                        cursor.execute("SELECT tag_id FROM tags WHERE LOWER(tag_name) = LOWER(%s)", (clean_name,))
+                    except Exception:
+                        cursor.execute("SELECT tag_id FROM tags WHERE LOWER(tag) = LOWER(%s)", (clean_name,))
+                    existing_tag = cursor.fetchone()
+                    if existing_tag:
+                        tag_id = existing_tag.get('tag_id') if isinstance(existing_tag, dict) else existing_tag[0]
+                        all_tags.add(tag_id)
+                    else:
+                        try:
+                            cursor.execute("INSERT INTO tags (tag_name) VALUES (%s)", (clean_name,))
+                        except Exception:
+                            cursor.execute("INSERT INTO tags (tag) VALUES (%s)", (clean_name,))
+                        all_tags.add(cursor.lastrowid)
+
                 for tag_id in all_tags:
                     if tag_id:
                         cursor.execute("INSERT INTO event_tags (event_id, tag_id) VALUES (%s, %s)", (event_id, tag_id))

@@ -466,3 +466,16 @@ main {
     background-color: #1e34aa;
     color: #fff;
 }
+
+.no-contact-dash {
+    color: #777;
+}
+
+.no-resources-cell {
+    color: #666;
+}
+
+.resource-directory-subtitle {
+    color: #666;
+    margin-top: 10px;
+}
