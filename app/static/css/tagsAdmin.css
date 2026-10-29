@@ -93,6 +93,25 @@
     color: #24292f;
 }
 
+.gh-column-headers {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    background-color: #f6f8fa;
+    border-bottom: 1px solid #d0d7de;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #57606a;
+}
+
+.gh-column-headers .gh-col-type {
+    font-size: 12px;
+    font-weight: 600;
+    color: #57606a;
+}
+
 .gh-label-row {
     display: flex;
     align-items: center;
@@ -127,9 +146,10 @@
 }
 
 .gh-col-actions {
-    flex: 0 0 auto;
+    flex: 0 0 90px;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 12px;
 }
 

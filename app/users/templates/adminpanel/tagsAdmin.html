@@ -34,6 +34,12 @@
             <span id="tagCountText"><strong>{{ tags|length }}</strong> {% if tags|length == 1 %}tag{% else %}tags{% endif %}</span>
         </div>
 
+        <div class="gh-column-headers">
+            <div class="gh-col-badge">Tag Name</div>
+            <div class="gh-col-type">Tag Type</div>
+            <div class="gh-col-actions">Actions</div>
+        </div>
+
         <div id="tagsList">
             {% if tags %}
                 {% for tag in tags %}
