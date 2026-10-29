@@ -92,6 +92,15 @@ body {
   background-color: #aaeb54;
   font-weight: bold;
 }
+
+.school-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: lightgrey;
+  border-radius: 9999px;     /* Full rounded corners */
+  font-size: 0.85rem;
+  font-weight: 500;
+}
 </style>
 
 
@@ -116,14 +125,19 @@ document.addEventListener('DOMContentLoaded', function() {
     contentHeight: 'auto',
     events: [], 
     eventClick: function(info) {
+      console.log("Full Event Object:", info.event);
+      console.log("Raw JSON Event Data:", info.event.toPlainObject());
+      console.log("Extended Props:", info.event.extendedProps);
+
       const ep = info.event.extendedProps;
       const addr = [ep.event_address1, ep.event_address2, ep.event_city, ep.event_state, ep.event_postal_code].filter(Boolean).join(', ');
-      const schoolsList = ep.schools && ep.schools.length > 0 ? ep.schools.join(', ') : 'N/A';
+      const schoolsList = ep.schools && ep.schools.length > 0 ? ep.schools.map(school => `<span class="school-pill">${school.trim()}</span>`).join(' ') : 'N/A';
       popup.innerHTML = `
         <span id="eventPopupClose">X</span>
         <h3>${info.event.title}</h3>
         <p><strong>Content Type:</strong> ${ep.tag || "N/A"}</p>
-        <p><strong>Schools:</strong> ${schoolsList}</p>
+        <p><strong>Schools:</strong>${schoolsList}</p>
+        <p><strong>Tags:</strong></p>
         <p><strong>Start:</strong> ${info.event.start.toLocaleString()}</p>
         <p><strong>End:</strong> ${info.event.end.toLocaleString()}</p>
         <p><strong>Registration Deadline:</strong> ${ep.registration_deadline
