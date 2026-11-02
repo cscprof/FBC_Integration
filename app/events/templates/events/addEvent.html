@@ -36,24 +36,28 @@
                 <h3>Event Details</h3>
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Event Name</label>
+                    <small class="event-desc">Please enter the official name of the event.</small>
                     <input type="text" class="entry-box" name="name" placeholder="Event Name" required>
                 </div>
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Event URL</label>
+                    <small class="event-desc">Please provide a website link where users can learn more about the event.</small>
                     <input class="entry-box" type="url" name="url" placeholder="https://..." required>
                 </div>
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Description</label>
-                    <textarea name="description" class="entry-box" placeholder="Add Description" rows="4" style="resize: vertical; box-sizing: border-box;" required></textarea>
+                    <small class="event-desc">Please explain what the event is about, who should attend, what to expect, etc.</small>
+                    <textarea name="description" class="entry-box" placeholder="This event is for..." rows="4" style="resize: vertical; box-sizing: border-box;" required></textarea>
                 </div>
             </div>
 
             <div class="form-section">
                 <h3>Tags and School</h3>
                 <div class="form-col" style="margin-bottom: 15px;">
-                    <label class="event-label">Content Type</label>
+                    <label class="event-label">Event Type</label>
+                    <small class="event-desc">Please select the event type that best describes the event.</small>
                     <select class="entry-box" name="tag" required>
-                        <option value="">Select a Content Type</option>
+                        <option value="">Select an Event Type</option>
                         {% for tag in tags %}
                           <option value="{{ tag.content_type_id }}">{{ tag.name }}</option>
                         {% endfor %}
@@ -61,16 +65,18 @@
                 </div>
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Schools</label>
+                    <small class="event-desc">Select the school(s) associated with the event.</small>
                     <select class="entry-box" name="schools" multiple>
                         {% for school in school_tags %}
                         <option value="{{ school.school_tag_id }}">{{ school.school_name }}</option>
                         {% endfor %}
                     </select>
-                    <small style="opacity: 0.7; margin-top: 5px; display: inline-block;">Hold Ctrl/Cmd to select multiple.</small>
+                    <small class="event-desc">Hold Ctrl (Windows) or Command (Mac) to select multiple schools.</small>
                 </div>
 
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Add Tag</label>
+                    <small class="event-desc">Please add any tags that could help users identify your event.</small>
                     <div class="tag-search-container" style="position: relative;">
                         <input class="entry-box" type="text" id="tagSearch" placeholder="Search tags..." autocomplete="off">
                         <div id="tagDropdown" class="tag-dropdown" style="display: none; position: absolute; background: white; border: 1px solid #ccc; width: 100%; max-height: 150px; overflow-y: auto; z-index: 10; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
@@ -89,6 +95,7 @@
 
             <div class="form-section">
                 <h3>Event Date & Time</h3>
+                <small class="event-desc">Please provide the dates and time this event will begin and end. </small>
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Starting Date & Time</label>
                     <input class="entry-box" type="datetime-local" name="starting_date" required>
@@ -105,13 +112,14 @@
 
             <div class="form-section">
                 <h3>Location Address</h3>
+                <small class="event-desc">Please enter the physical location where the event is taking place. These fields are optional.</small>
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Address Line 1</label>
                     <input class="entry-box" type="text" name="event_address1" placeholder="123 Main St">
                 </div>
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Address Line 2</label>
-                    <input class="entry-box" type="text" name="event_address2" placeholder="Suite/Apt">
+                    <input class="entry-box" type="text" name="event_address2" placeholder="Room #, Main Gymnasium, Auditorium, etc.">
                 </div>
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">City</label>
@@ -122,13 +130,14 @@
                     <input class="entry-box" type="text" name="event_state" placeholder="State">
                 </div>
                 <div class="form-col" style="margin-bottom: 15px;">
-                    <label class="event-label">Postal Code</label>
+                    <label class="event-label">Zip Code</label>
                     <input class="entry-box" type="text" name="event_postal_code" placeholder="Zip">
                 </div>
             </div>
 
             <div class="form-section">
                 <h3>Event Contact</h3>
+                <small class="event-desc">Provide contact information for an organizer of the event. Do not put your own information if you are not an organizer. These fields are optional.</small>
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Full Name</label>
                     <input class="entry-box" type="text" name="contact_name" placeholder="John Doe">
