@@ -65,7 +65,7 @@
                 </div>
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Schools</label>
-                    <small class="event-desc">Select the school(s) associated with the event.</small>
+                    <small class="event-desc">Select the school(s) associated with this event.</small>
                     <select class="entry-box" name="schools" multiple>
                         {% for school in school_tags %}
                         <option value="{{ school.school_tag_id }}">{{ school.school_name }}</option>
@@ -112,7 +112,7 @@
 
             <div class="form-section">
                 <h3>Location Address</h3>
-                <small class="event-desc">Please enter the physical location where the event is taking place. These fields are optional.</small>
+                <small class="event-desc">If this an in-person event, please enter the physical location of this event. If this is a virtual event, leave these fields blank.</small>
                 <div class="form-col" style="margin-bottom: 15px;">
                     <label class="event-label">Address Line 1</label>
                     <input class="entry-box" type="text" name="event_address1" placeholder="123 Main St">
