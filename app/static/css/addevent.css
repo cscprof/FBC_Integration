@@ -145,6 +145,7 @@ h1 {
     min-width: 200px;
     display: flex;
     flex-direction: column;
+    margin-bottom: 15px;
 }
 .form-col label {
     margin-bottom: 5px;
@@ -161,4 +162,91 @@ h1 {
 /* Ensures text fields don't accidentally resize outside containers */
 textarea {
     max-width: 100%;
+}
+
+.description-textarea {
+    resize: vertical !important;
+    box-sizing: border-box;
+}
+
+.tag-search-container {
+    position: relative;
+}
+
+.tag-dropdown {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 10;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.tag-option {
+    padding: 10px;
+    cursor: pointer;
+    color: black;
+    border-bottom: 1px solid #eee;
+}
+
+.tag-option:hover {
+    background-color: #f1f5f9;
+}
+
+.create-tag-option {
+    display: none;
+    background-color: #ffffff;
+}
+
+.create-tag-option:hover {
+    background-color: #e8f0fe !important;
+    color: #1a73e8 !important;
+}
+
+.create-tag-hint {
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+#noTagsMessage {
+    display: none;
+    padding: 10px;
+    color: grey;
+}
+
+#selectedTagsContainer {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.selected-tag-pill {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.selected-tag-remove {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.submit-container {
+    text-align: right;
+}
+
+.create-event-submit {
+    width: auto;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 8px;
 }

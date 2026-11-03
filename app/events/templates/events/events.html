@@ -2,6 +2,10 @@
 
 {% block title %}FBC - Events{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/events.css') }}">
+{% endblock %}
+
 {% block content %}
 
 <h1 class="title has-text-centered">Events Information</h1>
@@ -38,7 +42,7 @@
                      data-type="{{ event.tag }}"
                      data-schools='{{ event.schools | tojson }}'>
                     <div>
-                        <a href="/calendar?event={{ event.title | urlencode }}" class="event-link" style="text-decoration: none; color: inherit;">
+                        <a href="/calendar?event={{ event.title | urlencode }}" class="event-link">
                             <span>{{ event.title }}</span>
                         </a><br>
                         <small>{{ event.start.strftime('%b %d, %Y %I:%M %p') }} – {{ event.end.strftime('%b %d, %Y %I:%M %p') }}</small><br>
@@ -76,7 +80,7 @@
                          data-type="{{ event.tag }}"
                          data-schools='{{ event.schools | tojson }}'>
                         <div>
-                            <a href="/calendar?event={{ event.title | urlencode }}" class="event-link" style="text-decoration: none; color: inherit;">
+                            <a href="/calendar?event={{ event.title | urlencode }}" class="event-link">
                                 <span>{{ event.title }}</span>
                             </a><br>
                             <small>{{ event.start.strftime('%b %d, %Y %I:%M %p') }} – {{ event.end.strftime('%b %d, %Y %I:%M %p') }}</small><br>
@@ -94,30 +98,6 @@
 </div>
 
 <!-- FILTER SCRIPT -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const typeFilter = document.getElementById('contentTypeFilter');
-    const schoolFilter = document.getElementById('schoolFilter');
-    const eventItems = document.querySelectorAll('.event-item');
-
-    function applyFilters() {
-        const selectedType = typeFilter.value;
-        const selectedSchool = schoolFilter.value;
-
-        eventItems.forEach(item => {
-            const itemType = item.dataset.type || "";
-            const itemSchools = item.dataset.schools ? JSON.parse(item.dataset.schools) : [];
-
-            const typeMatch = !selectedType || itemType === selectedType;
-            const schoolMatch = !selectedSchool || itemSchools.includes(selectedSchool);
-
-            item.style.display = (typeMatch && schoolMatch) ? '' : 'none';
-        });
-    }
-
-    typeFilter.addEventListener('change', applyFilters);
-    schoolFilter.addEventListener('change', applyFilters);
-});
-</script>
+<script src="{{ url_for('static', filename='js/events.js') }}"></script>
 
 {% endblock %}
