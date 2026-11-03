@@ -3,7 +3,7 @@ from flask_login import current_user
 from pymysql.cursors import DictCursor
 
 from database import get_db_connection
-from app.models.Account import Account
+from app.Models.Account import Account
 from .passwords import hash_check_matches
 
 
