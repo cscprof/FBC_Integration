@@ -6,3 +6,6 @@ from . import partners
 @partners.route("/partners/apply")
 def partners_page():
     return render_template("partners/apply.html")
+
+def partners_apply_page():
+    return render_template("partners/apply.html")
