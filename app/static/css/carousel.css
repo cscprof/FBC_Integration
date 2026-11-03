@@ -1,0 +1,38 @@
+.car {
+    position: relative;
+    width: 70%;
+    height: auto;
+    margin: auto;
+    overflow: hidden;
+    display: flex;
+    border-radius: 20px;
+}
+
+.img-wrap {
+    display: flex;
+    transition: transform 1s ease;
+}
+
+.img-wrap img {
+    width: 100%;
+    height: auto;
+    flex-shrink: 0;
+}
+
+.btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(120, 120, 120, 0.5);
+    color: #91c636;
+    padding: 5px 5px 10px;
+    font-size: 50px;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}

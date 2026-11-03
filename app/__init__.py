@@ -14,11 +14,11 @@ prior to pushing the new code to GitHub.
 from flask import Flask
 
 from config import config
-# from database import db #Added by resource team for SQLAlchemy integration
 
 
 # Create Flask extensions
 # mysql = MySQL()
+
 from flask_mail import Mail
 mail = Mail()
 
@@ -37,20 +37,15 @@ def create_app(config_name):
     app.register_blueprint(events_blueprint)
 
     # Load the resources page section
-    # db.init_app(app) #Added for SQLAlchemy integration
     from .resources import resources as resources_blueprint
     app.register_blueprint(resources_blueprint)
-
+    
     # Load the user management section
     from .users import users as users_blueprint
     app.register_blueprint(users_blueprint)
 
     #for email verification
     mail.init_app(app)
-    
-    # Load login manager
-    from loginManager import login_manager
-    login_manager.init_app(app)
     
     return app
 

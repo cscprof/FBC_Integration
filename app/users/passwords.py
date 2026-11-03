@@ -31,8 +31,3 @@ def hash_check_matches(plaintext_password, stored_hash):
     except (InvalidHashError, VerifyMismatchError):
         #password did not match, alert user somehow
         return False
-        
-
-
-
-

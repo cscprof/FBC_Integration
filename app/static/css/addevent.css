@@ -38,8 +38,8 @@ h1 {
 }
 
 .add-event-blob {
-    background: #2e44cc;
     color: white;
+    background: #007EA3;
     padding: 45px;
     width: 850px;
     max-width: 95vw;

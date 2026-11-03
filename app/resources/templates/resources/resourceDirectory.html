@@ -122,12 +122,43 @@
     </div>
 </section>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+const searchInput = document.querySelector(".searchinput");
+const categorySelect = document.querySelector(".categoryselect");
+const resourceBoxes = document.querySelectorAll(".exampleboxes");
+
+function filterResources() {
+const searchValue = searchInput.value.toLowerCase();
+const selectedCategory = categorySelect.value;
+
+resourceBoxes.forEach(box => {
+const boxCategory = box.getAttribute("data-category");
+const textContent = box.innerText.toLowerCase();
+
+const matchesSearch = textContent.includes(searchValue);
+const matchesCategory =
+selectedCategory === "all" || boxCategory === selectedCategory;
+
+if (matchesSearch && matchesCategory) {
+box.style.display = "block";
+} else {
+box.style.display = "none";
+}
+});
+}
+
+searchInput.addEventListener("keyup", filterResources);
+categorySelect.addEventListener("change", filterResources);
+});
+</script>
+
 <!-- <div id="uploadModal">
     <div class="modalcontent">
         <div class="modalheader">
             <h2 class="modaltitle">Upload Resource</h2>
         </div>
-        
+
         <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
             <input type="text" name="title" placeholder="Title *" required>
             <input type="text" name="url" placeholder="URL *" required>
@@ -150,7 +181,7 @@
                     <option value="6">Other</option>
                 {% endif %}
             </select>
-            
+
             <div class="modalformactions">
                 <button type="button" onclick="document.getElementById('uploadModal').style.display='none'" class="modalbtncancel">Cancel</button>
                 <button type="submit" class="modalbtnsubmit">Submit</button>
@@ -159,35 +190,5 @@
     </div>
 </div> -->
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.querySelector(".searchinput");
-    const categorySelect = document.querySelector(".categoryselect");
-    const resourceBoxes = document.querySelectorAll(".exampleboxes");
-
-    function filterResources() {
-        const searchValue = searchInput.value.toLowerCase();
-        const selectedCategory = categorySelect.value;
-
-        resourceBoxes.forEach(box => {
-            const boxCategory = box.getAttribute("data-category");
-            const textContent = box.innerText.toLowerCase();
-
-            const matchesSearch = textContent.includes(searchValue);
-            const matchesCategory =
-                selectedCategory === "all" || boxCategory === selectedCategory;
-
-            if (matchesSearch && matchesCategory) {
-                box.style.display = "block";
-            } else {
-                box.style.display = "none";
-            }
-        });
-    }
-
-    searchInput.addEventListener("keyup", filterResources);
-    categorySelect.addEventListener("change", filterResources);
-});
-</script>
 
 {% endblock %}
