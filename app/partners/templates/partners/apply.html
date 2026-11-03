@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}FBC - Apply to be a parter{% endblock %}
+
+{% block content %}
+ 
+    <div class="homepage-wrapper">
+        <div class="homepage-info">
+			<input placeholder="Full Name" class="entry-box" type="text" name="fullname" required>
+            <input placeholder="Organization" class="entry-box" type="text" name="organization" required>
+			<input placeholder="Phone Number" class="entry-box" type="text" name="phonenumber" required>
+			<input placeholder="Email" class="entry-box" type="text" name="email" >
+			<input placeholder="Organization Address" class="entry-box" type="text" name="organizationaddress" required>
+			<button class="button-submit" type="submit">Submit</button>
+{% endblock %}
