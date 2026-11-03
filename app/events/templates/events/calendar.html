@@ -93,10 +93,20 @@ body {
   font-weight: bold;
 }
 
-.school-pill {
+.school-tag-pill {
   display: inline-block;
-  padding: 4px 10px;
-  background-color: lightgrey;
+  padding: 4px 8px;
+  background-color: #00577E;
+  border-radius: 9999px;     /* Full rounded corners */
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.tag-pill {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #8CC53E;
   border-radius: 9999px;     /* Full rounded corners */
   font-size: 0.85rem;
   font-weight: 500;
@@ -131,13 +141,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const ep = info.event.extendedProps;
       const addr = [ep.event_address1, ep.event_address2, ep.event_city, ep.event_state, ep.event_postal_code].filter(Boolean).join(', ');
-      const schoolsList = ep.schools && ep.schools.length > 0 ? ep.schools.map(school => `<span class="school-pill">${school.trim()}</span>`).join(' ') : 'N/A';
+      const schoolsList = ep.schools && ep.schools.length > 0 ? ep.schools.map(school => `<span class="school-tag-pill">${school.trim()}</span>`).join(' ') : 'N/A';
+      const tagList = ep.other_tags && ep.other_tags.length > 0 ? ep.other_tags.map(tag => `<span class="tag-pill">${tag.trim()}</span>`).join(' ') : 'N/A';
       popup.innerHTML = `
         <span id="eventPopupClose">X</span>
         <h3>${info.event.title}</h3>
         <p><strong>Content Type:</strong> ${ep.tag || "N/A"}</p>
         <p><strong>Schools:</strong>${schoolsList}</p>
-        <p><strong>Tags:</strong></p>
+        <p><strong>Tags:</strong>${tagList}</p>
         <p><strong>Start:</strong> ${info.event.start.toLocaleString()}</p>
         <p><strong>End:</strong> ${info.event.end.toLocaleString()}</p>
         <p><strong>Registration Deadline:</strong> ${ep.registration_deadline

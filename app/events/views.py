@@ -40,12 +40,22 @@ def fetch_approved_events_json():
                 SELECT t.tag_name
                 FROM event_tags et
                 JOIN tags t ON et.tag_id = t.tag_id
-                WHERE t.tag_type='school' AND et.event_id = %s
+                WHERE t.tag_type = 'school' AND et.event_id = %s
             """, (row['event_id'],))
             school_rows = cursor.fetchall()
+
+            cursor.execute("""
+                SELECT t.tag_name
+                FROM event_tags et
+                JOIN tags t ON et.tag_id = t.tag_id
+                WHERE t.tag_type != 'school' AND et.event_id = %s
+            """, (row['event_id'],))
+            other_rows = cursor.fetchall()
         conn.close()
         
+        
         schools = [s['tag_name'] for s in school_rows]
+        other_tags = [s['tag_name'] for s in other_rows]
         
         events.append({
             "title": row['name'],
@@ -55,6 +65,7 @@ def fetch_approved_events_json():
             "description": row.get('description'),
             "tag": row.get('content_type_name') or "N/A",
             "schools": schools,
+            "other_tags": other_tags,
             "registration_deadline": row['registration_deadline'].isoformat() if row['registration_deadline'] else None,
             "contact_name": row.get('contact_name'),
             "contact_phone": row.get('contact_phone'),
