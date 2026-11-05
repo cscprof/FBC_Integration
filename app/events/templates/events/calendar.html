@@ -140,9 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
     contentHeight: 'auto',
     events: [], 
     eventClick: function(info) {
-      console.log("Full Event Object:", info.event);
-      console.log("Raw JSON Event Data:", info.event.toPlainObject());
-      console.log("Extended Props:", info.event.extendedProps);
 
       const ep = info.event.extendedProps;
       const addr = [ep.event_address1, ep.event_address2, ep.event_city, ep.event_state, ep.event_postal_code].filter(Boolean).join(', ');
