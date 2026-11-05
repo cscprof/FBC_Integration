@@ -249,9 +249,11 @@ def calendar():
         with conn.cursor() as cursor:
             cursor.execute("SELECT tag_name FROM tags WHERE tag_type='school' ORDER BY tag_name")
             schools = [row['tag_name'] for row in cursor.fetchall()]
+            cursor.execute("SELECT tag_name FROM tags WHERE tag_type!='school' ORDER BY tag_name")
+            other_tags = [row['tag_name'] for row in cursor.fetchall()]
     finally:
         conn.close()
-    return render_template('events/calendar.html', schools=schools)
+    return render_template('events/calendar.html', schools=schools, other_tags=other_tags)
 
 
 @events.route('/update_event/<int:event_id>/<string:action>')
