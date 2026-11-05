@@ -127,3 +127,11 @@ select {
     background-color: #8ac926;
 }
 
+.applyParter {
+    height: 50%;
+    width: 50%;
+    background-color: #1e34aa;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 25%;
+}  /* https://www.w3schools.com/howto/howto_css_circles.asp */
