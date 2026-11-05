@@ -1,0 +1,22 @@
+.confirm-event-blob {
+    max-width: 600px;
+}
+
+.confirm-event-heading {
+    color: white;
+    margin-bottom: 10px;
+}
+
+.confirm-event-message {
+    color: white;
+    margin-top: 0.5rem;
+}
+
+#countdown {
+    color: white;
+    margin-top: 1rem;
+}
+
+.confirm-event-action {
+    margin-top: 20px;
+}

@@ -1,0 +1,18 @@
+.edit-event-blob {
+    max-width: 700px;
+}
+
+.edit-event-heading {
+    color: white;
+    margin-bottom: 10px;
+}
+
+.edit-event-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.edit-event-cancel {
+    text-decoration: none;
+}
