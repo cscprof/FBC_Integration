@@ -22,13 +22,13 @@
                  src="{{ url_for('static', filename=user.profile_picture) }}"
                  alt="Profile picture of {{ user.first_name }} {{ user.last_name }}">
         {% else %}
-            <div class="profile-picture-placeholder">{{ icon('user') }}</div>
+            <div class="profile-picture-placeholder"><i class="ui-icon fa-solid fa-user" aria-hidden="true"></i></div>
         {% endif %}
         <!-- Replace with dynamic values -->
         <h1>
             <!-- If middle_name is null, just omit it server-side -->
             {{ user.first_name }} <span class="muted">{{ user.middle_name }}</span> {{ user.last_name }}
-            <a href="{{ url_for('users.edit_profile', username=user.username) }}" class="edit-user-info">{{ icon('edit') }} Edit user info?</a>
+            <a href="{{ url_for('users.edit_profile', username=user.username) }}" class="edit-user-info"><i class="ui-icon fa-solid fa-pen-to-square" aria-hidden="true"></i> Edit user info?</a>
         </h1>
     </div>
 

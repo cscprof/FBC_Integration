@@ -28,22 +28,22 @@
       {% if is_manager(current_user) %}
         <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
           <a class="navbar-link">
-            {{ icon('shield') }} Admin
+            <i class="ui-icon fa-solid fa-shield-halved" aria-hidden="true"></i> Admin
           </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="/admin/users">{{ icon('users') }} Users</a>
-            <a class="navbar-item" href="/admin/events">{{ icon('calendar') }} Events</a>
-            <a class="navbar-item" href="/admin/resources">{{ icon('book') }} Resources</a>
-            <a class="navbar-item" href="/admin/tags">{{ icon('tag') }} Tags</a>
+            <a class="navbar-item" href="/admin/users"><i class="ui-icon fa-solid fa-users" aria-hidden="true"></i> Users</a>
+            <a class="navbar-item" href="/admin/events"><i class="ui-icon fa-solid fa-calendar-days" aria-hidden="true"></i> Events</a>
+            <a class="navbar-item" href="/admin/resources"><i class="ui-icon fa-solid fa-book-open" aria-hidden="true"></i> Resources</a>
+            <a class="navbar-item" href="/admin/tags"><i class="ui-icon fa-solid fa-tag" aria-hidden="true"></i> Tags</a>
           </div>
         </div>
       {% endif %}
 
-      <a class="navbar-item {% if request.path.startswith('/events') %}is-active{% endif %}" href="/events"> {{ icon('list') }} Events List </a>
+      <a class="navbar-item {% if request.path.startswith('/events') %}is-active{% endif %}" href="/events"> <i class="ui-icon fa-solid fa-list" aria-hidden="true"></i> Events List </a>
 
-      <a class="navbar-item {% if request.path.startswith('/calendar') %}is-active{% endif %}" href="/calendar"> {{ icon('calendar') }} Calendar </a>
+      <a class="navbar-item {% if request.path.startswith('/calendar') %}is-active{% endif %}" href="/calendar"> <i class="ui-icon fa-solid fa-calendar-days" aria-hidden="true"></i> Calendar </a>
 
-      <a class="navbar-item {% if request.path.startswith('/resources') %}is-active{% endif %}" href="/resources"> {{ icon('book') }} Resource Directory </a>
+      <a class="navbar-item {% if request.path.startswith('/resources') %}is-active{% endif %}" href="/resources"> <i class="ui-icon fa-solid fa-book-open" aria-hidden="true"></i> Resource Directory </a>
 
       <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
         <a class="navbar-link"> More </a>
@@ -86,9 +86,9 @@
           <!-- Show sign up and log in buttons if the user is not authenticated -->
           {% if not current_user.is_authenticated %}
             <a class="button sign-up" href="/signup">
-              {{ icon('plus') }} <strong>Sign up</strong>
+              <i class="ui-icon fa-solid fa-plus" aria-hidden="true"></i> <strong>Sign up</strong>
             </a>
-            <a class="button is-light" href="/login"> {{ icon('login') }} Log in </a>
+            <a class="button is-light" href="/login"> <i class="ui-icon fa-solid fa-right-to-bracket" aria-hidden="true"></i> Log in </a>
 
           <!-- Show log out if user is authenticaed -->
           {% elif current_user.is_authenticated %}
@@ -97,14 +97,14 @@
                 <span> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </span>
                 <img src="{{ url_for('static', filename=current_user.profilePicture) }}" class="navbar-picture">
               </a>
-              <a class="button is-light" href="{{ url_for('users.logout') }}"> {{ icon('logout') }} Log out </a>
+              <a class="button is-light" href="{{ url_for('users.logout') }}"> <i class="ui-icon fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log out </a>
               
             {% else %}
               <a href="{{ url_for('users.profile', username=current_user.username) }}" class="navbar-item navbar-profile-link">
                 <span> Hello, {{ current_user.nameFirst }} {{ current_user.nameLast }} </span>
-                <div class="profile-picture-placeholder navbar-picture">{{ icon('user') }}</div>
+                <div class="profile-picture-placeholder navbar-picture"><i class="ui-icon fa-solid fa-user" aria-hidden="true"></i></div>
               </a>
-              <a class="button is-light" href="{{ url_for('users.logout') }}"> {{ icon('logout') }} Log out </a>
+              <a class="button is-light" href="{{ url_for('users.logout') }}"> <i class="ui-icon fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log out </a>
 
             {% endif %}
           {% endif %}
