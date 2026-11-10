@@ -3,6 +3,7 @@ import uuid
 from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from database import get_db_connection
+import pymysql
 from pymysql import DatabaseError
 from pymysql.cursors import DictCursor
 from werkzeug.utils import secure_filename

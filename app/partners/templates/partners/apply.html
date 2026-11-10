@@ -13,14 +13,21 @@
 				<h1>Become a Partner!</h1>
 				
 				<div class="underline" style="margin-left: 15%; width: 70%;"></div>
+				<form class="signup-form" action="/add_partner" method="POST">
 				
-				<input placeholder="Organization Name" class="entry-box" type="text" name="organizationname" required>
+				<input placeholder="Organization Name" class="entry-box" type="text" name="organization_name" required>
 				
 				<input placeholder="Tell us about yourself" class="entry-box" type="text" name="description" required>
 				
-				<input placeholder="Phone Number" class="entry-box" type="text" name="phonenumber" required>
+				<input placeholder="Phone Number" class="entry-box" type="text" name="phone_number" required>
 				
 				<input placeholder="Email" class="entry-box" type="text" name="email" >
+
+				<input placeholder="Contact Name" class="entry-box" type="text" name="contact" >
+
+				<input placeholder="Organization Userame" class="entry-box" type="text" name="username" required>
+
+				<input placeholder="Password" class="entry-box" type="text" name="password" required>
 				
 				<input placeholder="Organization Address 1" class="entry-box" type="text" name="organizationaddress1" required>
 				
@@ -32,6 +39,7 @@
 				
 				<input placeholder="Zip Code" class="entry-box" type="text" name="zip" required>
 				
-				<button class="button-submit" onclick="location.href='/partners/thankyou'" type="submit" style="margin-top: 5%;">Submit</button>
->>>>>>> babc58c1c7b0e7beb36478a22e463c555c0dde83
-{% endblock %}
+				<button class="button-submit" type="submit" style="margin-top: 5%;">Submit</button>
+				</form>
+
+				{% endblock %}
