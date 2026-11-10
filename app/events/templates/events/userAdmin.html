@@ -21,7 +21,7 @@
                     </div>
                     <div class="actions">
                         <form method="POST" action="{{ url_for('users.delete_user', user_id=user.user_id) }}"
-                              onsubmit="return confirm('Delete this user?');" style="display:inline;">
+                              onsubmit="return confirm('Delete this user?');">
                             <button type="submit" class="btn btn-reject">Delete</button>
                         </form>
                     </div>

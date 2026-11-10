@@ -2,52 +2,139 @@
 
 {% block title %}Manage Tags{% endblock %}
 
-{% block content %}
-<div class="container section">
-    <h1 class="title has-text-centered" style="margin-top: 1rem; margin-bottom: 2rem;">Tags Dashboard</h1>
-    
-    <div class="box">
-        <h2 class="subtitle">Create New Tag</h2>
-        <form action="{{ url_for('users.add_tag') }}" method="POST" class="field has-addons" style="max-width: 400px; margin-bottom: 2rem;">
-            <div class="control is-expanded">
-                <input class="input" type="text" id="tag" name="tag" placeholder="New Tag Name" required>
-            </div>
-            <div class="control">
-                <button type="submit" class="button" style="background-color: #2e44cc; color: white;">Add Tag</button>
-            </div>
-        </form>
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tagsAdmin.css') }}">
+{% endblock %}
 
-        <h2 class="subtitle">Existing Tags</h2>
-        {% if tags %}
-            <div class="table-responsive">
-                <table class="table is-striped is-fullwidth is-hoverable mt-3 admin-resource-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 10%;">ID</th>
-                            <th>Tag Name</th>
-                            <th>Tag Type</th>
-                            <th style="width: 15%; text-align: center;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for tag in tags %}
-                    <tr>
-                        <td style="vertical-align: middle;">{{ tag.tag_id }}</td>
-                        <td style="vertical-align: middle;">{{ tag.tag_name }}</td>
-                        <td style="vertical-align: middle; text-align: left;">{{tag.tag_type or 'N/A'}}</td>
-                        <td style="vertical-align: middle; text-align: center;">
-                            <form action="{{ url_for('users.delete_tag', tag_id=tag.tag_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tag?');">
-                                <button type="submit" class="button is-danger is-small">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            </div>
-        {% else %}
-            <div class="notification is-info is-light">No tags found.</div>
-        {% endif %}
+{% block content %}
+<div class="gh-labels-container">
+    <div class="gh-header-actions">
+        <!-- Search filter -->
+        <div class="gh-search-wrapper">
+            <span class="gh-search-icon">
+                <i class="ui-icon fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            </span>
+            <input type="text" id="tagSearchInput" class="gh-search-input" placeholder="Search tags..." autocomplete="off">
+        </div>
+
+        <!-- New Tag Button (top right) -->
+        <button type="button" class="gh-btn-primary" onclick="openModal('newTagModal')">
+            <i class="ui-icon fa-solid fa-plus" aria-hidden="true"></i>
+            New Tag
+        </button>
+    </div>
+
+    <!-- Tags Box -->
+    <div class="gh-box">
+        <div class="gh-box-header">
+            <span id="tagCountText"><strong>{{ tags|length }}</strong> {% if tags|length == 1 %}tag{% else %}tags{% endif %}</span>
+        </div>
+
+        <div class="gh-column-headers">
+            <div class="gh-col-badge">Tag Name</div>
+            <div class="gh-col-type">Tag Type</div>
+            <div class="gh-col-actions">Actions</div>
+        </div>
+
+        <div id="tagsList">
+            {% if tags %}
+                {% for tag in tags %}
+                <div class="gh-label-row tag-item" data-tag-name="{{ tag.tag_name|lower }}" data-tag-type="{{ (tag.tag_type or '')|lower }}">
+                    <!-- Tag Name (Badge) -->
+                    <div class="gh-col-badge">
+                        <span class="gh-tag-pill {% if tag.tag_type == 'school' %}school-tag{% else %}general-tag{% endif %}">
+                            {{ tag.tag_name }}
+                        </span>
+                    </div>
+
+                    <!-- Tag Type -->
+                    <div class="gh-col-type">
+                        {% if tag.tag_type %}
+                            <span>{{ tag.tag_type }}</span>
+                        {% else %}
+                            <span class="gh-no-type">No type</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="gh-col-actions">
+                        <button type="button" class="gh-action-btn" onclick="openEditModal('{{ tag.tag_id }}', '{{ tag.tag_name|escape }}', '{{ (tag.tag_type or '')|escape }}')">
+                            <i class="ui-icon fa-solid fa-pen-to-square" aria-hidden="true"></i> Edit
+                        </button>
+                        <form action="{{ url_for('users.delete_tag', tag_id=tag.tag_id) }}" method="POST" class="gh-inline-form" onsubmit="return confirm('Are you sure you want to delete this tag?');">
+                            <button type="submit" class="gh-action-btn gh-delete-btn">
+                                <i class="ui-icon fa-solid fa-trash-can" aria-hidden="true"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="gh-empty-state">No tags found.</div>
+            {% endif %}
+        </div>
+
+        <div id="noSearchMatchMessage" class="gh-empty-state">
+            No tags matching your search.
+        </div>
     </div>
 </div>
+
+<!-- New Tag Modal -->
+<div id="newTagModal" class="gh-modal-backdrop" onclick="handleBackdropClick(event, 'newTagModal')">
+    <div class="gh-modal-card">
+        <div class="gh-modal-header">
+            <h3 class="gh-modal-title">Create New Tag</h3>
+            <button type="button" class="gh-modal-close" onclick="closeModal('newTagModal')" aria-label="Close"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i></button>
+        </div>
+        <form action="{{ url_for('users.add_tag') }}" method="POST">
+            <div class="gh-modal-body">
+                <div class="gh-form-group">
+                    <label class="gh-form-label" for="newTagName">Tag Name <span class="gh-required-star">*</span></label>
+                    <input type="text" id="newTagName" name="tag" class="gh-form-input" placeholder="e.g. beaver area high school" required autocomplete="off">
+                </div>
+                <div class="gh-form-group">
+                    <label class="gh-form-label" for="newTagType">Tag Type</label>
+                    <input type="text" id="newTagType" name="tag_type" class="gh-form-input" placeholder="e.g. school" list="tagTypeSuggestions" autocomplete="off">
+                    <datalist id="tagTypeSuggestions">
+                        <option value="school">
+                        <option value="general">
+                    </datalist>
+                </div>
+            </div>
+            <div class="gh-modal-footer">
+                <button type="button" class="gh-btn-secondary" onclick="closeModal('newTagModal')">Cancel</button>
+                <button type="submit" class="gh-btn-primary">Create Tag</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Tag Modal -->
+<div id="editTagModal" class="gh-modal-backdrop" onclick="handleBackdropClick(event, 'editTagModal')">
+    <div class="gh-modal-card">
+        <div class="gh-modal-header">
+            <h3 class="gh-modal-title">Edit Tag</h3>
+            <button type="button" class="gh-modal-close" onclick="closeModal('editTagModal')" aria-label="Close"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i></button>
+        </div>
+        <form id="editTagForm" method="POST" action="">
+            <div class="gh-modal-body">
+                <div class="gh-form-group">
+                    <label class="gh-form-label" for="editTagName">Tag Name <span class="gh-required-star">*</span></label>
+                    <input type="text" id="editTagName" name="tag_name" class="gh-form-input" placeholder="Tag name" required autocomplete="off">
+                </div>
+                <div class="gh-form-group">
+                    <label class="gh-form-label" for="editTagType">Tag Type</label>
+                    <input type="text" id="editTagType" name="tag_type" class="gh-form-input" placeholder="e.g. school" list="tagTypeSuggestions" autocomplete="off">
+                </div>
+            </div>
+            <div class="gh-modal-footer">
+                <button type="button" class="gh-btn-secondary" onclick="closeModal('editTagModal')">Cancel</button>
+                <button type="submit" class="gh-btn-primary"><i class="ui-icon fa-solid fa-check" aria-hidden="true"></i> Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/tagsAdmin.js') }}"></script>
 {% endblock %}

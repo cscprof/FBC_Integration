@@ -2,6 +2,10 @@
 
 {% block title %}Email Verification{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/emailIndex.css') }}">
+{% endblock %}
+
 {% block content %}
 
   <!-- Step 1: Request token button -->
@@ -12,10 +16,10 @@
   </div>
 
   <!-- Step 2: Enter email and send token -->
-  <div id="emailStep" style="display: none; margin-bottom: 150px;">
+  <div id="emailStep">
     <h2>Enter your email</h2>
     <form action="/email/verifyEmail" method="POST">
-      <input style="margin-bottom: 10px;" class="entry-box" type="email" name="email" value="{{ current_user.email }}" required>
+      <input class="entry-box email-verify-input" type="email" name="email" value="{{ current_user.email }}" required>
       <br>
       <button class="button sign-up" type="submit">Send verification token</button>
     </form>
@@ -23,12 +27,6 @@
     <p>Once sent, check your inbox and follow the link to verify.</p>
   </div>
 
-  <script>
-    <!--Separates email verification into two separate steps: a "request verification" page and a "send token" page-->
-    function showEmailStep() {
-      document.getElementById("requestStep").style.display = "none";
-      document.getElementById("emailStep").style.display = "block";
-    }
-  </script>
+  <script src="{{ url_for('static', filename='js/emailIndex.js') }}"></script>
 </body>
 {% endblock %}

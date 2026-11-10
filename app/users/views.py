@@ -149,13 +149,17 @@ def tagsAdmin():
 @users.route("/admin/tags/add", methods=["POST"])
 @role_required(MANAGER_ROLES)
 def add_tag():
-    tag_name = request.form.get('tag', '').strip()
+    tag_name = request.form.get('tag', '').strip() or request.form.get('tag_name', '').strip()
+    tag_type = request.form.get('tag_type', '').strip() or None
     
     if tag_name:
         conn = get_db_connection()
         try:
             with conn.cursor() as cursor:
-                cursor.execute("INSERT INTO tags (tag) VALUES (%s)", (tag_name,))
+                try:
+                    cursor.execute("INSERT INTO tags (tag_name, tag_type) VALUES (%s, %s)", (tag_name, tag_type))
+                except Exception:
+                    cursor.execute("INSERT INTO tags (tag, tag_type) VALUES (%s, %s)", (tag_name, tag_type))
                 conn.commit()
                 flash("Tag created successfully!", "success")
         except Exception as e:
@@ -168,6 +172,35 @@ def add_tag():
     else:
         flash("Tag name cannot be empty.", "error")
         
+    return redirect(url_for('users.tagsAdmin'))
+
+# Route for editing tag
+@users.route("/admin/tags/<int:tag_id>/edit", methods=["POST"])
+@role_required(MANAGER_ROLES)
+def edit_tag(tag_id):
+    tag_name = request.form.get('tag_name', '').strip() or request.form.get('tag', '').strip()
+    tag_type = request.form.get('tag_type', '').strip() or None
+
+    if tag_name:
+        conn = get_db_connection()
+        try:
+            with conn.cursor() as cursor:
+                try:
+                    cursor.execute("UPDATE tags SET tag_name = %s, tag_type = %s WHERE tag_id = %s", (tag_name, tag_type, tag_id))
+                except Exception:
+                    cursor.execute("UPDATE tags SET tag = %s, tag_type = %s WHERE tag_id = %s", (tag_name, tag_type, tag_id))
+                conn.commit()
+                flash("Tag updated successfully!", "success")
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            flash(f"Error updating tag: {e}", "error")
+        finally:
+            if conn:
+                conn.close()
+    else:
+        flash("Tag name cannot be empty.", "error")
+
     return redirect(url_for('users.tagsAdmin'))
 
 # Route for deleting tag
