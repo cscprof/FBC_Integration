@@ -7,6 +7,10 @@ from . import partners
 def partners_apply_page():
     return render_template("partners/apply.html")
 
+@partners.route("/partners/join")
+def partners_join_page():
+    return render_template("partners/join.html")
+
 @partners.route("/partners")
 def partners_page():
     return render_template("partners/index.html")
