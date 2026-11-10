@@ -250,6 +250,9 @@ def edit_user(user_id):
         return redirect(url_for("users.admin_panel"))
     return render_template("adminpanel/edit_user.html", user=user)
 
+#code for database function here
+#as does the shortened url for the admin/partners page
+
 @users.route("/profile")
 @login_required
 def profile():
@@ -497,3 +500,37 @@ def confirm_email(token):
 @users.route("/email/success")
 def email_confirmed():
     return render_template("/email/verificationSuccessful.html")
+
+@users.route("/admin/partners")
+def partner_admin():
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("USE flourish_bc")
+            cursor.execute("SELECT * FROM `flourish_bc`.`partners`")
+            partners = cursor.fetchall()
+
+            cursor.execute("SELECT * FROM tags")
+            all_tags = cursor.fetchall()
+    finally:
+        conn.close()
+    return render_template("/adminpanel/partnerAdmin.html", partners=partners, all_tags=all_tags)
+
+@users.route("/admin/partners/approve/<int:p>", methods=["GET", "POST"])
+def approve_partner(p):
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("USE flourish_bc")
+            cursor.execute("update partners SET approved = 1 where partner_id = %s", (p,))
+
+            cursor.execute("USE flourish_bc")
+            cursor.execute("SELECT * FROM `flourish_bc`.`partners`")
+            partners = cursor.fetchall()
+
+            cursor.execute("SELECT * FROM tags")
+            all_tags = cursor.fetchall()
+    finally:
+        conn.commit()
+        conn.close()
+        return render_template("/adminpanel/partnerAdmin.html", partners=partners, all_tags=all_tags)
