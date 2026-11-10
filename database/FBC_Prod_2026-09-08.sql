@@ -1,7 +1,7 @@
 /*
 MySQL Backup
 Database: flourish_bc
-Backup Time: 2026-11-3 3:36:00
+Backup Time: 2026-09-08 14:23:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -71,7 +71,6 @@ CREATE TABLE `partners` (
   `city` varchar(128) DEFAULT NULL,
   `state` varchar(32) DEFAULT NULL,
   `zip` varchar(16) DEFAULT NULL,
-  `approved` BOOL DEFAULT FALSE,
   PRIMARY KEY (`partner_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `resource_category` (
