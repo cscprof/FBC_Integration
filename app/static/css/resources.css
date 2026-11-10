@@ -1,6 +1,6 @@
 body {
     font-family: "Open Sans", Arial, sans-serif;
-    color: #2e44cc;
+    color: #00577e;
     background-color: #f5f5f5;
 }
 
@@ -14,13 +14,12 @@ main {
     /*gap: 40px;*/
 }
 
-
-
 .resources {
     background-color: #ffffff;
     padding: 40px;
-    border-radius: 10px;
+    border-radius: 20px;
     margin-top: 20px;
+    box-shadow: 0 8px 25px rgba(140, 198, 62, 0.20);
 }
 
 .searchfilter {
@@ -44,7 +43,7 @@ main {
 .searchinput {
     flex: 1;
     padding: 12px 15px;
-    border: 2px solid #d0d4ff;
+    border: 2px solid #00577e;
     border-radius: 5px;
     font-size: 1em;
     box-sizing: border-box;
@@ -52,7 +51,7 @@ main {
 
 .searchinput:focus {
     outline: none;
-    border-color: #2e44cc;
+    border-color: #00577e;
 }
 
 .categorydropdown {
@@ -62,7 +61,7 @@ main {
 .categoryselect {
     width: 100%;
     padding: 12px 15px;
-    border: 2px solid #d0d4ff;
+    border: 2px solid #00577e;
     border-radius: 5px;
     font-size: 1em;
     background-color: white;
@@ -72,7 +71,7 @@ main {
 
 .categoryselect:focus {
     outline: none;
-    border-color: #2e44cc;
+    border-color: #00577e;
 }
 
 .examplegrid {
@@ -89,33 +88,79 @@ main {
 }
 
 .exampleboxes {
-    background-color: #e1e4e8;
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    flex: 1;
+    background: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    height: 200px;
     width: 100%;
-    min-height: 280px;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border-left: 4px solid #00577e;
+    border-right: 4px solid #8cc63e;
+    transition: all 0.3s ease;
     box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.1),
-        0 6px 18px rgba(138, 201, 38, 0.25);
+        0 4px 12px rgba(0, 87, 126, 0.15);
 }
-
 
 .resource-card {
     position: relative;
 }
 
 .exampleboxes:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px);
     box-shadow:
-        0 12px 30px rgba(0, 0, 0, 0.15),
-        0 8px 22px rgba(138, 201, 38, 0.3);
+        0 8px 20px rgba(0, 87, 126, 0.25);
+}
+
+.card-image {
+    width: 140px;
+    min-width: 140px;
+    background: #8cc63e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    color: white;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-content {
+   flex: 1;
+   padding: 15px 20px;
+}
+
+.card-content h3 {
+    color: #00577e;
+    font-size: 1.8rem;
+    text-align: center;
+    margin: 0 0 15px 0;
+}
+
+.card-content p {
+    color: #333333;
+    text-align: center;
+    margin: 0;
+    max-width: 90%;
+}
+
+.card-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.card-content li {
+    margin-bottom: 6px;
+}
+
+.card-content li::before {
+    content: "->";
+    color: #8cc63e;
+    font-weight: bold;
 }
 
 .resource-card-wrapper {
@@ -123,6 +168,15 @@ main {
     display: flex;
     flex-direction: column;
     height: 100%;
+}
+
+.resource-card-wrapper .exampleboxes {
+    height: 120px;
+    min-height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .resource-card-link {
@@ -134,7 +188,7 @@ main {
 }
 
 .resource-card-link .exampleboxes {
-    padding-bottom: 50px;
+    padding-bottom: 0;
 }
 
 .edit-resource-btn {
@@ -142,12 +196,12 @@ main {
     top: 10px;
     right: 10px;
     background: rgba(255, 255, 255, 0.95);
-    border: 1px solid #2e44cc;
+    border: 1px solid #00577e;
     border-radius: 4px;
     padding: 6px 12px;
     font-size: 0.85rem;
     font-weight: 500;
-    color: #2e44cc;
+    color: #00577e;
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     z-index: 10;
@@ -155,33 +209,30 @@ main {
 }
 
 .edit-resource-btn:hover {
-    background: #2e44cc;
+    background: #00577e;
     color: #ffffff;
 }
 
 .exampleboxes h3 {
-    color: #2e44cc;
+    color: #00577e;
     font-size: 1.5em;
 }
 
 .resource-card-link .exampleboxes h3 {
-    margin-top: 40px;
-    margin-bottom: 20px;
-    min-height: 58px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin: 0 0 10px 0;
+    min-height: auto;
+    display: block;
 }
 
 .exampleboxes h4 {
-    color: #2e44cc;
+    color: #00577e;
     margin: 8px 0;
     font-size: 1.1em;
     min-height: 24px;
 }
 
 .exampleboxes h6 {
-    color: #2e44cc;
+    color: #00577e;
     margin: 4px 0;
     font-size: 0.9em;
     min-height: 20px;
@@ -205,7 +256,7 @@ main {
 }
 
 .resourcelink {
-    color: #2e44cc;
+    color: #00577e;
     text-decoration: none;
     font-weight: bold;
     font-size: 1em;
@@ -220,7 +271,7 @@ main {
 }
 
 .resourcelink:hover {
-    color: #8ac926;
+    color: #00577e;
     text-decoration: underline;
 }
 
@@ -230,7 +281,7 @@ main {
 }
 
 .uploadresourcebtn {
-    background-color: #2e44cc;
+    background-color: #00577e;
     color: white;
     padding: 12px 24px;
     border: none;
@@ -240,7 +291,7 @@ main {
 }
 
 .uploadresourcebtn:hover {
-    background-color: #1e34aa;
+    background-color: #00476b;
 }
 
 #uploadModal,
@@ -290,11 +341,11 @@ main {
 }
 
 .modalclose:hover {
-    color: #2e44cc;
+    color: #00577e;
 }
 
 .modaltitle {
-    color: #2e44cc;
+    color: #00577e;
     margin: 0;
 }
 
@@ -321,7 +372,7 @@ main {
 .modalform textarea:focus,
 .modalform select:focus {
     outline: none;
-    border-color: #2e44cc;
+    border-color: #00577e;
 }
 
 .modalform textarea {
@@ -353,12 +404,12 @@ main {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #2e44cc;
+    background-color: #00577e;
     color: white;
 }
 
 .modalbtnsubmit:hover {
-    background-color: #1e34aa;
+    background-color: #00476b;
 }
 
 .modalbtndelete {
@@ -401,7 +452,7 @@ main {
 .resource-info-label {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #2e44cc;
+    color: #00577e;
 }
 
 .resource-info-value {
@@ -413,7 +464,7 @@ main {
 .resource-info-section-title {
     font-size: 0.9rem;
     font-weight: 700;
-    color: #2e44cc;
+    color: #00577e;
     margin-bottom: 8px;
 }
 
@@ -448,7 +499,7 @@ main {
 
 .admin-resource-table thead th {
     background-color: #f0f3ff;
-    color: #2e44cc;
+    color: #00577e;
     border-bottom: 2px solid #d9defa;
 }
 
@@ -457,12 +508,12 @@ main {
 }
 
 .edit-resource-btn-inline {
-    background-color: #2e44cc;
+    background-color: #00577e;
     color: #fff;
     border: none;
 }
 
 .edit-resource-btn-inline:hover {
-    background-color: #1e34aa;
+    background-color: #00476b;
     color: #fff;
 }
