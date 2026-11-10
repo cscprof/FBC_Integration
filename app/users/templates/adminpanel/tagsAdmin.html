@@ -12,18 +12,14 @@
         <!-- Search filter -->
         <div class="gh-search-wrapper">
             <span class="gh-search-icon">
-                <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" fill="currentColor">
-                    <path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path>
-                </svg>
+                {{ icon('search') }}
             </span>
             <input type="text" id="tagSearchInput" class="gh-search-input" placeholder="Search tags..." autocomplete="off">
         </div>
 
         <!-- New Tag Button (top right) -->
         <button type="button" class="gh-btn-primary" onclick="openModal('newTagModal')">
-            <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" fill="currentColor">
-                <path d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z"></path>
-            </svg>
+            {{ icon('plus') }}
             New Tag
         </button>
     </div>
@@ -63,11 +59,11 @@
                     <!-- Actions -->
                     <div class="gh-col-actions">
                         <button type="button" class="gh-action-btn" onclick="openEditModal('{{ tag.tag_id }}', '{{ tag.tag_name|escape }}', '{{ (tag.tag_type or '')|escape }}')">
-                            Edit
+                            {{ icon('edit') }} Edit
                         </button>
                         <form action="{{ url_for('users.delete_tag', tag_id=tag.tag_id) }}" method="POST" class="gh-inline-form" onsubmit="return confirm('Are you sure you want to delete this tag?');">
                             <button type="submit" class="gh-action-btn gh-delete-btn">
-                                Delete
+                                {{ icon('delete') }} Delete
                             </button>
                         </form>
                     </div>
@@ -89,7 +85,7 @@
     <div class="gh-modal-card">
         <div class="gh-modal-header">
             <h3 class="gh-modal-title">Create New Tag</h3>
-            <button type="button" class="gh-modal-close" onclick="closeModal('newTagModal')">&times;</button>
+            <button type="button" class="gh-modal-close" onclick="closeModal('newTagModal')" aria-label="Close">{{ icon('close') }}</button>
         </div>
         <form action="{{ url_for('users.add_tag') }}" method="POST">
             <div class="gh-modal-body">
@@ -119,7 +115,7 @@
     <div class="gh-modal-card">
         <div class="gh-modal-header">
             <h3 class="gh-modal-title">Edit Tag</h3>
-            <button type="button" class="gh-modal-close" onclick="closeModal('editTagModal')">&times;</button>
+            <button type="button" class="gh-modal-close" onclick="closeModal('editTagModal')" aria-label="Close">{{ icon('close') }}</button>
         </div>
         <form id="editTagForm" method="POST" action="">
             <div class="gh-modal-body">
@@ -134,7 +130,7 @@
             </div>
             <div class="gh-modal-footer">
                 <button type="button" class="gh-btn-secondary" onclick="closeModal('editTagModal')">Cancel</button>
-                <button type="submit" class="gh-btn-primary">Save Changes</button>
+                <button type="submit" class="gh-btn-primary">{{ icon('check') }} Save Changes</button>
             </div>
         </form>
     </div>
