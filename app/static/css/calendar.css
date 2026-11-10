@@ -219,6 +219,7 @@ body {
 }
 
 #eventPopupClose {
+  color: #333;
   cursor: pointer;
   float: right;
   font-weight: bold;
@@ -286,6 +287,7 @@ body {
 }
 
 .add-event a {
+  color: #2e44cc;
   background-color: #aaeb54;
   font-weight: bold;
 }

@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const addr = [ep.event_address1, ep.event_address2, ep.event_city, ep.event_state, ep.event_postal_code].filter(Boolean).join(', ');
       const schoolsList = ep.schools && ep.schools.length > 0 ? ep.schools.join(', ') : 'N/A';
       popup.innerHTML = `
-        <span id="eventPopupClose">X</span>
+        <span id="eventPopupClose" title="Close"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i></span>
         <h3>${info.event.title}</h3>
         <p><strong>Content Type:</strong> ${ep.tag || "N/A"}</p>
         <p><strong>Schools:</strong> ${schoolsList}</p>
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
           setTimeout(() => {
             const tAddr = [targetEvent.event_address1, targetEvent.event_address2, targetEvent.event_city, targetEvent.event_state, targetEvent.event_postal_code].filter(Boolean).join(', ');
             popup.innerHTML = `
-              <span id="eventPopupClose">X</span>
+              <span id="eventPopupClose" title="Close"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i></span>
               <h3>${targetEvent.title}</h3>
               <p><strong>Start:</strong> ${new Date(targetEvent.start).toLocaleString()}</p>
               <p><strong>End:</strong> ${new Date(targetEvent.end).toLocaleString()}</p>

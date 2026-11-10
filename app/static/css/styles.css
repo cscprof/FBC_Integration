@@ -1,5 +1,6 @@
 /* signup button */
 .sign-up {
+    color: #212529;
     background-color: #aaeb54;    
 }
 
@@ -596,7 +597,7 @@
     align-items: center;
     justify-content: center;
     font-size: 36px;
-    color: #aaa;
+    color: #555;
 }
 
 /*profile image in the navbar, different styling than on the profile page*/
@@ -745,4 +746,8 @@
     height: 1em;
     flex-shrink: 0;
     vertical-align: -0.125em;
+}
+
+.title .ui-icon {
+    color: #2e44cc;
 }
