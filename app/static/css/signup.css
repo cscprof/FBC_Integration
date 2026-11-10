@@ -127,11 +127,16 @@ select {
     background-color: #8ac926;
 }
 
-.applyParter {
-    height: 50%;
-    width: 50%;
-    background-color: #1e34aa;
-    border-radius: 50%;
-    display: inline-block;
-    margin-left: 25%;
-}  /* https://www.w3schools.com/howto/howto_css_circles.asp */
+.applyParter-blob {
+    color: white;
+    background: #2e44cc;
+    padding: 45px;  
+    width: 600px;
+    height: 770px;
+    border-radius: 42% 67% 53% 69% / 33% 55% 40% 67%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 29.5%;
+}

@@ -1,12 +1,102 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<head>
+    <h1 style="font-size: 30px; margin: auto;">Our Partners</h1>
+</head>
 <body>
-    <p style="font-size: 35px;"> Business, Business, Business</p>
-        <img src=
-        "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.freepik.com%2Fpremium-vector%2Fminimalist-type-creative-business-logo-template_1286368-33451.jpg&f=1&nofb=1&ipt=ed01629e4d3154096a4b3dad28943c6bd862bee23ac632572c64fe19c42664a4&ipo=images" 
-        height="250" width="250">
+    {% if partners %}
+      <div class="examplepartnerscontainer">
+        {% for partner in partners %}
         
-    <button onclick="location.href='/partners/apply'" type="button">Become a partner! </body>
-<body>
+      <div class="examplepartners">
+            <div style="font-size: 20px;"><strong>Partner:</strong> <span class="searchable-text">{{ partner.name }}</span></div>
+            <div style="color: black">Contact: <span class="searchable-text">{{ partner.contact_name }}</span></div>
+            <div style="color: black">Phone: <span class="searchable-text">{{ partner.phone }}</span></div>
+            <div style="color: black">Email: <span class="searchable-text">{{ partner.email }}</span></div>    
+      </div>
+        {% endfor %}
+      </div>
+
+      <p class="no-results" id="noResults" style="display:none;">No partners match your search.</p>
+    {% else %}
+      <div class="resource">No partners found.</div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+    // Search function
+    (function () {
+    const search = document.getElementById('globalSearch');
+    const clearBtn = document.getElementById('clearBtn');
+    const resultCount = document.getElementById('resultCount');
+    const noResults = document.getElementById('noResults');
+    const cards = document.querySelectorAll('.user-card');
+
+    if (!search || !cards.length) return;
+
+    function escapeHtml(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    //Highlights text from search function and on matching user cards
+    function highlightText(el, term) {
+        const original = el.dataset.original || el.textContent;
+        el.dataset.original = original;
+
+        if (!term) {
+        el.innerHTML = escapeHtml(original);
+        return;
+        }
+
+        const lower = original.toLowerCase();
+        const idx = lower.indexOf(term);
+        if (idx === -1) {
+        el.innerHTML = escapeHtml(original);
+        return;
+        }
+
+        el.innerHTML =
+        escapeHtml(original.slice(0, idx)) +
+        '<span class="highlight">' + escapeHtml(original.slice(idx, idx + term.length)) + '</span>' +
+        escapeHtml(original.slice(idx + term.length));
+    }
+
+    //applies search filter and hides cards that do not fit criteria
+    function applyFilter() {
+        const term = search.value.trim().toLowerCase();
+        let visible = 0;
+
+        cards.forEach(card => {
+        const haystack = card.dataset.search || '';
+        const show = !term || haystack.includes(term);
+        card.classList.toggle('hidden', !show);
+
+        card.querySelectorAll('.searchable-text').forEach(el => highlightText(el, term));
+        if (show) visible++;
+        });
+
+        resultCount.textContent = `${visible} / ${cards.length} partners`;
+        noResults.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    search.addEventListener('input', applyFilter);
+
+    // Clears search function
+    clearBtn.addEventListener('click', () => {
+        search.value = '';
+        applyFilter();
+        search.focus();
+    });
+
+    applyFilter();
+    })();
+</script>
+
+
+</div>
+<br>
+
+<button class="btn-approve" onclick="location.href='/partners/apply'" type="button">Become a partner!</a>
 {% endblock %}
