@@ -4,12 +4,43 @@
 
 {% block content %}
  
-    <div class="homepage-wrapper">
-        <div class="homepage-info">
-			<input placeholder="Full Name" class="entry-box" type="text" name="fullname" required>
-            <input placeholder="Organization" class="entry-box" type="text" name="organization" required>
-			<input placeholder="Phone Number" class="entry-box" type="text" name="phonenumber" required>
-			<input placeholder="Email" class="entry-box" type="text" name="email" >
-			<input placeholder="Organization Address" class="entry-box" type="text" name="organizationaddress" required>
-			<button class="button-submit" type="submit">Submit</button>
+
+		<div class="applyParter">
+			<div class="homepage-info">
+				<br>
+				<br>
+				
+				<h1>Become a Partner!</h1>
+				
+				<div class="underline" style="margin-left: 15%; width: 70%;"></div>
+				<form class="signup-form" action="/add_partner" method="POST">
+				
+				<input placeholder="Organization Name" class="entry-box" type="text" name="organization_name" required>
+				
+				<input placeholder="Tell us about yourself" class="entry-box" type="text" name="description" required>
+				
+				<input placeholder="Phone Number" class="entry-box" type="text" name="phone_number" required>
+				
+				<input placeholder="Email" class="entry-box" type="text" name="email" >
+
+				<input placeholder="Contact Name" class="entry-box" type="text" name="contact" >
+
+				<input placeholder="Contact Userame" class="entry-box" type="text" name="username" required>
+
+				<input placeholder="Password" class="entry-box" type="text" name="password" required>
+				
+				<input placeholder="Organization Address 1" class="entry-box" type="text" name="organizationaddress1" required>
+				
+				<input placeholder="Organization Address 2" class="entry-box" type="text" name="organizationaddress2" required>
+				
+				<input placeholder="City" class="entry-box" type="text" name="city" required>
+				
+				<input placeholder="State" class="entry-box" type="text" name="state" required>
+				
+				<input placeholder="Zip Code" class="entry-box" type="text" name="zip" required>
+				
+				<button class="button-submit" type="submit" style="margin-top: 5%;">Submit</button>
+				</form>
+			</div>
+		</div>
 {% endblock %}

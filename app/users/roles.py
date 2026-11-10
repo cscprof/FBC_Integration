@@ -16,7 +16,7 @@ PARTNER = 4
 ADMIN = 5
 
 # Roles allowed to manage site content (events, resources, tags, users)
-MANAGER_ROLES = [PARTNER, ADMIN]
+MANAGER_ROLES = [ADMIN]
 
 def has_role(user, roles):
     """

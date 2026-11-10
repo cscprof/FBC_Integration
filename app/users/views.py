@@ -3,6 +3,7 @@ import uuid
 from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from database import get_db_connection
+import pymysql
 from pymysql import DatabaseError
 from pymysql.cursors import DictCursor
 from werkzeug.utils import secure_filename
@@ -249,6 +250,9 @@ def edit_user(user_id):
         flash("User not found")
         return redirect(url_for("users.admin_panel"))
     return render_template("adminpanel/edit_user.html", user=user)
+
+#code for database function here
+#as does the shortened url for the admin/partners page
 
 @users.route("/profile")
 @login_required
@@ -497,3 +501,60 @@ def confirm_email(token):
 @users.route("/email/success")
 def email_confirmed():
     return render_template("/email/verificationSuccessful.html")
+
+@users.route("/admin/partners")
+def partner_admin():
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("USE flourish_bc")
+            cursor.execute("SELECT * FROM `flourish_bc`.`partners`")
+            partners = cursor.fetchall()
+            print(partners)
+
+
+            cursor.execute("SELECT * FROM tags")
+            all_tags = cursor.fetchall()
+    finally:
+        conn.commit()
+        conn.close()
+    return render_template("/adminpanel/partnerAdmin.html", partners=partners, all_tags=all_tags)
+
+@users.route("/admin/partners/approve/<int:p>", methods=["GET", "POST"])
+def approve_partner(p):
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("USE flourish_bc")
+            cursor.execute("update partners SET approved = 1 where partner_id = %s", (p,))
+
+            cursor.execute("USE flourish_bc")
+            cursor.execute("SELECT * FROM `flourish_bc`.`partners`")
+            partners = cursor.fetchall()
+
+            cursor.execute("SELECT * FROM tags")
+            all_tags = cursor.fetchall()
+    finally:
+        conn.commit()
+        conn.close()
+        return render_template("/adminpanel/partnerAdmin.html", partners=partners, all_tags=all_tags)
+
+@users.route("/admin/partners/deny/<int:p>", methods=["GET", "POST"])
+def deny_partner(p):
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("USE flourish_bc")
+            cursor.execute("delete from users where partner_id = %s", (p,))
+            cursor.execute("delete from partners where partner_id = %s", (p,))
+
+            cursor.execute("USE flourish_bc")
+            cursor.execute("SELECT * FROM `flourish_bc`.`partners`")
+            partners = cursor.fetchall()
+
+            cursor.execute("SELECT * FROM tags")
+            all_tags = cursor.fetchall()
+    finally:
+        conn.commit()
+        conn.close()
+        return render_template("/adminpanel/partnerAdmin.html", partners=partners, all_tags=all_tags)
