@@ -14,14 +14,12 @@
 {% block content %}
 <div class="add-event d-flex justify-content-between align-items-center m-3">
   <div class="mb-3 mt-3">
-    <label for="contentTypeFilter">Content Type:</label>
+    <label for="contentTypeFilter class=ms-3">Content Type:</label>
     <select id="contentTypeFilter" class="form-select d-inline-block w-auto">
       <option value="">All</option>
-      <option value="Worship">Worship</option>
-      <option value="Retreat">Retreat</option>
-      <option value="Training">Training</option>
-      <option value="Service">Service</option>
-      <option value="Meeting">Meeting</option>
+      {% for tag in other_tags %}
+      <option value="{{ tag }}">{{ tag }}</option>
+      {% endfor %}
     </select>
 
     <label for="schoolFilter" class="ms-3">School:</label>
