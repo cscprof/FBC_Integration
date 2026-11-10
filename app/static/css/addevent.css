@@ -99,20 +99,6 @@ h1 {
     margin-bottom: -5px;
 }
 
-.button-submit {
-    background-color: #aaeb54;
-    color: black;
-    border: 1px solid grey;
-    padding: 12px;
-    font-size: 1.2rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: .2s;
-}
-.button-submit:hover {
-    background-color: #8ac926;
-}
-
 .form-section {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
