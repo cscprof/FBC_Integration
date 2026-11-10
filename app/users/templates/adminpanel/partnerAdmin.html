@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Partners{% endblock %}
+
+{% block content %}
+<div class="edit-user-blob"><h1 class="title">Partner Administration</h1>
+
+  <div class="section">
+    <div class="header">Manage Partners</div>
+
+    {% if partners %}
+      <div class="controls-bar">
+        <input type="text" id="globalSearch" placeholder="Search users…" autocomplete="off" />
+        <span class="result-count" id="resultCount"></span>
+        <button class="clear-btn" id="clearBtn" type="button">Clear filters</button>
+      </div>
+      <div id="userList">
+        {% for partner in partners %}
+            {% if partner.approved == 0 %}
+          <div class="user-card">
+
+            <div class="user-name">
+              <span class="searchable-text">
+                Pending: {{ partner.name }}
+              </span>
+            </div>
+            <div class="user-details" style="color: black">
+              <div><strong>ID:</strong> <span class="searchable-text">{{ partner.partner_id }}</span></div>
+              <div><strong>Email:</strong> <span class="searchable-text">{{ partner.email }}</span></div>
+              <div><strong>Contact:</strong> <span class="searchable-text">{{ partner.contact_name }}</span></div>
+              <div><strong>Phone Number:</strong> <span class="searchable-text">{{ partner.phone }}</span></div>
+              <div><strong>Description:</strong> <span class="searchable-text">{{ partner.description }}</span></div>
+              <div><form action ="/admin/partners/approve/{{partner.partner_id}}"><button type="submit" class="approval_button">Approve</button><span class="searchable-text"></span></form><form action ="/admin/partners/deny/{{partner.partner_id}}"><button type="submit" class="denial_button">Deny</button><span class="searchable-text"></span></form></div>
+            </div>
+          </div>
+            {% endif %}
+        {% endfor %}
+      </div>
+    <h2>Existing Partners</h2>
+      <div>
+        {% for partner in partners %}
+            {% if partner.approved == 1 %}
+          <div class="user-card">
+
+            <div class="user-name">
+              <span class="searchable-text">
+                {{ partner.name }}
+              </span>
+            </div>
+            <div class="user-details" style="color: black">
+              <div><strong>ID:</strong> <span class="searchable-text">{{ partner.partner_id }}</span></div>
+              <div><strong>Email:</strong> <span class="searchable-text">{{ partner.email }}</span></div>
+              <div><strong>Contact:</strong> <span class="searchable-text">{{ partner.contact_name }}</span></div>
+              <div><strong>Phone Number:</strong> <span class="searchable-text">{{ partner.phone }}</span></div>
+              <div><strong>Description:</strong> <span class="searchable-text">{{ partner.description }}</span></div>
+            </div>
+          </div>
+            {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

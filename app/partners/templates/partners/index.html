@@ -5,6 +5,7 @@
     <h1 style="font-size: 30px; margin: auto;">Our Partners</h1>
 </head>
 <body>
+
     {% if partners %}
       <div class="examplepartnerscontainer">
         {% for partner in partners %}
@@ -99,4 +100,8 @@
 <br>
 
 <button class="btn-approve" onclick="location.href='/partners/apply'" type="button">Become a partner!</a>
+
+<button class="button-submit" type="submit" onclick="location.href='/partners/join'" type="button" style="width: auto;">Join an existing partner </body>
+
+
 {% endblock %}
