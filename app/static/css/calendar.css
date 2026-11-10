@@ -291,3 +291,28 @@ body {
   background-color: #aaeb54;
   font-weight: bold;
 }
+
+.school-tag-pill {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #00577E;
+  border-radius: 9999px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.tag-pill {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #8CC53E;
+  border-radius: 9999px;
+  color: #1a1a1a;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+#eventPopup strong {
+  color: #2e44cc;
+  font-weight: 700;
+}
