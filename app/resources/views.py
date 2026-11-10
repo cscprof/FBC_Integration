@@ -2,9 +2,9 @@
 from . import resources as resources_blueprint
 from flask import render_template, request, redirect, url_for
 from flask_login import current_user
-from tagmanager import get_tags, give_tag
 from . import sql_queries  as db
-from loginManager import role_required
+from app.users.loginManager import role_required
+from app.users.roles import ADMIN, MANAGER_ROLES
 
 
 @resources_blueprint.route("/resources")
@@ -44,7 +44,7 @@ def search():
     return render_template('resources/resourcesearch.html', resources=resources, categories=categories_list)
 
 @resources_blueprint.route("/admin/resources")
-@role_required([5])
+@role_required(MANAGER_ROLES)
 def resources_admin():
     
     categories_list = db.get_resource_categories()
@@ -63,7 +63,7 @@ def resources_admin():
 
 
 @resources_blueprint.route("/resources/upload", methods=["POST"])
-@role_required([4, 5])
+@role_required(MANAGER_ROLES)
 def upload_resource():
     
     data = {}
@@ -93,16 +93,7 @@ def upload_resource():
     print(data)
 
     try:
-       
         resource_id = db.add_resource(data)
-
-        if resource_id > 0 and data['selected_tags']:
-            print("List has stuff")
-            db.add_tags(data)
-        else:
-            print("No stuff in list")
-
-        
         # Show the user their newly uploaded resource
         return redirect(url_for('resources.resources_admin'))
         
@@ -114,7 +105,7 @@ def upload_resource():
 
 
 @resources_blueprint.route("/resources/<int:resource_id>/edit", methods=["POST"])
-@role_required([4, 5])
+@role_required(MANAGER_ROLES)
 def edit_resource(resource_id: int):
     """Edit an existing resource."""
     try:
@@ -152,7 +143,7 @@ def edit_resource(resource_id: int):
 
 
 @resources_blueprint.route("/resources/<int:resource_id>/delete", methods=["POST"])
-@role_required([5])
+@role_required(MANAGER_ROLES)
 def delete_resource(resource_id: int):
     """Delete a resource by ID and return to the search page."""
     try:

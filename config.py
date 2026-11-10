@@ -4,9 +4,9 @@ in the application. It will also allow us to select from multiple
 configurations if we ever have a need to do so.
 
 The config class will read the configuration values from the
-settings.conf.example file.
+settings.conf file.
 
-Unless we add additional config parameters to settings.conf.example, there
+Unless we add additional config parameters to settings.conf, there
 should be no need to modify this file.
 '''
 

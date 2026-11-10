@@ -2,8 +2,12 @@
 
 {% block title %}Email sent!{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/emailSent.css') }}">
+{% endblock %}
+
 {% block content %}
-<div style="margin-bottom: 140px;">
+<div class="email-sent-container">
   <body>
     <h1>Check your email</h1>
     <p>We’ve sent a verification link to your email address.</p>

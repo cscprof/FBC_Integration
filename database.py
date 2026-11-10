@@ -1,15 +1,11 @@
 # from dotenv import load_dotenv
-#import os
+# import os
 import pymysql
 from flask import current_app
-# from flask_sqlalchemy import SQLAlchemy
 
-
-# db = SQLAlchemy()
 
 # GSM Temporary until all DB is converted
 def get_db_connection():
-
         return pymysql.connect(
             host=current_app.config['MYSQL_HOST'],
             user=current_app.config['MYSQL_USER'],
@@ -55,7 +51,7 @@ class db_class():
         return rows
     
 
-    def insert(self, sql):
+    def insert(self, sql, params=None):
         # Add a record to the database
 
         print(sql)
@@ -65,7 +61,10 @@ class db_class():
 
         # Execute query
         with conn.cursor() as cursor:
-            cursor.execute(sql)
+            if params is not None:
+                cursor.execute(sql, params)
+            else:
+                cursor.execute(sql)
             new_id = cursor.lastrowid            
 
         # Commit change and get insert id

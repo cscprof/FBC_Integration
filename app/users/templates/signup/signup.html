@@ -39,41 +39,47 @@
 
         <div class="password-box">
             <input placeholder="Password (8 characters minimum)" type="password" name="password" id="password" minlength="8" required>
-            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}" id="eyeicon" alt="hide-password">
+            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}"
+                 data-eye-open="{{ url_for('static', filename='images/eyeopen.png') }}"
+                 data-eye-closed="{{ url_for('static', filename='images/eyeclosed.png') }}"
+                 id="eyeicon" alt="hide-password">
         </div>
-        <script>
-            const eyeicon = document.getElementById("eyeicon");
-            const password = document.getElementById("password");
-
-            eyeicon.onclick = function () {
-                if (password.type === "password") {
-                    password.type = "text";
-                    eyeicon.src = "{{ url_for('static', filename='images/eyeopen.png') }}";
-                } else {
-                    password.type = "password";
-                    eyeicon.src = "{{ url_for('static', filename='images/eyeclosed.png') }}";
-                }
-            };
-        </script>
 
         <div class="password-box">
             <input placeholder="Confirm Password" type="password" name="passwordConfirmation" id="passwordConfirmation" minlength="8" required>
-            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}" id="eyeicon2" alt="hide-password">
+            <img src="{{ url_for('static', filename='images/eyeclosed.png') }}"
+                 data-eye-open="{{ url_for('static', filename='images/eyeopen.png') }}"
+                 data-eye-closed="{{ url_for('static', filename='images/eyeclosed.png') }}"
+                 id="eyeicon2" alt="hide-password">
         </div>
-        <script>
-            const eyeicon2 = document.getElementById("eyeicon2");
-            const passwordConfirmation = document.getElementById("passwordConfirmation");
+        
+<script>
+    let eyeicon = document.getElementById("eyeicon");
+    let password = document.getElementById("password");
 
-            eyeicon2.onclick = function () {
-                if (passwordConfirmation.type === "password") {
-                    passwordConfirmation.type = "text";
-                    eyeicon2.src = "{{ url_for('static', filename='images/eyeopen.png') }}";
-                } else {
-                    passwordConfirmation.type = "password";
-                    eyeicon2.src = "{{ url_for('static', filename='images/eyeclosed.png') }}";
-                }
-            };
-        </script>
+    let eyeicon2 = document.getElementById("eyeicon2");
+    let passwordConfirmation = document.getElementById("passwordConfirmation");
+
+    eyeicon.onclick = function() {
+        if (password.type == "password") {
+            password.type = "text";
+            eyeicon.src = eyeicon.dataset.eyeOpen;
+        } else {
+            password.type = "password";
+            eyeicon.src = eyeicon.dataset.eyeClosed;
+        }
+    };
+
+    eyeicon2.onclick = function() {
+        if (passwordConfirmation.type == "password") {
+            passwordConfirmation.type = "text";
+            eyeicon2.src = eyeicon2.dataset.eyeOpen;
+        } else {
+            passwordConfirmation.type = "password";
+            eyeicon2.src = eyeicon2.dataset.eyeClosed;
+        }
+    };
+</script>
 
         <button class="button-submit" type="submit">Submit</button>
     </form>
