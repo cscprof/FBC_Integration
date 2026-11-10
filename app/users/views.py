@@ -510,10 +510,13 @@ def partner_admin():
             cursor.execute("USE flourish_bc")
             cursor.execute("SELECT * FROM `flourish_bc`.`partners`")
             partners = cursor.fetchall()
+            print(partners)
+
 
             cursor.execute("SELECT * FROM tags")
             all_tags = cursor.fetchall()
     finally:
+        conn.commit()
         conn.close()
     return render_template("/adminpanel/partnerAdmin.html", partners=partners, all_tags=all_tags)
 
@@ -524,6 +527,26 @@ def approve_partner(p):
         with conn.cursor(DictCursor) as cursor:
             cursor.execute("USE flourish_bc")
             cursor.execute("update partners SET approved = 1 where partner_id = %s", (p,))
+
+            cursor.execute("USE flourish_bc")
+            cursor.execute("SELECT * FROM `flourish_bc`.`partners`")
+            partners = cursor.fetchall()
+
+            cursor.execute("SELECT * FROM tags")
+            all_tags = cursor.fetchall()
+    finally:
+        conn.commit()
+        conn.close()
+        return render_template("/adminpanel/partnerAdmin.html", partners=partners, all_tags=all_tags)
+
+@users.route("/admin/partners/deny/<int:p>", methods=["GET", "POST"])
+def deny_partner(p):
+    conn = get_db_connection()
+    try:
+        with conn.cursor(DictCursor) as cursor:
+            cursor.execute("USE flourish_bc")
+            cursor.execute("delete from users where partner_id = %s", (p,))
+            cursor.execute("delete from partners where partner_id = %s", (p,))
 
             cursor.execute("USE flourish_bc")
             cursor.execute("SELECT * FROM `flourish_bc`.`partners`")
