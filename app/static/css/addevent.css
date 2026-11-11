@@ -99,6 +99,16 @@ h1 {
     margin-bottom: -5px;
 }
 
+.event-desc {
+    display: block;
+    margin-left: 5px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    opacity: 0.8;
+}
+
 .button-submit {
     background-color: #aaeb54;
     color: black;
