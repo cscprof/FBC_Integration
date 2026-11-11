@@ -127,3 +127,16 @@ select {
     background-color: #8ac926;
 }
 
+.applyPartner-blob {
+    color: white;
+    background: #2e44cc;
+    padding: 45px;  
+    width: 800px;
+    height: 900px;
+    border-radius: 42% 67% 53% 69% / 33% 55% 40% 67%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20.5%;
+}
