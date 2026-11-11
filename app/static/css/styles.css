@@ -37,7 +37,7 @@
     background-color: transparent !important;
 }
 
-.navbar-link, .button {
+.navbar-link {
     text-decoration: none;
 }
 
@@ -277,6 +277,17 @@
 /*custom h2*/
 .header-2 {
     background-color: #aaeb54;
+    color: #2e44cc;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 700;
+    padding: 8px 20px;
+    font-size: 1.5rem;
+    border-radius: 4px 4px 0 0;
+    margin-top: 20px;
+}
+
+/*custom h2*/
+.admin-event-header-2 {
     color: #2e44cc;
     font-family: "Open Sans", sans-serif;
     font-weight: 700;
