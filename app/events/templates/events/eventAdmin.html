@@ -1,16 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}Admin{% endblock %}
-
+{% block title %}Admin Dashboard{% endblock %}
 
 {% block head %}
-<style>
-.add-event a {
-    background-color: #aaeb54;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/eventAdmin.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -18,231 +11,263 @@
     <h1 class="title">Admin Dashboard</h1>
 
     <div class="section">        
-         {% if is_manager(current_user) %}
+        {% if is_manager(current_user) %}
             <div class="add-event">
                 <a href="/add-event" class="button">Add Event</a>
             </div>
         {% endif %}
+        
         <div class="header">Manage Events</div>
-        <div class="mb-3 mt-3">
+        <div class="filter-controls">
             <label for="contentTypeFilter">Content Type:</label>
             <select id="contentTypeFilter" class="form-select d-inline-block w-auto">
                 <option value="">All</option>
-                <option value="Worship">Worship</option>
-                <option value="Retreat">Retreat</option>
-                <option value="Training">Training</option>
-                <option value="Service">Service</option>
-                <option value="Meeting">Meeting</option>
-            </select>
-
-            <label for="schoolFilter" class="ms-3">School:</label>
-            <select id="schoolFilter" class="form-select d-inline-block w-auto">
-                <option value="">All</option>
-                {% for school in schools %}
-                <option value="{{ school }}">{{ school }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="header-2">Approved Events</div>
-        <div class="list">
-            {% if events %}
-                {% for event in events %}
-                {% if event['status'] == 'approved' %}
-                <div class="resource event-item"
-                     data-type="{{ event['tag'] }}"
-                     data-schools='{{ event["schools"] | tojson }}'>
-                    <div>
-                        <span class="event-link" 
-                              data-name="{{ event['name'] }}" 
-                              data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') }}"
-                              data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') }}"
-                              data-description="{{ event['description'] }}"
-                              data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
-                              data-url="{{ event['url'] or '' }}"
-                              data-status="{{ event['status'] if event['status'] else 'pending' }}"
-                              data-contact-name="{{ event['contact_name'] or '' }}"
-                              data-contact-phone="{{ event['contact_phone'] or '' }}"
-                              data-contact-email="{{ event['contact_email'] or '' }}"
-                              data-address1="{{ event['event_address1'] or '' }}"
-                              data-address2="{{ event['event_address2'] or '' }}"
-                              data-city="{{ event['event_city'] or '' }}"
-                              data-state="{{ event['event_state'] or '' }}"
-                              data-postal="{{ event['event_postal_code'] or '' }}">
-                            {{ event['name'] }}
-                        </span><br>
-                        <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
-                        <p>{{ event['description'] }}</p>
-                        <small>Submitted by: {{ event['submitted_by'] }}</small>
-                        <div class="status">
-                            Status: {{ event['status'] if event['status'] else 'pending' }}
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
-                            <button class="btn btn-approve">Approve</button>
-                        </a>
-                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
-                            <button class="btn btn-reject">Reject/Cancel</button>
-                        </a>
-                        <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
-                            <button class="btn btn-edit">Edit</button>
-                        </a>
-                        <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');" style="display:inline;">
-                            <button type="submit" class="btn btn-reject">Delete</button>
-                        </form>
-                    </div>
-                </div>
-                {% endif %}
-                {% endfor %}
-            {% else %}
-                <div class="resource">No events found in the database.</div>
-            {% endif %}
-        </div>
-
-        <div class="header-2">Cancelled Events</div>
-        <div class="list">
-            {% if events %}
-                {% for event in events %}
-                {% if event['status'] == 'cancelled' %}
-                <div class="resource event-item"
-                     data-type="{{ event['tag'] }}"
-                     data-schools='{{ event["schools"] | tojson }}'>
-                    <div>
-                        <span class="event-link" 
-                              data-name="{{ event['name'] }}" 
-                              data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') }}"
-                              data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') }}"
-                              data-description="{{ event['description'] }}"
-                              data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
-                              data-url="{{ event['url'] or '' }}"
-                              data-status="{{ event['status'] if event['status'] else 'pending' }}"
-                              data-contact-name="{{ event['contact_name'] or '' }}"
-                              data-contact-phone="{{ event['contact_phone'] or '' }}"
-                              data-contact-email="{{ event['contact_email'] or '' }}"
-                              data-address1="{{ event['event_address1'] or '' }}"
-                              data-address2="{{ event['event_address2'] or '' }}"
-                              data-city="{{ event['event_city'] or '' }}"
-                              data-state="{{ event['event_state'] or '' }}"
-                              data-postal="{{ event['event_postal_code'] or '' }}">
-                            {{ event['name'] }}
-                        </span><br>
-                        <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
-                        <p>{{ event['description'] }}</p>
-                        <small>Submitted by: {{ event['submitted_by'] }}</small>
-                        <div class="status">
-                            Status: {{ event['status'] if event['status'] else 'pending' }}
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
-                            <button class="btn btn-approve">Approve</button>
-                        </a>
-                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
-                            <button class="btn btn-reject">Reject/Cancel</button>
-                        </a>
-                        <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
-                            <button class="btn btn-edit">Edit</button>
-                        </a>
-                        <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');" style="display:inline;">
-                            <button type="submit" class="btn btn-reject">Delete</button>
-                        </form>
-                    </div>
-                </div>
-                {% endif %}
-                {% endfor %}
-            {% else %}
-                <div class="resource">No events found in the database.</div>
-            {% endif %}
-        </div>
-
-        <div class="header-2">Pending Events</div>
-        <div class="list">
-            {% if events %}
-                {% for event in events %}
-                {% if event['status'] == 'pending' or not event['status'] %}
-                <div class="resource event-item"
-                     data-type="{{ event['tag'] }}"
-                     data-schools='{{ event["schools"] | tojson }}'>
-                    <div>
-                        <span class="event-link" 
-                              data-name="{{ event['name'] }}" 
-                              data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') }}"
-                              data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') }}"
-                              data-description="{{ event['description'] }}"
-                              data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
-                              data-url="{{ event['url'] or '' }}"
-                              data-status="{{ event['status'] if event['status'] else 'pending' }}"
-                              data-contact-name="{{ event['contact_name'] or '' }}"
-                              data-contact-phone="{{ event['contact_phone'] or '' }}"
-                              data-contact-email="{{ event['contact_email'] or '' }}"
-                              data-address1="{{ event['event_address1'] or '' }}"
-                              data-address2="{{ event['event_address2'] or '' }}"
-                              data-city="{{ event['event_city'] or '' }}"
-                              data-state="{{ event['event_state'] or '' }}"
-                              data-postal="{{ event['event_postal_code'] or '' }}">
-                            {{ event['name'] }}
-                        </span><br>
-                        <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
-                        <p>{{ event['description'] }}</p>
-                        <small>Submitted by: {{ event['submitted_by'] }}</small>
-                        <div class="status">
-                            Status: {{ event['status'] if event['status'] else 'pending' }}
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
-                            <button class="btn btn-approve">Approve</button>
-                        </a>
-                        <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
-                            <button class="btn btn-reject">Reject/Cancel</button>
-                        </a>
-                        <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
-                            <button class="btn btn-edit">Edit</button>
-                        </a>
-                        <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');" style="display:inline;">
-                            <button type="submit" class="btn btn-reject">Delete</button>
-                        </form>
-                    </div>
-                </div>
-                {% endif %}
-                {% endfor %}
-            {% else %}
-                <div class="resource">No events found in the database.</div>
-            {% endif %}
-        </div>
-
-        <details class="header-2">
-            <summary>Past Events</summary>
-            <div class="list">
-                {% if past_events %}
-                    {% for event in past_events %}
-                        <div class="resource event-item"
-                            data-type="{{ event.tag }}"
-                            data-schools='{{ event.schools | tojson }}'>
-                            <div>
-                                <a href="/calendar?event={{ event.title | urlencode }}" class="event-link" style="text-decoration: none; color: inherit;">
-                                    <span>{{ event.title }}</span>
-                                </a><br>
-                                <small>{{ event.start.strftime('%b %d, %Y %I:%M %p') }} – {{ event.end.strftime('%b %d, %Y %I:%M %p') }}</small><br>
-                                <p>{{ event.description }}</p>
-                            </div>
-                            <a href="{{ event.url or '#' }}" target="_blank" class="arrow">➜</a>
-                        </div>
+                {% if content_types %}
+                    {% for ct in content_types %}
+                        <option value="{{ ct.name }}">{{ ct.name }}</option>
                     {% endfor %}
                 {% else %}
-                    <div class="resource">No past events</div>
+                    <option value="Worship">Worship</option>
+                    <option value="Retreat">Retreat</option>
+                    <option value="Training">Training</option>
+                    <option value="Service">Service</option>
+                    <option value="Meeting">Meeting</option>
+                {% endif %}
+            </select>
+        </div>
+
+        <!-- APPROVED EVENTS -->
+        <div class="category-section">
+            <div class="header-2">Approved Events</div>
+            <div class="list">
+                {% if events %}
+                    {% for event in events %}
+                    {% if event['status'] == 'approved' and event not in past_events %}
+                    <div class="resource event-item" data-type="{{ event['tag'] }}">
+                        <div>
+                            <span class="event-link" 
+                                  data-name="{{ event['name'] }}" 
+                                  data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }}"
+                                  data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}"
+                                  data-description="{{ event['description'] or '' }}"
+                                  data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
+                                  data-url="{{ event['url'] or '' }}"
+                                  data-status="{{ event['status'] if event['status'] else 'approved' }}"
+                                  data-contact-name="{{ event['contact_name'] or '' }}"
+                                  data-contact-phone="{{ event['contact_phone'] or '' }}"
+                                  data-contact-email="{{ event['contact_email'] or '' }}"
+                                  data-address1="{{ event['event_address1'] or '' }}"
+                                  data-address2="{{ event['event_address2'] or '' }}"
+                                  data-city="{{ event['event_city'] or '' }}"
+                                  data-state="{{ event['event_state'] or '' }}"
+                                  data-postal="{{ event['event_postal_code'] or '' }}">
+                                {{ event['name'] }}
+                            </span><br>
+                            <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}</small><br>
+                            <p>{{ event['description'] or '' }}</p>
+                            <small>Submitted by: {{ event['submitted_by'] }}</small>
+                            <div class="status">
+                                Status: {{ event['status'] if event['status'] else 'approved' }}
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
+                                <button class="btn btn-approve">Approve</button>
+                            </a>
+                            <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
+                                <button class="btn btn-reject">Reject/Cancel</button>
+                            </a>
+                            <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
+                                <button class="btn btn-edit">Edit</button>
+                            </a>
+                            <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');">
+                                <button type="submit" class="btn btn-reject">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="resource empty-events">No events found in the database.</div>
                 {% endif %}
             </div>
-        </details>
+        </div>
+
+        <!-- CANCELLED EVENTS -->
+        <div class="category-section">
+            <div class="header-2">Cancelled Events</div>
+            <div class="list">
+                {% if events %}
+                    {% for event in events %}
+                    {% if event['status'] == 'cancelled' %}
+                    <div class="resource event-item" data-type="{{ event['tag'] }}">
+                        <div>
+                            <span class="event-link" 
+                                  data-name="{{ event['name'] }}" 
+                                  data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }}"
+                                  data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}"
+                                  data-description="{{ event['description'] or '' }}"
+                                  data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
+                                  data-url="{{ event['url'] or '' }}"
+                                  data-status="{{ event['status'] if event['status'] else 'cancelled' }}"
+                                  data-contact-name="{{ event['contact_name'] or '' }}"
+                                  data-contact-phone="{{ event['contact_phone'] or '' }}"
+                                  data-contact-email="{{ event['contact_email'] or '' }}"
+                                  data-address1="{{ event['event_address1'] or '' }}"
+                                  data-address2="{{ event['event_address2'] or '' }}"
+                                  data-city="{{ event['event_city'] or '' }}"
+                                  data-state="{{ event['event_state'] or '' }}"
+                                  data-postal="{{ event['event_postal_code'] or '' }}">
+                                {{ event['name'] }}
+                            </span><br>
+                            <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}</small><br>
+                            <p>{{ event['description'] or '' }}</p>
+                            <small>Submitted by: {{ event['submitted_by'] }}</small>
+                            <div class="status">
+                                Status: {{ event['status'] if event['status'] else 'cancelled' }}
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
+                                <button class="btn btn-approve">Approve</button>
+                            </a>
+                            <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
+                                <button class="btn btn-reject">Reject/Cancel</button>
+                            </a>
+                            <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
+                                <button class="btn btn-edit">Edit</button>
+                            </a>
+                            <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');">
+                                <button type="submit" class="btn btn-reject">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="resource empty-events">No events found in the database.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- PENDING EVENTS -->
+        <div class="category-section">
+            <div class="header-2">Pending Events</div>
+            <div class="list">
+                {% if events %}
+                    {% for event in events %}
+                    {% if event['status'] == 'pending' or not event['status'] %}
+                    <div class="resource event-item" data-type="{{ event['tag'] }}">
+                        <div>
+                            <span class="event-link" 
+                                  data-name="{{ event['name'] }}" 
+                                  data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }}"
+                                  data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}"
+                                  data-description="{{ event['description'] or '' }}"
+                                  data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
+                                  data-url="{{ event['url'] or '' }}"
+                                  data-status="{{ event['status'] if event['status'] else 'pending' }}"
+                                  data-contact-name="{{ event['contact_name'] or '' }}"
+                                  data-contact-phone="{{ event['contact_phone'] or '' }}"
+                                  data-contact-email="{{ event['contact_email'] or '' }}"
+                                  data-address1="{{ event['event_address1'] or '' }}"
+                                  data-address2="{{ event['event_address2'] or '' }}"
+                                  data-city="{{ event['event_city'] or '' }}"
+                                  data-state="{{ event['event_state'] or '' }}"
+                                  data-postal="{{ event['event_postal_code'] or '' }}">
+                                {{ event['name'] }}
+                            </span><br>
+                            <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}</small><br>
+                            <p>{{ event['description'] or '' }}</p>
+                            <small>Submitted by: {{ event['submitted_by'] }}</small>
+                            <div class="status">
+                                Status: {{ event['status'] if event['status'] else 'pending' }}
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
+                                <button class="btn btn-approve">Approve</button>
+                            </a>
+                            <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
+                                <button class="btn btn-reject">Reject/Cancel</button>
+                            </a>
+                            <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
+                                <button class="btn btn-edit">Edit</button>
+                            </a>
+                            <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');">
+                                <button type="submit" class="btn btn-reject">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="resource empty-events">No events found in the database.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- PAST EVENTS (Collapsible with Arrow) -->
+        <div class="category-section">
+            <details class="header-2">
+                <summary>
+                    <span>Past Events</span>
+                    <span class="past-arrow">▼</span>
+                </summary>
+                <div class="list">
+                    {% if past_events %}
+                        {% for event in past_events %}
+                            <div class="resource event-item" data-type="{{ event['tag'] }}">
+                                <div>
+                                    <span class="event-link" 
+                                          data-name="{{ event['name'] }}" 
+                                          data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }}"
+                                          data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}"
+                                          data-description="{{ event['description'] or '' }}"
+                                          data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
+                                          data-url="{{ event['url'] or '' }}"
+                                          data-status="{{ event['status'] if event['status'] else 'approved' }}"
+                                          data-contact-name="{{ event['contact_name'] or '' }}"
+                                          data-contact-phone="{{ event['contact_phone'] or '' }}"
+                                          data-contact-email="{{ event['contact_email'] or '' }}"
+                                          data-address1="{{ event['event_address1'] or '' }}"
+                                          data-address2="{{ event['event_address2'] or '' }}"
+                                          data-city="{{ event['event_city'] or '' }}"
+                                          data-state="{{ event['event_state'] or '' }}"
+                                          data-postal="{{ event['event_postal_code'] or '' }}">
+                                        {{ event['name'] }}
+                                    </span><br>
+                                    <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}</small><br>
+                                    <p>{{ event['description'] or '' }}</p>
+                                    <small>Submitted by: {{ event['submitted_by'] }}</small>
+                                    <div class="status">
+                                        Status: {{ event['status'] if event['status'] else 'approved' }}
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
+                                        <button class="btn btn-edit">Edit</button>
+                                    </a>
+                                    <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');">
+                                        <button type="submit" class="btn btn-reject">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="resource empty-events">No past events</div>
+                    {% endif %}
+                </div>
+            </details>
+        </div>
 
     </div>
-        
 </div>
 
+<!-- POPUP MODAL (Showing actual link, Resource theme) -->
 <div id="overlay"></div>
 <div id="eventPopup">
-    <span id="eventPopupClose">X</span>
+    <button type="button" id="eventPopupClose" aria-label="Close">&times;</button>
     <h3 id="popupEventName"></h3>
     <p><strong>Start:</strong> <span id="popupEventStart"></span></p>
     <p><strong>End:</strong> <span id="popupEventEnd"></span></p>
@@ -254,77 +279,5 @@
     <p><strong>Status:</strong> <span id="popupEventStatus"></span></p>
 </div>
 
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const typeFilter = document.getElementById('contentTypeFilter');
-    const schoolFilter = document.getElementById('schoolFilter');
-    const eventItems = document.querySelectorAll('.event-item');
-    const popup = document.getElementById('eventPopup');
-    const overlay = document.getElementById('overlay');
-    const popupClose = document.getElementById('eventPopupClose');
-    const popupName = document.getElementById('popupEventName');
-    const popupStart = document.getElementById('popupEventStart');
-    const popupEnd = document.getElementById('popupEventEnd');
-    const popupDeadline = document.getElementById('popupEventDeadline');
-    const popupURL = document.getElementById('popupEventURL');
-    const popupDescription = document.getElementById('popupEventDescription');
-    const popupStatus = document.getElementById('popupEventStatus');
-    const popupAddress = document.getElementById('popupEventAddress');
-    const popupContact = document.getElementById('popupEventContact');
-
-    function applyFilters() {
-        const selectedType = typeFilter.value;
-        const selectedSchool = schoolFilter.value;
-
-        eventItems.forEach(item => {
-            const itemType = item.dataset.type || "";
-            const itemSchools = item.dataset.schools ? JSON.parse(item.dataset.schools) : [];
-
-            const typeMatch = !selectedType || itemType === selectedType;
-            const schoolMatch = !selectedSchool || itemSchools.includes(selectedSchool);
-
-            item.style.display = (typeMatch && schoolMatch) ? '' : 'none';
-        });
-    }
-
-    typeFilter.addEventListener('change', applyFilters);
-    schoolFilter.addEventListener('change', applyFilters);
-
-    document.querySelectorAll('.event-link').forEach(link => {
-        link.addEventListener('click', function() {
-            const name = this.getAttribute('data-name');
-            const description = this.getAttribute('data-description') || "No description available.";
-            popupStart.textContent = this.dataset.start;
-            popupEnd.textContent = this.dataset.end;
-            popupDeadline.textContent = this.dataset.deadline;
-            popupStatus.textContent = this.dataset.status;
-            popupName.textContent = name;
-            popupDescription.textContent = description;
-            popup.style.display = 'block';
-            overlay.style.display = 'block';
-            const url = this.dataset.url;
-            if (url) {
-                popupURL.innerHTML = `<a href="${url}" target="_blank" class="link">${url}</a>`;
-            } else {
-                popupURL.textContent = 'N/A';
-            }
-            const addrParts = [this.dataset.address1, this.dataset.address2, this.dataset.city, this.dataset.state, this.dataset.postal].filter(Boolean);
-            popupAddress.textContent = addrParts.length ? addrParts.join(', ') : 'N/A';
-            const contactParts = [this.dataset.contactName, this.dataset.contactPhone, this.dataset.contactEmail].filter(Boolean);
-            popupContact.textContent = contactParts.length ? contactParts.join(' | ') : 'N/A';
-        });
-    });
-
-    popupClose.addEventListener('click', function() {
-        popup.style.display = 'none';
-        overlay.style.display = 'none';
-    });
-
-    overlay.addEventListener('click', function() {
-        popup.style.display = 'none';
-        overlay.style.display = 'none';
-    });
-});
-</script>
+<script src="{{ url_for('static', filename='js/eventAdmin.js') }}"></script>
 {% endblock %}

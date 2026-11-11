@@ -33,14 +33,14 @@ def fetch_approved_events_json():
 
     events = []
     for row in rows:
-        # Get schools for this event
+        # Get tags for this event
         conn = get_db_connection()
         with conn.cursor() as cursor:
             cursor.execute("""
                 SELECT t.tag_name
                 FROM event_tags et
                 JOIN tags t ON et.tag_id = t.tag_id
-                WHERE t.tag_type='school' AND et.event_id = %s
+                WHERE et.event_id = %s
             """, (row['event_id'],))
             school_rows = cursor.fetchall()
         conn.close()
@@ -142,7 +142,7 @@ def addEvent():
             cursor.execute("SELECT MIN(content_type_id) as content_type_id, name FROM content_types GROUP BY name")
             tags = cursor.fetchall()
 
-            cursor.execute("SELECT tag_id as school_tag_id, tag_name as school_name FROM tags WHERE tag_type='school'")
+            cursor.execute("SELECT tag_id as school_tag_id, tag_name as school_name FROM tags ORDER BY tag_name")
             school_tags = cursor.fetchall()
     finally:
         conn.close()
@@ -154,6 +154,7 @@ def addEvent():
         content_type_id = request.form.get('tag', '').strip()
         schools = request.form.getlist('schools')
         event_tags = request.form.getlist('event_tags')
+        new_tags = request.form.getlist('new_tags')
         starting_date_raw = request.form.get('starting_date', '').strip()
         ending_date_raw = request.form.get('ending_date', '').strip()
         deadline_raw = request.form.get('deadline', '').strip()
@@ -209,7 +210,36 @@ def addEvent():
                 event_id = cursor.lastrowid
                 
                 # Insert school and event tags
-                all_tags = set(schools + event_tags)
+                all_tags = set()
+                for tag_val in schools + event_tags:
+                    tag_val_str = str(tag_val).strip()
+                    if not tag_val_str:
+                        continue
+                    if tag_val_str.isdigit():
+                        all_tags.add(int(tag_val_str))
+                    else:
+                        new_tags.append(tag_val_str)
+
+                for new_tag_name in new_tags:
+                    clean_name = new_tag_name.strip()
+                    if not clean_name:
+                        continue
+                    # Check if tag already exists in tags table (case-insensitive)
+                    try:
+                        cursor.execute("SELECT tag_id FROM tags WHERE LOWER(tag_name) = LOWER(%s)", (clean_name,))
+                    except Exception:
+                        cursor.execute("SELECT tag_id FROM tags WHERE LOWER(tag) = LOWER(%s)", (clean_name,))
+                    existing_tag = cursor.fetchone()
+                    if existing_tag:
+                        tag_id = existing_tag.get('tag_id') if isinstance(existing_tag, dict) else existing_tag[0]
+                        all_tags.add(tag_id)
+                    else:
+                        try:
+                            cursor.execute("INSERT INTO tags (tag_name) VALUES (%s)", (clean_name,))
+                        except Exception:
+                            cursor.execute("INSERT INTO tags (tag) VALUES (%s)", (clean_name,))
+                        all_tags.add(cursor.lastrowid)
+
                 for tag_id in all_tags:
                     if tag_id:
                         cursor.execute("INSERT INTO event_tags (event_id, tag_id) VALUES (%s, %s)", (event_id, tag_id))
@@ -236,7 +266,7 @@ def calendar():
     conn = get_db_connection()
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT tag_name FROM tags WHERE tag_type='school' ORDER BY tag_name")
+            cursor.execute("SELECT tag_name FROM tags ORDER BY tag_name")
             schools = [row['tag_name'] for row in cursor.fetchall()]
     finally:
         conn.close()
@@ -266,6 +296,7 @@ def update_event(event_id, action):
 def adminView():
     events = []
     schools = []
+    content_types = []
     conn = get_db_connection()
     try:
         with conn.cursor() as cursor:
@@ -274,61 +305,100 @@ def adminView():
                        e.registration_deadline, e.user_id,
                        e.contact_name, e.contact_phone, e.contact_email,
                        e.event_address1, e.event_address2, e.event_city, e.event_state, e.event_postal_code,
+                       ct.name as content_type_name,
                        u.username, u.first_name, u.last_name
                 FROM events e
+                LEFT JOIN content_types ct ON e.content_type = ct.content_type_id
                 LEFT JOIN users u ON e.user_id = u.user_id
                 ORDER BY CASE WHEN e.status = 'pending' THEN 0 ELSE 1 END, e.start_date ASC
             """)
             rows = cursor.fetchall()
 
-        cursor.execute("SELECT tag_name FROM tags ORDER BY tag_id")
-        schools = [row['tag_name'] for row in cursor.fetchall()]
+            cursor.execute("SELECT tag_name FROM tags ORDER BY tag_name")
+            schools = [row['tag_name'] for row in cursor.fetchall()]
 
-        events = []
-        for row in rows:
-            cursor.execute("""
-                SELECT t.tag_id
-                FROM event_tags et
-                JOIN tags t ON et.tag_id = t.tag_id
-                WHERE et.event_id = %s
-            """, (row['event_id'],))
-            event_schools = [s['tag_id'] for s in cursor.fetchall()]
+            cursor.execute("SELECT content_type_id, name FROM content_types ORDER BY name")
+            content_types = cursor.fetchall()
 
-            # build a readable submitter name
-            if row.get('first_name') or row.get('last_name'):
-                submitted_by = f"{row.get('first_name') or ''} {row.get('last_name') or ''}".strip()
-            else:
-                submitted_by = row.get('username') or 'Unknown'
+            events = []
+            for row in rows:
+                cursor.execute("""
+                    SELECT t.tag_name
+                    FROM event_tags et
+                    JOIN tags t ON et.tag_id = t.tag_id
+                    WHERE et.event_id = %s
+                """, (row['event_id'],))
+                event_schools = [s['tag_name'] for s in cursor.fetchall()]
 
-            events.append({
-                "event_id": row["event_id"],
-                "name": row["name"],
-                "description": row.get("description"),
-                "status": row.get("status"),
-                "start": row.get("start_date"),
-                "end": row.get("end_date"),
-                "url": row.get("url"),
-                "tag": row.get("content_type_name") or "N/A",
-                "schools": event_schools,
-                "registration_deadline": row.get("registration_deadline"),
-                "user_id": row.get("user_id"),
-                "submitted_by": submitted_by,
-                "contact_name": row.get("contact_name"),
-                "contact_phone": row.get("contact_phone"),
-                "contact_email": row.get("contact_email"),
-                "event_address1": row.get("event_address1"),
-                "event_address2": row.get("event_address2"),
-                "event_city": row.get("event_city"),
-                "event_state": row.get("event_state"),
-                "event_postal_code": row.get("event_postal_code"),
-            })
+                # build a readable submitter name
+                if row.get('first_name') or row.get('last_name'):
+                    submitted_by = f"{row.get('first_name') or ''} {row.get('last_name') or ''}".strip()
+                else:
+                    submitted_by = row.get('username') or 'Unknown'
+
+                events.append({
+                    "event_id": row["event_id"],
+                    "name": row["name"],
+                    "description": row.get("description"),
+                    "status": row.get("status"),
+                    "start": row.get("start_date"),
+                    "end": row.get("end_date"),
+                    "url": row.get("url"),
+                    "tag": row.get("content_type_name") or "N/A",
+                    "schools": event_schools,
+                    "registration_deadline": row.get("registration_deadline"),
+                    "user_id": row.get("user_id"),
+                    "submitted_by": submitted_by,
+                    "contact_name": row.get("contact_name"),
+                    "contact_phone": row.get("contact_phone"),
+                    "contact_email": row.get("contact_email"),
+                    "event_address1": row.get("event_address1"),
+                    "event_address2": row.get("event_address2"),
+                    "event_city": row.get("event_city"),
+                    "event_state": row.get("event_state"),
+                    "event_postal_code": row.get("event_postal_code"),
+                })
     except Exception as e:
-        rows = []
+        events = []
+        schools = []
+        content_types = []
         print(f"Error fetching data: {e}")
     finally:
         conn.close()
 
-    return render_template('events/eventAdmin.html', events=events, schools=schools)
+    now = datetime.now()
+    pending_events = []
+    approved_events = []
+    cancelled_events = []
+    past_events = []
+
+    for ev in events:
+        status = ev.get('status')
+        is_past = False
+        if ev.get('end') and ev['end'] < now:
+            is_past = True
+        elif not ev.get('end') and ev.get('start') and ev['start'] < now:
+            is_past = True
+
+        if status == 'pending' or not status:
+            pending_events.append(ev)
+        elif status == 'cancelled':
+            cancelled_events.append(ev)
+        elif is_past:
+            past_events.append(ev)
+        else:
+            approved_events.append(ev)
+
+    return render_template(
+        'events/eventAdmin.html',
+        events=events,
+        pending_events=pending_events,
+        approved_events=approved_events,
+        cancelled_events=cancelled_events,
+        past_events=past_events,
+        schools=schools,
+        content_types=content_types
+    )
 
 
 
