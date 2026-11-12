@@ -22,12 +22,14 @@ document.addEventListener('DOMContentLoaded', function() {
     eventClick: function(info) {
       const ep = info.event.extendedProps;
       const addr = [ep.event_address1, ep.event_address2, ep.event_city, ep.event_state, ep.event_postal_code].filter(Boolean).join(', ');
-      const schoolsList = ep.schools && ep.schools.length > 0 ? ep.schools.join(', ') : 'N/A';
+      const schoolsList = ep.schools && ep.schools.length > 0 ? ep.schools.map(school => `<span class="school-tag-pill">${school.trim()}</span>`).join(' ') : 'N/A';
+      const tagList = ep.other_tags && ep.other_tags.length > 0 ? ep.other_tags.map(tag => `<span class="tag-pill">${tag.trim()}</span>`).join(' ') : 'N/A';
       popup.innerHTML = `
-        <span id="eventPopupClose">X</span>
+        <span id="eventPopupClose" title="Close"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i></span>
         <h3>${info.event.title}</h3>
         <p><strong>Content Type:</strong> ${ep.tag || "N/A"}</p>
-        <p><strong>Schools:</strong> ${schoolsList}</p>
+        <p><strong>Schools: </strong>${schoolsList}</p>
+        <p><strong>Tags: </strong>${tagList}</p>
         <p><strong>Start:</strong> ${info.event.start.toLocaleString()}</p>
         <p><strong>End:</strong> ${info.event.end.toLocaleString()}</p>
         <p><strong>Registration Deadline:</strong> ${ep.registration_deadline
@@ -70,9 +72,14 @@ document.addEventListener('DOMContentLoaded', function() {
           // Wait a moment for the calendar to render, then show the popup
           setTimeout(() => {
             const tAddr = [targetEvent.event_address1, targetEvent.event_address2, targetEvent.event_city, targetEvent.event_state, targetEvent.event_postal_code].filter(Boolean).join(', ');
+            const tSchoolsList = targetEvent.schools && targetEvent.schools.length > 0 ? targetEvent.schools.map(school => `<span class="school-tag-pill">${school.trim()}</span>`).join(' ') : 'N/A';
+            const tTagList = targetEvent.other_tags && targetEvent.other_tags.length > 0 ? targetEvent.other_tags.map(tag => `<span class="tag-pill">${tag.trim()}</span>`).join(' ') : 'N/A';
             popup.innerHTML = `
-              <span id="eventPopupClose">X</span>
+              <span id="eventPopupClose" title="Close"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i></span>
               <h3>${targetEvent.title}</h3>
+              <p><strong>Content Type:</strong> ${targetEvent.tag || "N/A"}</p>
+              <p><strong>Schools: </strong>${tSchoolsList}</p>
+              <p><strong>Tags: </strong>${tTagList}</p>
               <p><strong>Start:</strong> ${new Date(targetEvent.start).toLocaleString()}</p>
               <p><strong>End:</strong> ${new Date(targetEvent.end).toLocaleString()}</p>
               <p><strong>Registration Deadline:</strong> ${targetEvent.registration_deadline
@@ -107,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedSchool = schoolFilter.value;
 
     const filteredEvents = allEvents.filter(e => {
-      const typeMatch = !selectedType || e.tag === selectedType;
+      const typeMatch = !selectedType || (e.other_tags && e.other_tags.includes(selectedType)) || e.tag === selectedType;
       const schoolMatch = !selectedSchool || (e.schools && e.schools.includes(selectedSchool));
       return typeMatch && schoolMatch;
     });

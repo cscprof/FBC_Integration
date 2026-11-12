@@ -17,11 +17,9 @@
     <label for="contentTypeFilter">Content Type:</label>
     <select id="contentTypeFilter" class="form-select d-inline-block w-auto">
       <option value="">All</option>
-      <option value="Worship">Worship</option>
-      <option value="Retreat">Retreat</option>
-      <option value="Training">Training</option>
-      <option value="Service">Service</option>
-      <option value="Meeting">Meeting</option>
+      {% for tag in other_tags %}
+      <option value="{{ tag }}">{{ tag }}</option>
+      {% endfor %}
     </select>
 
     <label for="schoolFilter" class="ms-3">School:</label>
@@ -35,7 +33,7 @@
 
   {% if is_manager(current_user) %}
   <a href="/add-event" class="button">
-    Add Event
+    <i class="ui-icon fa-solid fa-plus" aria-hidden="true"></i> Add Event
   </a>
   {% endif %}
   
