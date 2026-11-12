@@ -61,7 +61,7 @@
                         </small><br>
                         {% endif %}
                     </div>
-                    <a href="{{ event.url or '#' }}" target="_blank" class="arrow">➜</a>
+                    <a href="{{ event.url or '#' }}" target="_blank" class="arrow" aria-label="Visit event website"><i class="ui-icon fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                 </div>
                 {% endfor %}
             {% else %}
@@ -86,7 +86,7 @@
                             <small>{{ event.start.strftime('%b %d, %Y %I:%M %p') }} – {{ event.end.strftime('%b %d, %Y %I:%M %p') }}</small><br>
                             <p>{{ event.description }}</p>
                         </div>
-                        <a href="{{ event.url or '#' }}" target="_blank" class="arrow">➜</a>
+                        <a href="{{ event.url or '#' }}" target="_blank" class="arrow" aria-label="Visit event website"><i class="ui-icon fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                     {% endfor %}
                 {% else %}

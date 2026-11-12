@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     events: [], 
     eventClick: function(info) {
       popup.innerHTML = `
-        <span id="eventPopupClose">X</span>
+        <span id="eventPopupClose" title="Close"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i></span>
         <h3>${info.event.title}</h3>
         <p><strong>Start:</strong> ${info.event.start.toLocaleString()}</p>
         <p><strong>End:</strong> ${info.event.end.toLocaleString()}</p>

@@ -147,7 +147,8 @@ document.addEventListener('DOMContentLoaded', function() {
         tagEl.appendChild(text);
 
         const removeBtn = document.createElement('span');
-        removeBtn.innerHTML = '&times;';
+        removeBtn.innerHTML = '<i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i>';
+        removeBtn.setAttribute('title', 'Remove tag');
         removeBtn.className = 'selected-tag-remove';
         removeBtn.addEventListener('click', function() {
             selectedTags.delete(id);
@@ -176,7 +177,8 @@ document.addEventListener('DOMContentLoaded', function() {
         tagEl.appendChild(text);
 
         const removeBtn = document.createElement('span');
-        removeBtn.innerHTML = '&times;';
+        removeBtn.innerHTML = '<i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i>';
+        removeBtn.setAttribute('title', 'Remove tag');
         removeBtn.className = 'selected-tag-remove';
         
         const lowerName = name.toLowerCase();
