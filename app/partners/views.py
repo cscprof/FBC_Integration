@@ -42,7 +42,7 @@ def partners_page():
     conn = get_db_connection()
     try:
         with conn.cursor(DictCursor) as cursor:
-            cursor.execute("SELECT * FROM partners")
+            cursor.execute("SELECT * FROM partners WHERE approved = TRUE;")
             partners = cursor.fetchall()
             return render_template('partners/index.html', partners=partners)
     except Exception as e:
