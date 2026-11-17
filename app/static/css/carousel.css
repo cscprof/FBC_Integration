@@ -23,8 +23,8 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(120, 120, 120, 0.5);
-    color: #91c636;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
     padding: 5px 5px 10px;
     font-size: 50px;
 }

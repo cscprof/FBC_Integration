@@ -78,7 +78,11 @@ form input[type="radio"] {
     margin-bottom: 5px;
 }
 
-.password-box img{
+.password-box .password-toggle {
+    border: 0;
+    padding: 0;
+    background: none;
+    color: #333;
     width: 35px;
     cursor: pointer;
     position: absolute;

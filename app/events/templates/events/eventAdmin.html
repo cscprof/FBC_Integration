@@ -15,9 +15,11 @@
             Manage approved, cancelled, and pending events.
         </p>  
         {% if is_manager(current_user) %}
-        <div class = "uploadbutton">
+        <div class="uploadbutton add-event">
             <form action="/add-event" method="get">
-                <button type="submit" class="uploadresourcebtn">Add event</button>
+                <button type="submit" class="uploadresourcebtn button">
+                    <i class="ui-icon fa-solid fa-plus" aria-hidden="true"></i> Add Event
+                </button>
             </form>
         </div>
         {% endif %}
@@ -76,16 +78,19 @@
                         </div>
                         <div class="actions">
                             <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
-                                <button class="btn btn-approve">Approve</button>
+                                <button class="btn btn-approve"><i class="ui-icon fa-solid fa-check" aria-hidden="true"></i> Approve</button>
                             </a>
                             <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
-                                <button class="btn btn-reject">Reject/Cancel</button>
+                                <button class="btn btn-reject"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i> Reject/Cancel</button>
                             </a>
                             <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
-                                <button class="btn btn-edit">Edit</button>
+                                <button class="btn btn-edit"><i class="ui-icon fa-solid fa-pen-to-square" aria-hidden="true"></i> Edit</button>
                             </a>
+
                             <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');" style="display:inline;">
-                                <button type="submit" class="btn btn-reject">Delete</button>
+                              <button type="submit" class="btn btn-reject">
+                                 <i class="ui-icon fa-solid fa-trash-can" aria-hidden="true"></i> Delete
+                              </button> 
                             </form>
                         </div>
                     </div>
@@ -132,16 +137,16 @@
                         </div>
                         <div class="actions">
                             <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
-                                <button class="btn btn-approve">Approve</button>
+                                <button class="btn btn-approve"><i class="ui-icon fa-solid fa-check" aria-hidden="true"></i> Approve</button>
                             </a>
                             <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
-                                <button class="btn btn-reject">Reject/Cancel</button>
+                                <button class="btn btn-reject"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i> Reject/Cancel</button>
                             </a>
                             <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
-                                <button class="btn btn-edit">Edit</button>
+                                <button class="btn btn-edit"><i class="ui-icon fa-solid fa-pen-to-square" aria-hidden="true"></i> Edit</button>
                             </a>
                             <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');" style="display:inline;">
-                                <button type="submit" class="btn btn-reject">Delete</button>
+                                <button type="submit" class="btn btn-reject"><i class="ui-icon fa-solid fa-trash-can" aria-hidden="true"></i> Delete</button>
                             </form>
                         </div>
                     </div>
@@ -188,16 +193,16 @@
                         </div>
                         <div class="actions">
                             <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='approved') }}">
-                                <button class="btn btn-approve">Approve</button>
+                                <button class="btn btn-approve"><i class="ui-icon fa-solid fa-check" aria-hidden="true"></i> Approve</button>
                             </a>
                             <a href="{{ url_for('events.update_event', event_id=event['event_id'], action='cancelled') }}">
-                                <button class="btn btn-reject">Reject/Cancel</button>
+                                <button class="btn btn-reject"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i> Reject/Cancel</button>
                             </a>
                             <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
-                                <button class="btn btn-edit">Edit</button>
+                                <button class="btn btn-edit"><i class="ui-icon fa-solid fa-pen-to-square" aria-hidden="true"></i> Edit</button>
                             </a>
-                            <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');" style="display:inline;">
-                                <button type="submit" class="btn btn-reject">Delete</button>
+                              <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');" style="display:inline;">
+                                <button type="submit" class="btn btn-reject"><i class="ui-icon fa-solid fa-trash-can" aria-hidden="true"></i> Delete</button>
                             </form>
                         </div>
                     </div>
@@ -213,15 +218,40 @@
                 <div class="list">
                     {% if past_events %}
                         {% for event in past_events %}
-                            <div class="resource event-item"
-                                data-type="{{ event.tag }}"
-                                data-schools='{{ event.schools | tojson }}'>
-                                <div class="event-link">
-                                    <a href="/calendar?event={{ event.title | urlencode }}" style="text-decoration: none; color: inherit;">
-                                        <span>{{ event.title }}</span>
-                                    </a><br>
-                                    <small>{{ event.start.strftime('%b %d, %Y %I:%M %p') }} – {{ event.end.strftime('%b %d, %Y %I:%M %p') }}</small><br>
-                                    <p>{{ event.description }}</p>
+                            <div class="resource event-item" data-type="{{ event['tag'] }}">
+                                <div>
+                                    <span class="event-link" 
+                                          data-name="{{ event['name'] }}" 
+                                          data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }}"
+                                          data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}"
+                                          data-description="{{ event['description'] or '' }}"
+                                          data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
+                                          data-url="{{ event['url'] or '' }}"
+                                          data-status="{{ event['status'] if event['status'] else 'approved' }}"
+                                          data-contact-name="{{ event['contact_name'] or '' }}"
+                                          data-contact-phone="{{ event['contact_phone'] or '' }}"
+                                          data-contact-email="{{ event['contact_email'] or '' }}"
+                                          data-address1="{{ event['event_address1'] or '' }}"
+                                          data-address2="{{ event['event_address2'] or '' }}"
+                                          data-city="{{ event['event_city'] or '' }}"
+                                          data-state="{{ event['event_state'] or '' }}"
+                                          data-postal="{{ event['event_postal_code'] or '' }}">
+                                        {{ event['name'] }}
+                                    </span><br>
+                                    <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}</small><br>
+                                    <p>{{ event['description'] or '' }}</p>
+                                    <small>Submitted by: {{ event['submitted_by'] }}</small>
+                                    <div class="status">
+                                        Status: {{ event['status'] if event['status'] else 'approved' }}
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <a href="{{ url_for('events.edit_event', event_id=event['event_id']) }}">
+                                        <button class="btn btn-edit"><i class="ui-icon fa-solid fa-pen-to-square" aria-hidden="true"></i> Edit</button>
+                                    </a>
+                                    <form method="POST" action="{{ url_for('events.delete_event', event_id=event['event_id']) }}" onsubmit="return confirm('Delete this event?');">
+                                        <button type="submit" class="btn btn-reject"><i class="ui-icon fa-solid fa-trash-can" aria-hidden="true"></i> Delete</button>
+                                    </form>
                                 </div>
                                 <a href="{{ event.url or '#' }}" target="_blank" class="arrow">➜</a>
                             </div>
@@ -238,7 +268,7 @@
 <!-- POPUP MODAL (Showing actual link, Resource theme) -->
 <div id="overlay"></div>
 <div id="eventPopup">
-    <button type="button" id="eventPopupClose" aria-label="Close">&times;</button>
+    <button type="button" id="eventPopupClose" aria-label="Close"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i></button>
     <h3 id="popupEventName"></h3>
     <p><strong>Start:</strong> <span id="popupEventStart"></span></p>
     <p><strong>End:</strong> <span id="popupEventEnd"></span></p>

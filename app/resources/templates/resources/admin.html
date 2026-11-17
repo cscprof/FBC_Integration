@@ -9,7 +9,7 @@
 
         <div class="uploadbutton">
             <button onclick="document.getElementById('uploadModal').style.display='flex'" class="uploadresourcebtn">
-                Add Resource
+                <i class="ui-icon fa-solid fa-plus" aria-hidden="true"></i> Add Resource
             </button>
         </div>
 
@@ -77,7 +77,7 @@
                                     data-email="{{ resource.contact_email or ''|e }}"
                                     data-phone="{{ resource.contact_phone or ''|e }}"
                                 >
-                                    Edit
+                                    <i class="ui-icon fa-solid fa-pen-to-square" aria-hidden="true"></i> Edit
                                 </button>
                             </td>
                         </tr>
@@ -97,7 +97,7 @@
 <div id="uploadModal">
     <div class="modalcontent">
         <div class="modalheader">
-            <h2 class="modaltitle">Add Resource</h2>                        
+            <h2 class="modaltitle"><i class="ui-icon fa-solid fa-plus" aria-hidden="true"></i> Add Resource</h2>
         </div>
 
         <form action="{{ url_for('resources.upload_resource') }}" method="POST" class="modalform">
@@ -133,7 +133,7 @@
     <div class="modalcontent">
         <div class="modalheader">
             <h2 class="modaltitle">Edit Resource</h2>
-            <button onclick="closeEditModal()" class="modalclose">&times;</button>
+            <button onclick="closeEditModal()" class="modalclose" aria-label="Close"><i class="ui-icon fa-solid fa-xmark" aria-hidden="true"></i></button>
         </div>
 
         <form action="{{ url_for('resources.edit_resource', resource_id=0) }}"
@@ -176,8 +176,8 @@
 
             <div class="modalformactions">
                 <button type="button" onclick="closeEditModal()" class="modalbtncancel">Cancel</button>
-                <button type="button" onclick="deleteResource()" class="modalbtndelete">Delete</button>
-                <button type="submit" class="modalbtnsubmit">Save Changes</button>
+                <button type="button" onclick="deleteResource()" class="modalbtndelete"><i class="ui-icon fa-solid fa-trash-can" aria-hidden="true"></i> Delete</button>
+                <button type="submit" class="modalbtnsubmit"><i class="ui-icon fa-solid fa-check" aria-hidden="true"></i> Save Changes</button>
             </div>
         </form>
     </div>
