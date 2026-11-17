@@ -38,7 +38,7 @@
     background-color: transparent !important;
 }
 
-.navbar-link {
+.navbar-link, .button {
     text-decoration: none;
 }
 

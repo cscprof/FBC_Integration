@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const typeFilter = document.getElementById('contentTypeFilter');
+    const schoolFilter = document.getElementById('schoolFilter');
     const eventItems = document.querySelectorAll('.event-item');
     const popup = document.getElementById('eventPopup');
     const overlay = document.getElementById('overlay');
@@ -15,17 +16,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const popupContact = document.getElementById('popupEventContact');
 
     function applyFilters() {
-        const selectedType = typeFilter.value;
+        const selectedType = typeFilter ? typeFilter.value : "";
+        const selectedSchool = schoolFilter ? schoolFilter.value : "";
 
         eventItems.forEach(item => {
             const itemType = item.dataset.type || "";
+            let itemSchools = [];
+            try {
+                itemSchools = JSON.parse(item.dataset.schools || "[]");
+            } catch (e) {
+                itemSchools = [];
+            }
+
             const typeMatch = !selectedType || itemType === selectedType;
-            item.style.display = typeMatch ? '' : 'none';
+            const schoolMatch = !selectedSchool || itemSchools.includes(selectedSchool);
+            item.style.display = (typeMatch && schoolMatch) ? '' : 'none';
         });
     }
 
     if (typeFilter) {
         typeFilter.addEventListener('change', applyFilters);
+    }
+    if (schoolFilter) {
+        schoolFilter.addEventListener('change', applyFilters);
     }
 
     document.querySelectorAll('.event-link').forEach(link => {

@@ -47,40 +47,10 @@
         <div class="password-box">
             <input placeholder="Confirm Password" type="password" name="passwordConfirmation" id="passwordConfirmation" minlength="8" required>
             <button type="button" class="password-toggle" aria-label="Show password" aria-pressed="false">
-              <img src="{{ url_for('static', filename='images/eyeclosed.png') }}"
-                                 data-eye-open="{{ url_for('static', filename='images/eyeopen.png') }}"
-                                 data-eye-closed="{{ url_for('static', filename='images/eyeclosed.png') }}"
-                                 id="eyeicon2" alt="hide-password">
-             </button>
+                <i class="ui-icon fa-solid fa-eye-slash" aria-hidden="true"></i>
+            </button>
         </div>
-        
-<script>
-    let eyeicon = document.getElementById("eyeicon");
-    let password = document.getElementById("password");
-
-    let eyeicon2 = document.getElementById("eyeicon2");
-    let passwordConfirmation = document.getElementById("passwordConfirmation");
-
-    eyeicon.onclick = function() {
-        if (password.type == "password") {
-            password.type = "text";
-            eyeicon.src = eyeicon.dataset.eyeOpen;
-        } else {
-            password.type = "password";
-            eyeicon.src = eyeicon.dataset.eyeClosed;
-        }
-    };
-
-    eyeicon2.onclick = function() {
-        if (passwordConfirmation.type == "password") {
-            passwordConfirmation.type = "text";
-            eyeicon2.src = eyeicon2.dataset.eyeOpen;
-        } else {
-            passwordConfirmation.type = "password";
-            eyeicon2.src = eyeicon2.dataset.eyeClosed;
-        }
-    };
-</script>
+        <script src="{{ url_for('static', filename='js/signup.js') }}"></script>
 
         <button class="button-submit" type="submit">Submit</button>
     </form>

@@ -27,11 +27,17 @@
             <label for="contentTypeFilter">Content Type:</label>
             <select id="contentTypeFilter" class="form-select d-inline-block w-auto">
                 <option value="">All</option>
-                <option value="Worship">Worship</option>
-                <option value="Retreat">Retreat</option>
-                <option value="Training">Training</option>
-                <option value="Service">Service</option>
-                <option value="Meeting">Meeting</option>
+                {% if content_types %}
+                    {% for ct in content_types %}
+                        <option value="{{ ct.name }}">{{ ct.name }}</option>
+                    {% endfor %}
+                {% else %}
+                    <option value="Worship">Worship</option>
+                    <option value="Retreat">Retreat</option>
+                    <option value="Training">Training</option>
+                    <option value="Service">Service</option>
+                    <option value="Meeting">Meeting</option>
+                {% endif %}
             </select>
 
             <label for="schoolFilter" class="ms-3">School:</label>
@@ -46,19 +52,19 @@
             <div class="list">
                 {% if events %}
                     {% for event in events %}
-                    {% if event['status'] == 'approved' %}
+                    {% if event['status'] == 'approved' and event not in past_events %}
                     <div class="resource event-item"
                         data-type="{{ event['tag'] }}"
                         data-schools='{{ event["schools"] | tojson }}'>
                         <div>
                             <span class="event-link" 
                                 data-name="{{ event['name'] }}" 
-                                data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') }}"
-                                data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') }}"
-                                data-description="{{ event['description'] }}"
+                                data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }}"
+                                data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}"
+                                data-description="{{ event['description'] or '' }}"
                                 data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
                                 data-url="{{ event['url'] or '' }}"
-                                data-status="{{ event['status'] if event['status'] else 'pending' }}"
+                                data-status="{{ event['status'] if event['status'] else 'approved' }}"
                                 data-contact-name="{{ event['contact_name'] or '' }}"
                                 data-contact-phone="{{ event['contact_phone'] or '' }}"
                                 data-contact-email="{{ event['contact_email'] or '' }}"
@@ -69,11 +75,11 @@
                                 data-postal="{{ event['event_postal_code'] or '' }}">
                                 {{ event['name'] }}
                             </span><br>
-                            <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
-                            <p>{{ event['description'] }}</p>
+                            <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}</small><br>
+                            <p>{{ event['description'] or '' }}</p>
                             <small>Submitted by: {{ event['submitted_by'] }}</small>
                             <div class="status">
-                                Status: {{ event['status'] if event['status'] else 'pending' }}
+                                Status: {{ event['status'] if event['status'] else 'approved' }}
                             </div>
                         </div>
                         <div class="actions">
@@ -112,12 +118,12 @@
                         <div>
                             <span class="event-link" 
                                 data-name="{{ event['name'] }}" 
-                                data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') }}"
-                                data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') }}"
-                                data-description="{{ event['description'] }}"
+                                data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }}"
+                                data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}"
+                                data-description="{{ event['description'] or '' }}"
                                 data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
                                 data-url="{{ event['url'] or '' }}"
-                                data-status="{{ event['status'] if event['status'] else 'pending' }}"
+                                data-status="{{ event['status'] if event['status'] else 'cancelled' }}"
                                 data-contact-name="{{ event['contact_name'] or '' }}"
                                 data-contact-phone="{{ event['contact_phone'] or '' }}"
                                 data-contact-email="{{ event['contact_email'] or '' }}"
@@ -128,11 +134,11 @@
                                 data-postal="{{ event['event_postal_code'] or '' }}">
                                 {{ event['name'] }}
                             </span><br>
-                            <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
-                            <p>{{ event['description'] }}</p>
+                            <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}</small><br>
+                            <p>{{ event['description'] or '' }}</p>
                             <small>Submitted by: {{ event['submitted_by'] }}</small>
                             <div class="status">
-                                Status: {{ event['status'] if event['status'] else 'pending' }}
+                                Status: {{ event['status'] if event['status'] else 'cancelled' }}
                             </div>
                         </div>
                         <div class="actions">
@@ -168,9 +174,9 @@
                         <div>
                             <span class="event-link" 
                                 data-name="{{ event['name'] }}" 
-                                data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') }}"
-                                data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') }}"
-                                data-description="{{ event['description'] }}"
+                                data-start="{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }}"
+                                data-end="{{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}"
+                                data-description="{{ event['description'] or '' }}"
                                 data-deadline="{{ event['registration_deadline'].strftime('%b %d, %Y %I:%M %p') if event['registration_deadline'] else 'N/A' }}"
                                 data-url="{{ event['url'] or '' }}"
                                 data-status="{{ event['status'] if event['status'] else 'pending' }}"
@@ -184,8 +190,8 @@
                                 data-postal="{{ event['event_postal_code'] or '' }}">
                                 {{ event['name'] }}
                             </span><br>
-                            <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') }}</small><br>
-                            <p>{{ event['description'] }}</p>
+                            <small>{{ event['start'].strftime('%b %d, %Y %I:%M %p') if event['start'] else '' }} – {{ event['end'].strftime('%b %d, %Y %I:%M %p') if event['end'] else '' }}</small><br>
+                            <p>{{ event['description'] or '' }}</p>
                             <small>Submitted by: {{ event['submitted_by'] }}</small>
                             <div class="status">
                                 Status: {{ event['status'] if event['status'] else 'pending' }}
@@ -218,7 +224,9 @@
                 <div class="list">
                     {% if past_events %}
                         {% for event in past_events %}
-                            <div class="resource event-item" data-type="{{ event['tag'] }}">
+                            <div class="resource event-item"
+                                data-type="{{ event['tag'] }}"
+                                data-schools='{{ event["schools"] | tojson }}'>
                                 <div>
                                     <span class="event-link" 
                                           data-name="{{ event['name'] }}" 
@@ -253,7 +261,9 @@
                                         <button type="submit" class="btn btn-reject"><i class="ui-icon fa-solid fa-trash-can" aria-hidden="true"></i> Delete</button>
                                     </form>
                                 </div>
-                                <a href="{{ event.url or '#' }}" target="_blank" class="arrow">➜</a>
+                                {% if event['url'] %}
+                                    <a href="{{ event['url'] }}" target="_blank" rel="noopener noreferrer" class="arrow">➜</a>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     {% else %}

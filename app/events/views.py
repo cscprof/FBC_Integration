@@ -308,27 +308,19 @@ def update_event(event_id, action):
 @role_required(MANAGER_ROLES)
 def adminView():
     events = []
-    approved_events = fetch_approved_events_python()
     schools = []
-    today = datetime.now().date()
-    past_events = []
+    content_types = []
 
-    for approved_events in approved_events:
-        event_end = approved_events.get('end') or approved_events.get('start')
-        if event_end.date() < today:
-            past_events.append(approved_events)
-        past_events.sort(key=lambda ev: ev['start'], reverse=True)
-        
     conn = get_db_connection()
     try:
         with conn.cursor() as cursor:
             cursor.execute("""
                 SELECT e.event_id, e.name, e.status, e.description, e.start_date, e.end_date, e.url,
-                        e.registration_deadline, e.user_id,
-                        e.contact_name, e.contact_phone, e.contact_email,
-                        e.event_address1, e.event_address2, e.event_city, e.event_state, e.event_postal_code,
-                        u.username, u.first_name, u.last_name,
-                        ct.name as content_type_name
+                       e.registration_deadline, e.user_id,
+                       e.contact_name, e.contact_phone, e.contact_email,
+                       e.event_address1, e.event_address2, e.event_city, e.event_state, e.event_postal_code,
+                       u.username, u.first_name, u.last_name,
+                       ct.name as content_type_name
                 FROM events e
                 LEFT JOIN content_types ct ON e.content_type = ct.content_type_id
                 LEFT JOIN users u ON e.user_id = u.user_id
@@ -336,20 +328,22 @@ def adminView():
             """)
             rows = cursor.fetchall()
 
-            cursor.execute("SELECT tag_name FROM tags ORDER BY tag_id")
+            cursor.execute("SELECT tag_name FROM tags ORDER BY tag_name")
             schools = [row['tag_name'] for row in cursor.fetchall()]
 
-        for row in rows:
-                with conn.cursor() as tagCursor:
-                    tagCursor.execute("""
-                        SELECT t.tag_id
-                        FROM event_tags et
-                        JOIN tags t ON et.tag_id = t.tag_id
-                        WHERE et.event_id = %s
-                    """, (row['event_id'],))
-                    event_schools = [s['tag_id'] for s in tagCursor.fetchall()]
+            cursor.execute("SELECT content_type_id, name FROM content_types ORDER BY name")
+            content_types = cursor.fetchall()
 
-            # build a readable submitter name
+            for row in rows:
+                cursor.execute("""
+                    SELECT t.tag_name
+                    FROM event_tags et
+                    JOIN tags t ON et.tag_id = t.tag_id
+                    WHERE et.event_id = %s
+                """, (row['event_id'],))
+                event_schools = [s['tag_name'] for s in cursor.fetchall()]
+
+                # build a readable submitter name
                 if row.get('first_name') or row.get('last_name'):
                     submitted_by = f"{row.get('first_name') or ''} {row.get('last_name') or ''}".strip()
                 else:
@@ -377,7 +371,7 @@ def adminView():
                     "event_state": row.get("event_state"),
                     "event_postal_code": row.get("event_postal_code"),
                 })
-            
+
     except Exception as e:
         events = []
         schools = []
@@ -386,7 +380,24 @@ def adminView():
     finally:
         conn.close()
 
-    return render_template('events/eventAdmin.html', events=events, schools=schools, past_events=past_events)
+    now = datetime.now()
+    past_events = []
+    for ev in events:
+        if ev.get('status') != 'approved':
+            continue
+        event_end = ev.get('end') or ev.get('start')
+        if event_end and event_end < now:
+            past_events.append(ev)
+
+    past_events.sort(key=lambda ev: ev.get('start') or datetime.min, reverse=True)
+
+    return render_template(
+        'events/eventAdmin.html',
+        events=events,
+        past_events=past_events,
+        schools=schools,
+        content_types=content_types,
+    )
 
 @events.route('/edit_event/<int:event_id>', methods=['GET', 'POST'])
 @role_required(MANAGER_ROLES)
