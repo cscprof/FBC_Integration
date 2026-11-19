@@ -1,4 +1,16 @@
 /* signup button */
+.approval_button {
+    background-color: #91c636;
+    padding: 3px;
+    border-radius: 5px;
+}
+
+.denial_button {
+    background-color: red;
+    padding: 3px;
+    border-radius: 5px;
+}
+
 .sign-up {
     color: #212529;
     background-color: #aaeb54;    

@@ -35,6 +35,7 @@
             <a class="navbar-item" href="/admin/events"><i class="ui-icon fa-solid fa-calendar-days" aria-hidden="true"></i> Events</a>
             <a class="navbar-item" href="/admin/resources"><i class="ui-icon fa-solid fa-book-open" aria-hidden="true"></i> Resources</a>
             <a class="navbar-item" href="/admin/tags"><i class="ui-icon fa-solid fa-tag" aria-hidden="true"></i> Tags</a>
+            <a class="navbar-item" href="/admin/partners">Partners</a>
           </div>
         </div>
       {% endif %}
@@ -44,6 +45,8 @@
       <a class="navbar-item {% if request.path.startswith('/calendar') %}is-active{% endif %}" href="/calendar"> <i class="ui-icon fa-solid fa-calendar-days" aria-hidden="true"></i> Calendar </a>
 
       <a class="navbar-item {% if request.path.startswith('/resources') %}is-active{% endif %}" href="/resources"> <i class="ui-icon fa-solid fa-book-open" aria-hidden="true"></i> Resource Directory </a>
+
+      <a class="navbar-item {% if request.path.startswith('/parters') %}is-active{% endif %}" href="/partners"> Partners </a>
 
       <div class="navbar-item has-dropdown is-hoverable custom-dropdown">
         <a class="navbar-link"> More </a>
