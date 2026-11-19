@@ -53,9 +53,8 @@
         <script src="{{ url_for('static', filename='js/signup.js') }}"></script>
 
         <button class="button-submit" type="submit">Submit</button>
-
     </form>
-    </div>
+</div>
         {% with messages = get_flashed_messages() %}
           {% if messages %}
             <ul class="flashes">
@@ -65,5 +64,5 @@
             </ul>
           {% endif %}
         {% endwith %}
-</div>
+    </div>
 {% endblock %}
